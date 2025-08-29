@@ -1,0 +1,96 @@
+
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💀 Religious & Spiritual Talking 💀</title>
+  <meta name="theme-color" content="#000000" />
+  <link rel="manifest" href="manifest.json">
+  <style>
+    * {margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif;}
+    body {background-color: #000; color: #fff; display: flex; flex-direction: column; height: 100vh;}
+    header {padding: 10px; text-align: center; background-color: #111; font-size: 1.2em; border-bottom: 2px solid #222;}
+    #chat {flex: 1; overflow-y: auto; padding: 10px;}
+    .message {padding: 8px 12px; margin: 6px 0; border-radius: 10px; max-width: 80%; word-wrap: break-word;}
+    .self {background-color: #1f1f1f; margin-left: auto; border: 1px solid #333;}
+    .other {background-color: #111; border: 1px solid #222;}
+    footer {display: flex; padding: 10px; background-color: #111; border-top: 2px solid #222;}
+    #msgInput {flex: 1; padding: 8px; border-radius: 5px; border: none; margin-right: 5px; background: #222; color: #fff;}
+    #sendBtn {padding: 8px 16px; border: none; border-radius: 5px; background: #444; color: #fff; cursor: pointer;}
+  </style>
+</head>
+<body>
+  <header>💀 Religious & Spiritual Talking 💀</header>
+  <div id="chat"></div>
+  <footer>
+    <input id="msgInput" type="text" placeholder="Type your message..." />
+    <button id="sendBtn">Send</button>
+  </footer>  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded, limitToLast, query } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA206LK5i1usX8BrSduDV1h8lIWf-0cjnQ",
+      authDomain: "messages-bd41e.firebaseapp.com",
+      projectId: "messages-bd41e",
+      storageBucket: "messages-bd41e.firebasestorage.app",
+      messagingSenderId: "779486859427",
+      appId: "1:779486859427:web:13e8ba714ede73b393ef16",
+      databaseURL: "https://messages-bd41e-default-rtdb.firebaseio.com/"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Password Protection
+    const storedAuth = localStorage.getItem('auth_access');
+    if (!storedAuth || storedAuth !== 'granted') {
+      let pass = prompt('Enter password to join:');
+      if (pass === 'innocent_people_only') {
+        localStorage.setItem('auth_access', 'granted');
+      } else {
+        alert('Wrong password! Reload to try again.');
+        throw new Error('Unauthorized access');
+      }
+    }
+
+    // Username setup
+    let username = localStorage.getItem('adi_user_v1');
+    if (!username) {
+      username = prompt('Choose your username:');
+      if (!username || username.trim() === '') username = 'Anonymous';
+      localStorage.setItem('adi_user_v1', username);
+    }
+
+    const chatDiv = document.getElementById('chat');
+    const msgInput = document.getElementById('msgInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function appendMessage(data) {
+      const div = document.createElement('div');
+      div.classList.add('message');
+      if (data.user === username) div.classList.add('self');
+      else div.classList.add('other');
+      div.textContent = `${data.user}: ${data.text}`;
+      chatDiv.appendChild(div);
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    const msgRef = query(ref(db, 'messages'), limitToLast(50));
+    onChildAdded(msgRef, (snapshot) => {
+      appendMessage(snapshot.val());
+    });
+
+    sendBtn.addEventListener('click', () => {
+      const text = msgInput.value.trim();
+      if (text !== '') {
+        push(ref(db, 'messages'), { user: username, text: text });
+        msgInput.value = '';
+      }
+    });
+
+    msgInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendBtn.click();
+    });
+  </script></body>
+</html>
