@@ -31,6 +31,8 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#000)
 .hidden{display:none}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;background:#0b1220;color:#fff;padding:8px 12px;border-radius:10px;z-index:999}
 .adminBox{padding:8px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid var(--line)}
+.menuBtn{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.danger{color:#ef4444}
 @media (max-width:420px){ .app{padding:6px} .chatShell{height:58vh} }
 </style>
 </head>
@@ -57,9 +59,9 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#000)
             <div class="small">General is public — everyone can send</div>
           </div>
           <div class="row">
-            <button id="zoomOut" class="small">−</button>
+            <button id="zoomOut" class="menuBtn">−</button>
             <div id="zoomLabel" class="small">100%</div>
-            <button id="zoomIn" class="small">＋</button>
+            <button id="zoomIn" class="menuBtn">＋</button>
           </div>
         </div>
 
@@ -82,7 +84,7 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#000)
           </div>
           <div class="row">
             <div id="meName" class="small">Not signed</div>
-            <button id="leaveBtn" class="small">Leave</button>
+            <button id="leaveBtn" class="menuBtn">Leave</button>
           </div>
         </div>
 
@@ -113,8 +115,8 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#000)
           </div>
 
           <div style="display:flex;gap:8px;align-items:center">
-            <button id="banBtn" class="small">🚫 Ban user</button>
-            <button id="clearGroupBtn" class="small danger">🧹 Clear messages</button>
+            <button id="banBtn" class="menuBtn">🚫 Ban user</button>
+            <button id="clearGroupBtn" class="menuBtn danger">🧹 Clear messages</button>
           </div>
 
           <div style="margin-top:10px">
@@ -130,19 +132,23 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#000)
   <div id="toastWrap"></div>
 
 <script type="module">
-// ========== IMPORT FIREBASE MODULES ===========
+// --- Firebase modular imports ---
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, where, limit, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import {
+  getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import {
+  getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, getDocs, deleteDoc
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-// ========== CONFIG — REPLACE WITH YOUR FIREBASE ========
+// ---------- Your Firebase config (from your project messages-30e3a) ----------
 const firebaseConfig = {
-  apiKey: "PASTE_API_KEY",
-  authDomain: "PASTE_PROJECT.firebaseapp.com",
-  projectId: "PASTE_PROJECT",
-  storageBucket: "PASTE_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_MSG_ID",
-  appId: "PASTE_APP_ID"
+  apiKey: "AIzaSyCRYqtAQifwmFqbnb5PZy2SVI-cSOfshVc",
+  authDomain: "messages-30e3a.firebaseapp.com",
+  projectId: "messages-30e3a",
+  storageBucket: "messages-30e3a.appspot.com",
+  messagingSenderId: "131390317978",
+  appId: "1:131390317978:web:8c05070328b5bcbf49c623"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -150,7 +156,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-// ========== UI REFS ===========
+// ---------- UI refs ----------
 const signInBtn = document.getElementById('signInBtn');
 const signOutBtn = document.getElementById('signOutBtn');
 const subtitle = document.getElementById('subtitle');
@@ -173,248 +179,107 @@ const memberEmail = document.getElementById('memberEmail');
 const adminsList = document.getElementById('adminsList');
 const banBtn = document.getElementById('banBtn');
 const clearGroupBtn = document.getElementById('clearGroupBtn');
-const zoomIn = document.getElementById('zoomIn')||document.getElementById('zoomIn');
+const zoomIn = document.getElementById('zoomIn');
 const zoomOut = document.getElementById('zoomOut');
 const zoomLabel = document.getElementById('zoomLabel');
-const createNote = document.getElementById('createNote');
-const createGroupBtnLocal = document.getElementById('createGroupBtn');
 
-// state
-let me = null; // {uid,name,email,photo}
-let currentGroup = null; // {id,name,public,ownerUid,members:...}
+let me = null;
+let currentGroup = null;
 let messagesUnsub = null;
 let isAdmin = false;
+let CONFIG_ADMIN = { password: null, maxGroups: 3, defaultGroup: 'general' };
 let zoom = Number(localStorage.getItem('zoom')||1);
 
-// helpers
+// ---------- helpers ----------
 function toast(t){ const el=document.createElement('div'); el.className='toast'; el.textContent=t; document.body.appendChild(el); setTimeout(()=>el.style.opacity='0',2200); setTimeout(()=>el.remove(),2600); }
 function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 function applyZoom(){ zoom=Math.min(1.6,Math.max(0.7,zoom)); document.documentElement.style.setProperty('zoom',zoom); zoomLabel.textContent=Math.round(zoom*100)+'%'; localStorage.setItem('zoom',zoom); }
 applyZoom();
-zoomIn?.addEventListener('click',()=>{ zoom+=0.1; applyZoom(); });
+if(zoomIn) zoomIn.addEventListener('click',()=>{ zoom+=0.1; applyZoom(); });
 zoomOut.addEventListener('click',()=>{ zoom-=0.1; applyZoom(); });
 
-// ========== AUTH ===========
-signInBtn.addEventListener('click', async ()=>{
-  try{ await signInWithPopup(auth, provider); }catch(e){ console.error(e); toast('Sign-in failed'); }
-});
-signOutBtn.addEventListener('click', async ()=>{ try{ await signOut(auth); }catch{} });
+// fetch admin config from Firestore
+async function loadAdminConfig(){ try{ const snap = await getDoc(doc(db,'config','admin')); if(snap.exists()){ const d = snap.data(); CONFIG_ADMIN.password = d.password; CONFIG_ADMIN.maxGroups = d.maxGroups||3; CONFIG_ADMIN.defaultGroup = d.defaultGroup||'general'; } }catch(e){ console.error('config load',e); } }
+loadAdminConfig();
 
-onAuthStateChanged(auth, async user =>{
-  if(user){
-    me = { uid: user.uid, name: user.displayName, email: user.email, photo: user.photoURL };
-    signInBtn.classList.add('hidden'); signOutBtn.classList.remove('hidden');
-    meName.textContent = me.name || me.email;
-    subtitle.textContent = `Signed in as ${me.name}`;
+// ---------- AUTH (redirect-based for mobile compatibility) ----------
+signInBtn.addEventListener('click', async ()=>{ try{ await signInWithRedirect(auth, provider); }catch(e){ console.error(e); toast('Sign-in error'); } });
 
-    // ensure default general group exists
-    await ensureGeneral();
+// finish redirect flow (if any)
+getRedirectResult(auth).then(async (res)=>{
+  if(res && res.user){ /* no-op, onAuthStateChanged will handle UI */ }
+}).catch(e=>{ console.error('redirect result',e); });
 
-    // load groups and admin status
-    await loadGroups();
+signOutBtn.addEventListener('click', async ()=>{ try{ await signOut(auth); toast('Signed out'); }catch(e){ console.error(e); } });
 
-    // check if user is admin by checking admins collection OR if they know admin password
-    const adm = await checkIsAdmin(me.uid);
-    if(adm){ setAdminMode(true); }
-
-  } else {
-    me = null; signInBtn.classList.remove('hidden'); signOutBtn.classList.add('hidden'); meName.textContent='Not signed'; subtitle.textContent='Sign in with Google'; clearUI(); }
-});
+onAuthStateChanged(auth, async user=>{
+  if(user){ me = { uid:user.uid, name:user.displayName, email:user.email, photo:user.photoURL }; signInBtn.classList.add('hidden'); signOutBtn.classList.remove('hidden'); meName.textContent = me.name || me.email; subtitle.textContent = `Signed in as ${me.name||me.email}`; try{ await setDoc(doc(db,'users',me.uid),{ name: me.name, email: me.email, photo: me.photo },{ merge:true }); }catch{} await ensureDefaultGroup(); await loadGroups(); const adm = await checkIsAdmin(me.uid); if(adm) setAdminMode(true); } else { me=null; signInBtn.classList.remove('hidden'); signOutBtn.classList.add('hidden'); meName.textContent='Not signed'; subtitle.textContent='Sign in with Google'; clearUI(); } });
 
 function clearUI(){ groupsList.innerHTML=''; msgList.innerHTML=''; chatCard.classList.add('hidden'); adminPanel.classList.add('hidden'); adminPanelBtn.classList.add('hidden'); }
 
-// ========== FIRESTORE HELPERS ===========
-async function ensureGeneral(){
-  const docRef = doc(db,'groups','general');
-  const snap = await getDoc(docRef);
-  if(!snap.exists()){
-    await setDoc(docRef,{ id:'general', name:'General', public:true, ownerUid:null, created: Date.now() });
-  }
-}
+// ---------- Ensure default general group ----------
+async function ensureDefaultGroup(){ try{ const gRef=doc(db,'groups',CONFIG_ADMIN.defaultGroup||'general'); const gSnap = await getDoc(gRef); if(!gSnap.exists()){ await setDoc(gRef,{ id: CONFIG_ADMIN.defaultGroup||'general', name:'General', public:true, ownerUid:null, created: serverTimestamp() }); } }catch(e){ console.error('ensure default',e); } }
 
+// ---------- Load groups list ----------
 async function loadGroups(){
   groupsList.innerHTML='';
-  const snaps = await getDocs(collection(db,'groups'));
-  const arr = [];
-  snaps.forEach(s=> arr.push(s.data()));
-  // ensure general first
-  arr.sort((a,b)=> (a.id==='general'? -1:0));
-  arr.forEach(g=> renderGroupItem(g));
+  try{
+    const snaps = await getDocs(collection(db,'groups'));
+    const arr = [];
+    snaps.forEach(s=> arr.push(s.data()));
+    arr.sort((a,b)=> (a.id===CONFIG_ADMIN.defaultGroup? -1 : (b.id===CONFIG_ADMIN.defaultGroup? 1:0)));
+    arr.forEach(g=> renderGroupItem(g));
+  }catch(e){ console.error('loadGroups',e); }
 }
 
-function renderGroupItem(g){
-  const el = document.createElement('div'); el.className='group'; el.innerHTML = `<div><div style='font-weight:700'>${escapeHtml(g.name)}</div><div class='small'>${g.public? 'Public' : 'Private'}</div></div>`;
-  el.addEventListener('click', ()=> openGroup(g.id));
-  groupsList.appendChild(el);
-}
+function renderGroupItem(g){ const el=document.createElement('div'); el.className='group'; el.innerHTML = `<div><div style='font-weight:700'>${escapeHtml(g.name||g.id)}</div><div class='small'>${g.public? 'Public' : 'Private'}</div></div>`; el.addEventListener('click', ()=> openGroup(g.id)); groupsList.appendChild(el); }
 
-// ========== OPEN GROUP ===========
-async function openGroup(id){
-  // fetch group
-  const gSnap = await getDoc(doc(db,'groups',id));
-  if(!gSnap.exists()){ toast('Group missing'); return; }
-  const g = gSnap.data();
+// ---------- Open group (membership checks) ----------
+async function openGroup(id){ try{ const gSnap = await getDoc(doc(db,'groups',id)); if(!gSnap.exists()){ toast('Group missing'); return; } const g = gSnap.data(); if(!g.public){ const members = g.members||{}; if(!me) { toast('Sign in to join'); return; } if(!(members[me.uid] || g.ownerUid===me.uid)) { toast('Private: you are not a member'); return; } } currentGroup = g; roomTitle.textContent = g.name; roomSubtitle.textContent = g.public? 'Public group' : 'Private group'; chatCard.classList.remove('hidden'); if(messagesUnsub) messagesUnsub(); const q = query(collection(db,'groups',id,'messages'), orderBy('ts')); messagesUnsub = onSnapshot(q,snap=>{ msgList.innerHTML=''; snap.forEach(d=> renderMessage(d.id,d.data())); msgList.scrollTop = msgList.scrollHeight; }); const adm = await checkIsAdmin(me?.uid); if(adm) adminPanelBtn.classList.remove('hidden'); else adminPanelBtn.classList.add('hidden'); }catch(e){ console.error('openGroup',e); } }
 
-  // membership check for private groups
-  if(!g.public){
-    const members = g.members||{};
-    if(!me){ toast('Sign in first'); return; }
-    if(!(members[me.uid] || g.ownerUid===me.uid || (g.admins && g.admins[me.uid]))){ toast('Private group — you are not a member'); return; }
-  }
+// ---------- Render message ----------
+function renderMessage(id,m){ try{ const el=document.createElement('div'); el.className='bubble'; if(me && m.uid===me.uid) el.classList.add('mine'); const when = m.ts && m.ts.toDate ? m.ts.toDate().toLocaleTimeString() : ''; el.innerHTML = `<div style='font-weight:700'>${escapeHtml(m.name||m.email||'unknown')}</div><div class='small'>${escapeHtml(when)}</div><div style='margin-top:6px'>${escapeHtml(m.text)}</div>`; // admin tools
+  if(isAdmin){ const tools=document.createElement('div'); tools.style.marginTop='6px'; tools.style.display='flex'; tools.style.gap='6px'; const edit=document.createElement('button'); edit.className='menuBtn'; edit.textContent='✏️'; edit.onclick=async (ev)=>{ ev.stopPropagation(); const nt = prompt('Edit message', m.text); if(nt!==null){ try{ await updateDoc(doc(db,'groups',currentGroup.id,'messages',id),{ text: nt, edited: true }); toast('Edited'); }catch(e){console.error(e); toast('Edit failed');} }}; const del=document.createElement('button'); del.className='menuBtn'; del.textContent='🗑️'; del.onclick=async (ev)=>{ ev.stopPropagation(); if(confirm('Delete this message?')){ try{ await deleteDoc(doc(db,'groups',currentGroup.id,'messages',id)); toast('Deleted'); }catch(e){console.error(e); toast('Delete failed'); } }}; tools.appendChild(edit); tools.appendChild(del); el.appendChild(tools); } msgList.appendChild(el);}catch(e){console.error('renderMessage',e);} }
 
-  currentGroup = g; roomTitle.textContent = g.name; roomSubtitle.textContent = g.public? 'Public group' : 'Private group';
-  chatCard.classList.remove('hidden');
-
-  // attach messages listener
-  if(messagesUnsub) messagesUnsub();
-  const q = query(collection(db,'groups',id,'messages'), orderBy('ts'));
-  messagesUnsub = onSnapshot(q, snap=>{
-    msgList.innerHTML='';
-    snap.forEach(d=>{
-      const m = d.data(); renderMessage(d.id,m);
-    });
-    msgList.scrollTop = msgList.scrollHeight;
-  });
-
-  // show admin panel button if admin
-  const adm = await checkIsAdmin(me?.uid);
-  if(adm) adminPanelBtn.classList.remove('hidden'); else adminPanelBtn.classList.add('hidden');
-}
-
-// render single message
-function renderMessage(id,m){
-  if(!m) return;
-  const el = document.createElement('div'); el.className='bubble'; if(me && m.uid===me.uid) el.classList.add('mine');
-  const ts = m.ts ? new Date(m.ts).toLocaleTimeString() : '';
-  el.innerHTML = `<div style='font-weight:700'>${escapeHtml(m.name||m.email||'unknown')}</div><div class='small'>${ts}</div><div style='margin-top:6px'>${escapeHtml(m.text)}</div>`;
-
-  // admin tools on each message
-  isAdminCheck().then(admin=>{
-    if(admin){
-      const tools = document.createElement('div'); tools.style.marginTop='6px'; tools.style.display='flex'; tools.style.gap='6px';
-      const edit = document.createElement('button'); edit.className='small'; edit.textContent='✏️'; edit.onclick=async (ev)=>{ ev.stopPropagation(); const nt = prompt('Edit message', m.text); if(nt!==null){ await updateDoc(doc(db,'groups',currentGroup.id,'messages',id),{ text: nt, edited: true }); toast('Edited'); }};
-      const del = document.createElement('button'); del.className='small'; del.textContent='🗑️'; del.onclick=async (ev)=>{ ev.stopPropagation(); if(confirm('Delete this message?')){ await deleteDoc(doc(db,'groups',currentGroup.id,'messages',id)); toast('Deleted'); }};
-      tools.appendChild(edit); tools.appendChild(del); el.appendChild(tools);
-    }
-  });
-
-  msgList.appendChild(el);
-}
-
-// ========== SENDING MESSAGES ===========
+// ---------- Send message ----------
 sendBtn.addEventListener('click', sendMessage);
 msgInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); sendMessage(); }});
-async function sendMessage(){
-  if(!me) return toast('Sign in first');
-  if(!currentGroup) return toast('Open a group');
-  // membership check for private
-  if(!currentGroup.public){ const members = currentGroup.members||{}; if(!(members[me.uid]|| currentGroup.ownerUid===me.uid || (currentGroup.admins && currentGroup.admins[me.uid]))){ return toast('You are not a member'); }}
-  const text = (msgInput.value||'').trim(); if(!text) return; msgInput.value='';
-  await addDoc(collection(db,'groups',currentGroup.id,'messages'),{ uid: me.uid, name: me.name, email: me.email, text, ts: Date.now() });
-}
+async function sendMessage(){ try{ if(!me) return toast('Sign in first'); if(!currentGroup) return toast('Open a group'); // ban check
+  const banSnap = await getDoc(doc(db,'banned',me.uid)); if(banSnap.exists()) return toast('You are banned'); // membership check for private
+  if(!currentGroup.public){ const members = currentGroup.members||{}; if(!(members[me.uid]|| currentGroup.ownerUid===me.uid)) return toast('Not a member'); }
+  const text = (msgInput.value||'').trim(); if(!text) return; msgInput.value=''; await addDoc(collection(db,'groups',currentGroup.id,'messages'),{ uid: me.uid, name: me.name, email: me.email, text, ts: serverTimestamp() }); }catch(e){ console.error('send',e); toast('Send failed'); } }
 
-// ========== ADMIN CHECKS and FLOW ===========
-// Two-step: first check admins collection; if not present, ask password via Firestore config/admin
-async function checkIsAdmin(uid){
-  if(!uid) return false;
-  // check admins collection
-  const aSnap = await getDoc(doc(db,'admins',uid));
-  if(aSnap.exists()) return true;
-  return false;
-}
+// ---------- Admin flows ----------
+async function checkIsAdmin(uid){ if(!uid) return false; try{ const snap = await getDoc(doc(db,'admins',uid)); return snap.exists(); }catch(e){ console.error('checkIsAdmin',e); return false; } }
 
-async function isAdminCheck(){ return isAdmin; }
-
-// Allow user to enter admin password once to become admin (password stored in config/admin.password)
-adminPanelBtn.addEventListener('click', async ()=>{
-  // ask if admin
-  const wants = confirm('Are you an admin? (enter password to become admin)');
-  if(!wants) return;
-  const pass = prompt('Admin password:'); if(pass===null) return;
-  try{
-    const cfg = await getDoc(doc(db,'config','admin'));
-    if(!cfg.exists()){ toast('Admin config missing'); return; }
-    const real = cfg.data().password;
-    if(pass === real){
-      // set admins/<uid> = true
-      await setDoc(doc(db,'admins',me.uid),{ email: me.email, name: me.name, addedAt: Date.now() });
-      setAdminMode(true);
-      toast('Admin enabled');
-    } else { toast('Wrong password'); }
-  }catch(e){ console.error(e); toast('Admin check failed'); }
-});
+adminPanelBtn.addEventListener('click', async ()=>{ // ask password flow
+  if(!me) return toast('Sign in first'); const wants = confirm('Admin login — enter password to become admin. Continue?'); if(!wants) return; const pass = prompt('Admin password'); if(pass===null) return; try{ const cfg = await getDoc(doc(db,'config','admin')); if(!cfg.exists()){ toast('Admin config missing'); return; } const real = cfg.data().password; if(String(pass) === String(real)){ await setDoc(doc(db,'admins',me.uid),{ email: me.email, name: me.name, addedAt: serverTimestamp() }); setAdminMode(true); toast('Admin enabled'); } else { toast('Wrong password'); } }catch(e){ console.error('admin flow',e); toast('Admin check failed'); } });
 
 function setAdminMode(on){ isAdmin = !!on; if(isAdmin){ adminPanel.classList.remove('hidden'); adminPanelBtn.classList.add('hidden'); loadAdminsList(); } else { adminPanel.classList.add('hidden'); adminPanelBtn.classList.remove('hidden'); } }
 
-async function loadAdminsList(){ adminsList.innerHTML=''; const snaps = await getDocs(collection(db,'admins')); snaps.forEach(s=>{ const d=s.data(); const el=document.createElement('div'); el.textContent = d.name || d.email || s.id; adminsList.appendChild(el); }); }
+async function loadAdminsList(){ try{ adminsList.innerHTML=''; const snaps = await getDocs(collection(db,'admins')); snaps.forEach(s=>{ const d=s.data(); const el=document.createElement('div'); el.textContent = d.name || d.email || s.id; adminsList.appendChild(el); }); }catch(e){ console.error(e); } }
 
-// ========== CREATE GROUP (Admin only) ===========
+// create group (admin only)
 doCreateGroup.addEventListener('click', async ()=>{
-  if(!isAdmin) return toast('Admins only');
-  const name = (newGroupName.value||'').trim(); if(!name) return toast('Enter group name');
-  // enforce max 3 groups total or per admin? requirement: admins can create 3 groups at most — we'll enforce per admin (count groups where ownerUid==me.uid)
-  const snaps = await getDocs(collection(db,'groups'));
-  const myGroups = [];
-  snaps.forEach(s=>{ const g=s.data(); if(g.ownerUid===me.uid) myGroups.push(g); });
-  if(myGroups.length >= 3) return toast('You already created 3 groups');
-  // create group id slug
-  const id = name.toLowerCase().replace(/[^a-z0-9_-]/g,'-').slice(0,28)+'_'+(Date.now().toString(36).slice(-5));
-  await setDoc(doc(db,'groups',id),{ id, name, public:false, ownerUid: me.uid, ownerName: me.name, created: Date.now(), members: {} });
-  toast('Group created'); newGroupName.value=''; loadGroups();
-});
+  if(!isAdmin) return toast('Admins only'); const name = (newGroupName.value||'').trim(); if(!name) return toast('Enter group name'); try{ // count how many groups this admin owns
+    const snaps = await getDocs(collection(db,'groups')); let myCount=0; snaps.forEach(s=>{ const g=s.data(); if(g.ownerUid===me.uid) myCount++; }); const cfgSnap = await getDoc(doc(db,'config','admin')); const maxG = cfgSnap.exists()? (cfgSnap.data().maxGroups||3) : 3; if(myCount>=maxG) return toast('You already created max groups'); // slug id
+    const id = name.toLowerCase().replace(/[^a-z0-9-_]/g,'-').slice(0,28) + '_' + (Date.now().toString(36).slice(-5)); await setDoc(doc(db,'groups',id),{ id, name, public:false, ownerUid: me.uid, ownerName: me.name, created: serverTimestamp(), members: {} }); toast('Group created'); newGroupName.value=''; loadGroups(); }catch(e){ console.error('create group',e); toast('Create failed'); } });
 
-// ========== ADD MEMBER (Admin) ===========
+// add member by email
 addMemberBtn.addEventListener('click', async ()=>{
-  if(!isAdmin) return toast('Admins only');
-  if(!currentGroup) return toast('Open a group');
-  const email = (memberEmail.value||'').trim().toLowerCase(); if(!email) return toast('Enter email');
-  // find uid by email from users collection
-  const usersSnap = await getDocs(collection(db,'users'));
-  let foundUid = null;
-  usersSnap.forEach(u=>{ const d=u.data(); if((d.email||'').toLowerCase()===email){ foundUid = u.id; }});
-  if(!foundUid) return toast('User not found — they must sign in once');
-  // set membership
-  await updateDoc(doc(db,'groups',currentGroup.id),{ ['members.'+foundUid]: true });
-  toast('Added'); memberEmail.value='';
-});
+  if(!isAdmin) return toast('Admins only'); if(!currentGroup) return toast('Open a group'); const email = (memberEmail.value||'').trim().toLowerCase(); if(!email) return toast('Enter email'); try{ const usersSnap = await getDocs(collection(db,'users')); let foundUid=null; usersSnap.forEach(u=>{ const d=u.data(); if((d.email||'').toLowerCase()===email) foundUid = u.id; }); if(!foundUid) return toast('User not found — they must sign in once'); await updateDoc(doc(db,'groups',currentGroup.id),{ ['members.'+foundUid]: true }); toast('Added'); memberEmail.value=''; }catch(e){ console.error('add member',e); toast('Add failed'); } });
 
-// ========== BAN & CLEAR ===========
-banBtn.addEventListener('click', async ()=>{
-  if(!isAdmin) return toast('Admins only');
-  const em = prompt('Enter email to ban (user will be blocked from sending)'); if(!em) return;
-  // find uid
-  const usersSnap = await getDocs(collection(db,'users'));
-  let foundUid = null; usersSnap.forEach(u=>{ const d=u.data(); if((d.email||'').toLowerCase()===em.toLowerCase()) foundUid=u.id; });
-  if(!foundUid) return toast('User not found');
-  await setDoc(doc(db,'banned',foundUid),{ email: em, by: me.email, at: Date.now() });
-  toast('User banned');
-});
+// ban user
+banBtn.addEventListener('click', async ()=>{ if(!isAdmin) return toast('Admins only'); const em = prompt('Enter email to ban'); if(!em) return; try{ const usersSnap = await getDocs(collection(db,'users')); let foundUid=null; usersSnap.forEach(u=>{ const d=u.data(); if((d.email||'').toLowerCase()===em.toLowerCase()) foundUid = u.id; }); if(!foundUid) return toast('User not found'); await setDoc(doc(db,'banned',foundUid),{ email: em, by: me.email, at: serverTimestamp() }); toast('User banned'); }catch(e){ console.error('ban',e); toast('Ban failed'); } });
 
-clearGroupBtn.addEventListener('click', async ()=>{
-  if(!isAdmin) return toast('Admins only');
-  if(!currentGroup) return toast('Open a group');
-  if(!confirm('Delete all messages in this group?')) return;
-  // fetch messages then delete
-  const msgsSnap = await getDocs(collection(db,'groups',currentGroup.id,'messages'));
-  const delOps = [];
-  msgsSnap.forEach(m=>{ delOps.push(deleteDoc(doc(db,'groups',currentGroup.id,'messages',m.id))); });
-  await Promise.all(delOps);
-  toast('Cleared');
-});
+// clear group messages
+clearGroupBtn.addEventListener('click', async ()=>{ if(!isAdmin) return toast('Admins only'); if(!currentGroup) return toast('Open a group'); if(!confirm('Delete all messages in this group?')) return; try{ const msgsSnap = await getDocs(collection(db,'groups',currentGroup.id,'messages')); const ops=[]; msgsSnap.forEach(m=> ops.push(deleteDoc(doc(db,'groups',currentGroup.id,'messages',m.id)))); await Promise.all(ops); toast('Cleared'); }catch(e){ console.error('clear',e); toast('Clear failed'); } });
 
-// ========== USER PROFILE WRITE (first sign-in) ===========
-onAuthStateChanged(auth, async user=>{
-  if(user){
-    // ensure user profile recorded
-    try{ await setDoc(doc(db,'users',user.uid),{ name: user.displayName, email: user.email, photo: user.photoURL },{ merge:true }); }catch(e){}
-  }
-});
+// leave group (for UI only)
+leaveBtn.addEventListener('click', ()=>{ currentGroup = null; chatCard.classList.add('hidden'); });
 
-// ========== UTIL: getDoc, getDocs, deleteDoc etc imported above ===========
-// ... already used above
-
-// ========== INITIAL: load groups if signed-in state already present ========
-(async ()=>{ try{ await ensureGeneral(); await loadGroups(); }catch(e){} })();
+// initial ensure and load
+(async ()=>{ try{ await loadAdminConfig(); await ensureDefaultGroup(); await loadGroups(); }catch(e){ console.error('init',e); } })();
 
 </script>
 </body>
