@@ -2,713 +2,420 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>💀 Religious & Spiritual Talking 💀</title>
-<meta name="theme-color" content="#000000" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>💀 Religious & Spiritual Talking — Friends</title>
+<meta name="theme-color" content="#000" />
 <style>
-  :root{
-    --bg:#050506; --card:#0f1112; --muted:#9aa0a6; --ink:#e6eef2; --line:#1f2326;
-    --accent:#7dd3fc; --accent-2:#a78bfa; --glass: rgba(255,255,255,0.03); --maxw:480px;
-    --kb:0px; /* updated when keyboard opens */
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-    --safe-top: env(safe-area-inset-top, 0px);
-  }
-
-  html,body{height:100%;margin:0}
-  body{
-    font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
-    background:linear-gradient(180deg,var(--bg),#000);
-    color:var(--ink);
-    -webkit-font-smoothing:antialiased;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    overscroll-behavior-y: contain;
-  }
-
-  /* shell uses dynamic viewport units for mobile keyboards */
-  .shell{
-    max-width:var(--maxw);
-    height:100dvh; /* mobile-correct viewport */
-    height:100svh;
-    height:-webkit-fill-available;
-    margin:0 auto;
-    display:flex;flex-direction:column;position:relative;overflow:hidden;
-    padding-top:var(--safe-top);
-    padding-bottom:calc(var(--safe-bottom) + var(--kb));
-  }
-
-  header.app{display:flex;align-items:center;gap:12px;padding:14px 14px 10px;
-    background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);
-    backdrop-filter:blur(2px);z-index:2}
-  .logo{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#061018;font-weight:900;box-shadow:0 6px 20px rgba(0,0,0,0.4)}
-  .title{font-weight:800;font-size:16px}
-  .subtitle{font-size:12px;color:var(--muted)}
-
-  .card{flex:1;background:var(--card);border-top-left-radius:24px;border-top-right-radius:24px;
-    display:flex;flex-direction:column;border-top:1px solid var(--line);position:relative;overflow:hidden;}
-
-  #chat{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;
-    -webkit-overflow-scrolling:touch}
-  .bubble{max-width:86%;padding:10px 14px;border-radius:14px;background:var(--glass);border:1px solid var(--line);
-    box-shadow:0 6px 20px rgba(0,0,0,0.35)}
-  .mine{margin-left:auto;background:linear-gradient(180deg,#0b1220,#0f1b2a);border:1px solid rgba(255,255,255,0.03)}
-  .hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-  .dot{width:10px;height:10px;border-radius:50%}
-  .name{font-weight:700;font-size:13px}
-  .msg{white-space:pre-wrap;word-break:break-word}
-  .meta{margin-top:6px;font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .readers{display:flex;gap:4px;align-items:center}
-
-  footer.bar{
-    position:sticky; bottom:0; left:0; right:0;
-    display:flex;gap:8px;padding:10px 12px;
-    border-top:1px solid var(--line);background:rgba(0,0,0,0.25);backdrop-filter:blur(6px);align-items:center
-  }
-  #msg{flex:1;padding:14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,0.02);color:var(--ink);outline:none;
-    font-size:16px; min-height:44px} /* >=16px avoids iOS zoom */
-  .icon, button.icon{
-    width:48px;height:48px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,0.02);
-    display:grid;place-items:center;flex:0 0 auto;font-size:18px
-  }
-  button{cursor:pointer;color:var(--ink);background:transparent;border:none;font-size:14px}
-
-  .panel{position:absolute;left:12px;right:12px;bottom:calc(80px + var(--kb));max-height:40vh;overflow:auto;background:var(--card);
-    border:1px solid var(--line);border-radius:16px;padding:8px;display:none;z-index:6;box-shadow:0 16px 40px rgba(0,0,0,.5)}
-  .panel.show{display:block}
-  .grid8{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
-  .grid8 button{padding:10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02);font-size:18px;min-height:44px}
-
-  .cover{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:40;pointer-events:auto}
-  .coverBackdrop{position:absolute;inset:0;background:linear-gradient(45deg, rgba(10,10,10,0.85), rgba(2,0,10,0.9));backdrop-filter:blur(8px);transition:opacity .45s ease}
-  .portalCard{position:relative;z-index:2;width:min(92vw,480px);max-width:420px;border-radius:20px;padding:22px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);box-shadow:0 30px 90px rgba(0,0,0,0.65);display:flex;flex-direction:column;align-items:center;gap:12px}
-  .portalTitle{font-size:20px;font-weight:800}
-  .portalSub{color:var(--muted);font-size:13px}
-  .unlockBtn{--s:64px;width:var(--s);height:var(--s);border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#041017;font-weight:800;border:none;box-shadow:0 20px 50px rgba(124,58,237,0.12);transform:translateZ(0);cursor:pointer}
-  .unlockBtn:hover{transform:scale(1.06)}
-  .passwordPanel{width:100%;max-width:360px;border-radius:14px;padding:12px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.04);display:flex;flex-direction:column;gap:8px;opacity:0;transform:translateY(20px) scale(.98);pointer-events:none;transition:opacity .32s ease, transform .32s}
-  .passwordPanel.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
-  .passwordInput{width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));color:var(--ink);outline:none;font-size:16px}
-  .passActions{display:flex;gap:8px;justify-content:flex-end}
-  .ghost{opacity:.7;font-size:13px;color:var(--muted)}
-
-  .ring{position:absolute;width:360px;height:360px;border-radius:50%;pointer-events:none;filter:blur(20px);opacity:0.08;background:radial-gradient(circle at 30% 30%, rgba(125,211,252,0.15), transparent 12%), radial-gradient(circle at 70% 70%, rgba(167,139,250,0.12), transparent 18%);transform:scale(.9)}
-  @media (max-width:480px){ .ring{width:260px;height:260px} .portalCard{padding:16px} }
-
-  .portalCard.enter{animation:portalIn .7s cubic-bezier(.2,.9,.2,1)}
-  @keyframes portalIn{ from{ transform:translateY(18px) scale(.98); opacity:0 } to{ transform:translateY(0) scale(1); opacity:1 } }
-
-  /* tiny helpers */
-  .chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);display:inline-block;margin:4px;font-size:12px}
-  .menuBtn{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--ink);min-height:44px}
-  .danger{color:#ef4444}
-
-  /* simple toast */
-  .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(26px + var(--safe-bottom)); background:#0b1220; color:#fff; padding:8px 12px; border-radius:10px; z-index:1200; box-shadow: 0 12px 40px rgba(0,0,0,.6); opacity: 1; transition: opacity .3s linear; }
+:root{--bg:#050506;--card:#0f1112;--muted:#9aa0a6;--ink:#e6eef2;--line:#1f2326;--accent:#7dd3fc;--accent2:#a78bfa}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#000);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
+.app{max-width:480px;margin:0 auto;height:100vh;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:12px;padding:12px}
+.logo{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#041017;font-weight:900}
+.title{font-weight:800}
+.subtitle{font-size:12px;color:var(--muted)}
+.container{flex:1;padding:10px;display:flex;flex-direction:column;gap:10px}
+.card{background:var(--card);border-radius:14px;padding:10px;border:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.groups{display:flex;flex-direction:column;gap:8px;overflow:auto}
+.group{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);cursor:pointer}
+.row{display:flex;gap:8px;align-items:center}
+.btn{background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;color:#041017;padding:8px 10px;border-radius:10px;cursor:pointer}
+.small{font-size:13px;color:var(--muted)}
+.chatShell{display:flex;flex-direction:column;height:62vh;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.chatHeader{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line)}
+.msgList{flex:1;padding:10px;overflow:auto;display:flex;flex-direction:column;gap:8px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+.bubble{max-width:78%;padding:10px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid var(--line)}
+.mine{margin-left:auto;background:linear-gradient(180deg,#0b1220,#0f1b2a)}
+.msgMeta{font-size:11px;color:var(--muted);margin-top:6px;display:flex;gap:8px;align-items:center}
+.chatFooter{display:flex;gap:8px;padding:8px;border-top:1px solid var(--line)}
+.input{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--ink);outline:none}
+.hidden{display:none}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;background:#0b1220;color:#fff;padding:8px 12px;border-radius:10px;z-index:999}
+.adminBox{padding:8px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid var(--line)}
+@media (max-width:420px){ .app{padding:6px} .chatShell{height:58vh} }
 </style>
 </head>
-<body data-theme="dark">
-  <div class="shell" id="appShell">
-    <header class="app">
+<body>
+  <div class="app" id="app">
+    <div class="top">
       <div class="logo">💬</div>
       <div style="flex:1">
         <div class="title">Religious & Spiritual Talking</div>
-        <div class="subtitle" id="who">Locked</div>
+        <div class="subtitle" id="subtitle">Friends-only chat • mobile-focused</div>
       </div>
-      <button id="emojiBtn" class="icon" title="Emoji" aria-label="Emoji">😊</button>
-      <button id="stkBtn" class="icon" title="Stickers" aria-label="Stickers">🖼️</button>
-    </header>
-
-    <div class="card">
-      <div id="chat" aria-live="polite"></div>
-      <div id="typing" class="subtitle" style="min-height:18px;padding:6px 12px"></div>
-      <div id="adminBar" style="display:none;">
-        <button id="themeToggle" class="menuBtn">🌓 Theme</button>
-        <button id="banCenter" class="menuBtn">🚫 Ban</button>
-        <button id="clearChat" class="menuBtn danger">🧹 Clear</button>
-        <button id="promote" class="menuBtn">⭐ Admin</button>
+      <div id="authArea" class="row">
+        <button id="signInBtn" class="btn">Sign in with Google</button>
+        <button id="signOutBtn" class="btn hidden">Sign out</button>
       </div>
     </div>
 
-    <footer class="bar">
-      <button id="gifBtn" class="icon" title="GIFs" aria-label="GIFs">🎞️</button>
-      <input id="msg" placeholder="Type…" autocomplete="off" inputmode="text" />
-      <button id="send" class="icon" title="Send" aria-label="Send">➡️</button>
-    </footer>
-  </div>
-
-  <!-- panels -->
-  <div id="emojiPanel" class="panel" aria-hidden="true"><div class="grid8" id="emojiGrid"></div></div>
-  <div id="stkPanel" class="panel" aria-hidden="true"><div class="grid8" id="stickerGrid"></div></div>
-  <div id="gifPanel" class="panel" aria-hidden="true"><div class="grid8" id="gifGrid"></div></div>
-
-  <!-- animated cover (unlock portal) -->
-  <div class="cover" id="cover" aria-hidden="false">
-    <div class="coverBackdrop" id="coverBackdrop"></div>
-    <div class="portalCard enter" role="dialog" aria-modal="true" aria-labelledby="portalTitle">
-      <div class="ring" aria-hidden="true"></div>
-      <div id="portalTitle" class="portalTitle">Spiritual Portal</div>
-      <div class="portalSub">Tap the core to reveal the lock</div>
-      <button id="unlockBtn" class="unlockBtn" aria-label="Unlock portal">Enter</button>
-      <div id="passwordPanel" class="passwordPanel" role="region" aria-hidden="true">
-        <input id="passwordInput" class="passwordInput" type="password" placeholder="Enter password" />
-        <div class="passActions">
-          <button id="passwordCancel" class="menuBtn">Cancel</button>
-          <button id="passwordSubmit" class="menuBtn">Unlock</button>
+    <div class="container">
+      <!-- Home: groups list -->
+      <div id="home" class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:800">Groups</div>
+            <div class="small">General is public — everyone can send</div>
+          </div>
+          <div class="row">
+            <button id="zoomOut" class="small">−</button>
+            <div id="zoomLabel" class="small">100%</div>
+            <button id="zoomIn" class="small">＋</button>
+          </div>
         </div>
-        <div class="ghost">Don't worry — stored only in your browser.</div>
+
+        <div id="groupsList" class="groups" style="margin-top:8px"></div>
+
+        <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+          <button id="createGroupBtn" class="btn">+ Create group</button>
+          <button id="adminPanelBtn" class="btn hidden">Admin</button>
+        </div>
+
+        <div id="createNote" class="small">Admins can create up to 3 groups (private). Use admin button to manage members.</div>
       </div>
+
+      <!-- Chat shell -->
+      <div id="chatCard" class="chatShell hidden">
+        <div class="chatHeader">
+          <div>
+            <div id="roomTitle" style="font-weight:800">Group</div>
+            <div class="small" id="roomSubtitle">Private / Public</div>
+          </div>
+          <div class="row">
+            <div id="meName" class="small">Not signed</div>
+            <button id="leaveBtn" class="small">Leave</button>
+          </div>
+        </div>
+
+        <div id="msgList" class="msgList"></div>
+
+        <div class="chatFooter">
+          <input id="msgInput" class="input" placeholder="Type a message…" />
+          <button id="sendBtn" class="btn">Send</button>
+        </div>
+      </div>
+
+      <!-- Admin panel modal area -->
+      <div id="adminPanel" class="card hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:800">Admin Controls</div>
+          <div class="small">You are admin</div>
+        </div>
+
+        <div class="adminBox">
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <input id="newGroupName" class="input" placeholder="New group name (private)" />
+            <button id="doCreateGroup" class="btn">Create</button>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+            <input id="memberEmail" class="input" placeholder="Add member by email (to selected group)" />
+            <button id="addMemberBtn" class="btn">Add</button>
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center">
+            <button id="banBtn" class="small">🚫 Ban user</button>
+            <button id="clearGroupBtn" class="small danger">🧹 Clear messages</button>
+          </div>
+
+          <div style="margin-top:10px">
+            <div class="small">Admins list (manage in console) — changes reflect here:</div>
+            <div id="adminsList" class="small"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <dialog id="setupDlg">
-    <h3 style="margin:0 0 6px 0">Create your identity</h3>
-    <div class="row"><input id="nameInput" placeholder="username (letters, numbers, _ or -)" /></div>
-    <div class="row"><input id="colorInput" type="color" value="#5eead4"/> <span class="subtitle">Pick bubble color</span></div>
-    <div class="chips" id="swatches"></div>
-    <div style="margin-top:10px">
-      <div class="subtitle">Live preview</div>
-      <div style="margin-top:8px" class="bubble" id="liveBubble"><div class="hdr"><span class="name">username</span></div><div class="msg">This is how your message will look.</div></div>
-    </div>
-    <div class="actions"><button id="setupOk" class="menuBtn">Continue</button></div>
-  </dialog>
-
-  <dialog id="adminDlg">
-    <h3>Admin password</h3>
-    <div class="row"><input id="adminInput" type="password" placeholder="admin password"/></div>
-    <div class="actions"><button id="adminOk" class="menuBtn">Unlock Admin</button></div>
-  </dialog>
-
-  <dialog id="banDlg"><h3>Ban/Unban</h3><div id="banList" class="list"></div><div class="actions"><button id="banClose" class="menuBtn">Close</button></div></dialog>
-
-  <dialog id="clearDlg">
-    <h3>Clear chat</h3>
-    <div style="margin-bottom:8px"><button id="selAll" class="menuBtn">Select All</button></div>
-    <div id="clearList" class="list"></div>
-    <div class="actions"><button id="clearClose" class="menuBtn">Cancel</button><button id="clearGo" class="menuBtn danger">Delete</button></div>
-  </dialog>
-
-  <dialog id="promoteDlg"><h3>Promote/Demote</h3><div id="promoteList" class="list"></div><div class="actions"><button id="promoteClose" class="menuBtn">Close</button></div></dialog>
-
-  <audio id="ping" preload="auto"></audio>
+  <div id="toastWrap"></div>
 
 <script type="module">
-/* ========================================================
-   Mobile-optimized chat + PWA manifest/service worker via Blobs
-   (Same features; added mobile polish and PWA bits.)
-======================================================== */
+// ========== IMPORT FIREBASE MODULES ===========
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import {
-  getDatabase, ref, get, set, update, onValue, push, remove, query, limitToLast, onChildAdded, onChildRemoved
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, where, limit, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-/* ---------- PWA manifest + icons via Blob ---------- */
-(async ()=>{
-  // draw simple maskable icons (PNG) at 192 & 512
-  async function makeIcon(size=192){
-    const c = document.createElement('canvas'); c.width=size; c.height=size; const ctx = c.getContext('2d');
-    const r = size/2;
-    // background gradient
-    const g = ctx.createLinearGradient(0,0,size,size);
-    g.addColorStop(0,'#7dd3fc'); g.addColorStop(1,'#a78bfa');
-    ctx.fillStyle = g; ctx.fillRect(0,0,size,size);
-    // maskable safe zone circle
-    ctx.fillStyle = 'rgba(0,0,0,0.08)'; ctx.beginPath(); ctx.arc(r,r,r*0.86,0,Math.PI*2); ctx.fill();
-    // chat bubble
-    ctx.fillStyle = '#061018'; ctx.beginPath();
-    const w = size*0.58, h = size*0.42; const x = r - w/2, y = r - h/2;
-    const rad = size*0.08;
-    ctx.moveTo(x+rad,y);
-    ctx.arcTo(x+w,y,x+w,y+h,rad);
-    ctx.arcTo(x+w,y+h,x+w*0.66,y+h,rad);
-    ctx.lineTo(x+w*0.5,y+h+size*0.10);
-    ctx.lineTo(x+w*0.46,y+h);
-    ctx.arcTo(x,y+h,x,y,rad);
-    ctx.arcTo(x,y,x+w,y,rad);
-    ctx.closePath(); ctx.fill();
-    // inner dots
-    ctx.fillStyle = '#e6eef2';
-    const d = size*0.06, gap=size*0.09, cy=y+h*0.55, sx=x+w*0.3;
-    [0,1,2].forEach(i=>{ ctx.beginPath(); ctx.arc(sx+i*gap,cy,d,0,Math.PI*2); ctx.fill(); });
-    return new Promise(res=> c.toBlob(b=> res(URL.createObjectURL(b)), 'image/png'));
-  }
-  const [i192,i512] = await Promise.all([makeIcon(192), makeIcon(512)]);
-  const manifest = {
-    name: "Religious & Spiritual Talking",
-    short_name: "Spiritual Chat",
-    start_url: ".",
-    display: "standalone",
-    background_color: "#0b1220",
-    theme_color: "#000000",
-    icons: [
-      { src: i192, sizes: "192x192", type: "image/png", purpose: "any maskable" },
-      { src: i512, sizes: "512x512", type: "image/png", purpose: "any maskable" }
-    ]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('link'); link.rel='manifest'; link.href=url; document.head.appendChild(link);
-
-  // register minimal SW (https/localhost only)
-  if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
-    const swCode = `
-      self.addEventListener('install', e => self.skipWaiting());
-      self.addEventListener('activate', e => self.clients.claim());
-      // Optional: very light offline fallback (no caching of RTDB calls)
-    `;
-    const swBlob = new Blob([swCode], {type:'text/javascript'});
-    const swUrl = URL.createObjectURL(swBlob);
-    try{ await navigator.serviceWorker.register(swUrl); }catch{}
-  }
-})();
-
-/* ---------------- firebase config ---------------- */
+// ========== CONFIG — REPLACE WITH YOUR FIREBASE ========
 const firebaseConfig = {
-  apiKey: "AIzaSyA206LK5i1usX8BrSduDV1h8lIWf-0cjnQ",
-  authDomain: "messages-bd41e.firebaseapp.com",
-  projectId: "messages-bd41e",
-  storageBucket: "messages-bd41e.firebasestorage.app",
-  messagingSenderId: "779486859427",
-  appId: "1:779486859427:web:13e8ba714ede73b393ef16",
-  databaseURL: "https://messages-bd41e-default-rtdb.firebaseio.com/"
+  apiKey: "PASTE_API_KEY",
+  authDomain: "PASTE_PROJECT.firebaseapp.com",
+  projectId: "PASTE_PROJECT",
+  storageBucket: "PASTE_PROJECT.appspot.com",
+  messagingSenderId: "PASTE_MSG_ID",
+  appId: "PASTE_APP_ID"
 };
+
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-/* ---------------- helpers ---------------- */
-const $ = (s, r=document) => r.querySelector(s);
-function safeGet(k){ try{ return localStorage.getItem(k); }catch{ return null; } }
-function safeSet(k,v){ try{ localStorage.setItem(k,v); }catch{} }
-function toast(msg){
-  const el = document.createElement('div');
-  el.className = 'toast';
-  el.textContent = msg;
-  document.body.appendChild(el);
-  setTimeout(()=> el.style.opacity = '0', 2200);
-  setTimeout(()=> el.remove(), 2600);
-}
-function sanitizeName(n){ if(!n) return null; try{ n=String(n).normalize('NFKD').replace(/[\u0300-\u036f]/g,''); }catch(e){} return String(n).toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,20) || null; }
-function fmt(ts){ try{ return new Date(ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }catch{ return ''; } }
-function tint(hex,alpha){ return `color-mix(in srgb, ${hex} ${Math.min(100,Math.max(0,alpha*100))}%, transparent)`; }
+// ========== UI REFS ===========
+const signInBtn = document.getElementById('signInBtn');
+const signOutBtn = document.getElementById('signOutBtn');
+const subtitle = document.getElementById('subtitle');
+const groupsList = document.getElementById('groupsList');
+const createGroupBtn = document.getElementById('createGroupBtn');
+const adminPanelBtn = document.getElementById('adminPanelBtn');
+const chatCard = document.getElementById('chatCard');
+const roomTitle = document.getElementById('roomTitle');
+const roomSubtitle = document.getElementById('roomSubtitle');
+const meName = document.getElementById('meName');
+const msgList = document.getElementById('msgList');
+const msgInput = document.getElementById('msgInput');
+const sendBtn = document.getElementById('sendBtn');
+const leaveBtn = document.getElementById('leaveBtn');
+const adminPanel = document.getElementById('adminPanel');
+const doCreateGroup = document.getElementById('doCreateGroup');
+const newGroupName = document.getElementById('newGroupName');
+const addMemberBtn = document.getElementById('addMemberBtn');
+const memberEmail = document.getElementById('memberEmail');
+const adminsList = document.getElementById('adminsList');
+const banBtn = document.getElementById('banBtn');
+const clearGroupBtn = document.getElementById('clearGroupBtn');
+const zoomIn = document.getElementById('zoomIn')||document.getElementById('zoomIn');
+const zoomOut = document.getElementById('zoomOut');
+const zoomLabel = document.getElementById('zoomLabel');
+const createNote = document.getElementById('createNote');
+const createGroupBtnLocal = document.getElementById('createGroupBtn');
 
-/* ---------------- app state ---------------- */
-let myName = sanitizeName(safeGet('user_v3'));
-let myColor = safeGet('color_v3') || '#5eead4';
-let authed = safeGet('auth_v3') === '1';
-let isAdmin = safeGet('is_admin_v3') === '1';
-const CORE_ADMIN_RAW = ['aditya','vishwatej'];
-const CORE_ADMINS = {}; CORE_ADMIN_RAW.forEach(n=>{ const s=sanitizeName(n); if(s) CORE_ADMINS[s]=true; });
-const CHAT_PASSWORD = 'innocent_people_only';
-const ADMIN_PASSWORD = 'admin_secret_2025';
+// state
+let me = null; // {uid,name,email,photo}
+let currentGroup = null; // {id,name,public,ownerUid,members:...}
+let messagesUnsub = null;
+let isAdmin = false;
+let zoom = Number(localStorage.getItem('zoom')||1);
 
-/* ---------------- DOM refs ---------------- */
-const cover = $('#cover'), coverBackdrop = $('#coverBackdrop'), unlockBtn = $('#unlockBtn');
-const passwordPanel = $('#passwordPanel'), passwordInput = $('#passwordInput');
-const passwordSubmit = $('#passwordSubmit'), passwordCancel = $('#passwordCancel');
+// helpers
+function toast(t){ const el=document.createElement('div'); el.className='toast'; el.textContent=t; document.body.appendChild(el); setTimeout(()=>el.style.opacity='0',2200); setTimeout(()=>el.remove(),2600); }
+function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+function applyZoom(){ zoom=Math.min(1.6,Math.max(0.7,zoom)); document.documentElement.style.setProperty('zoom',zoom); zoomLabel.textContent=Math.round(zoom*100)+'%'; localStorage.setItem('zoom',zoom); }
+applyZoom();
+zoomIn?.addEventListener('click',()=>{ zoom+=0.1; applyZoom(); });
+zoomOut.addEventListener('click',()=>{ zoom-=0.1; applyZoom(); });
 
-const setupDlg = $('#setupDlg'), nameInput = $('#nameInput'), colorInput = $('#colorInput');
-const swatches = $('#swatches'), setupOk = $('#setupOk'), liveBubble = $('#liveBubble');
-
-const adminDlg = $('#adminDlg'), adminInput = $('#adminInput'), adminOk = $('#adminOk');
-
-const who = $('#who'), chat = $('#chat'), msg = $('#msg'), send = $('#send'), typing = $('#typing');
-const emojiBtn = $('#emojiBtn'), stkBtn = $('#stkBtn'), gifBtn = $('#gifBtn');
-
-const emojiPanel = $('#emojiPanel'), stkPanel = $('#stkPanel'), gifPanel = $('#gifPanel');
-const emojiGrid = $('#emojiGrid'), stickerGrid = $('#stickerGrid'), gifGrid = $('#gifGrid');
-
-const adminsRef = ref(db,'meta/admins');
-
-/* ---------- Mobile: keyboard avoidance with visualViewport ---------- */
-(function keyboardFit(){
-  if(window.visualViewport){
-    const fit = () => {
-      const vv = window.visualViewport;
-      const kb = Math.max(0, (window.innerHeight - vv.height));
-      document.documentElement.style.setProperty('--kb', kb ? kb + 'px' : '0px');
-    };
-    visualViewport.addEventListener('resize', fit);
-    visualViewport.addEventListener('scroll', fit);
-    window.addEventListener('orientationchange', fit);
-    fit();
-  }
-})();
-
-/* ---------------- ensure admin meta exists ---------------- */
-(async ()=>{ try{ const s = await get(adminsRef); if(!s.exists()) await set(adminsRef, CORE_ADMINS); }catch{} })();
-
-/* ---------------- audio ---------------- */
-const ping = $('#ping'); ping.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYAAABkYXRhBAAAABAwMD8/';
-
-/* ---------------- emoji/stickers/gifs ---------------- */
-const EMOJI = ['😂','😭','🔥','💀','🤡','🙏','😈','👀','🧿','🤯','💩','✨','🥴','🕉️','🔮','👺','😤','🚩','🪦','😎','🤌','🙃','🤖','💬'];
-const STICKERS = ['💀💀','😭😭','🔥💀','🕉️🤡','👹🚩','😈✨','🤯🔮','😂💩','👀👀','🙏💀'];
-const GIFS = ['skull','cry','wtf','boom','evil','lol','clap','nope','angry','ok'];
-
-EMOJI.forEach(e=>{ const b=document.createElement('button'); b.textContent=e; b.onclick=()=>{ msg.value+=e; msg.focus(); }; emojiGrid.appendChild(b);});
-STICKERS.forEach(s=>{ const b=document.createElement('button'); b.textContent=s; b.onclick=()=> sendSticker(s); stickerGrid.appendChild(b);});
-GIFS.forEach(g=>{ const b=document.createElement('button'); b.textContent=g; b.onclick=()=> sendGif(g); gifGrid.appendChild(b);});
-
-emojiBtn.addEventListener('click', ()=> togglePanel(emojiPanel));
-stkBtn.addEventListener('click', ()=> togglePanel(stkPanel));
-gifBtn.addEventListener('click', ()=> togglePanel(gifPanel));
-function togglePanel(p){ [emojiPanel,stkPanel,gifPanel].forEach(x=>{ if(x!==p) x.classList.remove('show'); }); p.classList.toggle('show'); }
-
-/* ---------------- cover + prompt flow ---------------- */
-function showCover(){ cover.style.display = 'flex'; coverBackdrop.style.opacity = '1'; }
-function hideCover(){ cover.style.display = 'none'; }
-function revealPasswordPanel(){ passwordPanel.classList.add('show'); passwordPanel.setAttribute('aria-hidden','false'); passwordInput.focus(); }
-function hidePasswordPanel(){ passwordPanel.classList.remove('show'); passwordPanel.setAttribute('aria-hidden','true'); }
-
-unlockBtn.addEventListener('click', ()=> {
-  unlockBtn.animate([{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:360});
-  setTimeout(()=> revealPasswordPanel(), 220);
+// ========== AUTH ===========
+signInBtn.addEventListener('click', async ()=>{
+  try{ await signInWithPopup(auth, provider); }catch(e){ console.error(e); toast('Sign-in failed'); }
 });
-passwordCancel.addEventListener('click', ()=> hidePasswordPanel());
-passwordSubmit.addEventListener('click', doUnlock);
-passwordInput.addEventListener('keydown', e=>{ if(e.key==='Enter') doUnlock(); });
+signOutBtn.addEventListener('click', async ()=>{ try{ await signOut(auth); }catch{} });
 
-async function doUnlock(){
-  try{
-    const pass = String(passwordInput.value||'').trim();
-    if(pass === CHAT_PASSWORD){
-      safeSet('auth_v3','1'); authed = true;
-      coverBackdrop.style.transition = 'opacity .45s ease'; coverBackdrop.style.opacity = '0';
-      const pc = document.querySelector('.portalCard');
-      if(pc){ pc.style.transition = 'transform .5s ease, opacity .5s ease'; pc.style.transform = 'translateY(-18px) scale(.98)'; pc.style.opacity = '0'; }
-      setTimeout(()=> hideCover(), 520);
-      passwordInput.value = '';
-      if(myName){ syncTheme(); showSetupIfNeeded(false); } else { try{ setupDlg.showModal(); nameInput.focus(); }catch{} }
-    } else {
-      toast('Wrong password'); passwordInput.value=''; passwordInput.focus();
-    }
-  }catch{
-    toast('Unlock failed');
+onAuthStateChanged(auth, async user =>{
+  if(user){
+    me = { uid: user.uid, name: user.displayName, email: user.email, photo: user.photoURL };
+    signInBtn.classList.add('hidden'); signOutBtn.classList.remove('hidden');
+    meName.textContent = me.name || me.email;
+    subtitle.textContent = `Signed in as ${me.name}`;
+
+    // ensure default general group exists
+    await ensureGeneral();
+
+    // load groups and admin status
+    await loadGroups();
+
+    // check if user is admin by checking admins collection OR if they know admin password
+    const adm = await checkIsAdmin(me.uid);
+    if(adm){ setAdminMode(true); }
+
+  } else {
+    me = null; signInBtn.classList.remove('hidden'); signOutBtn.classList.add('hidden'); meName.textContent='Not signed'; subtitle.textContent='Sign in with Google'; clearUI(); }
+});
+
+function clearUI(){ groupsList.innerHTML=''; msgList.innerHTML=''; chatCard.classList.add('hidden'); adminPanel.classList.add('hidden'); adminPanelBtn.classList.add('hidden'); }
+
+// ========== FIRESTORE HELPERS ===========
+async function ensureGeneral(){
+  const docRef = doc(db,'groups','general');
+  const snap = await getDoc(docRef);
+  if(!snap.exists()){
+    await setDoc(docRef,{ id:'general', name:'General', public:true, ownerUid:null, created: Date.now() });
   }
 }
 
-/* prompt on first load as before */
-if(!authed){
-  showCover();
-  setTimeout(()=> {
-    try{
-      const p = prompt('Enter password to unlock:');
-      if(p === null){
-        // do nothing; user can use the portal UI
-      } else if(p === CHAT_PASSWORD){
-        safeSet('auth_v3','1'); authed = true; hideCover(); toast('Unlocked via prompt!');
-      } else {
-        alert('Wrong password — reload to try again'); location.reload();
-      }
-    }catch{
-      showCover();
-    }
-  }, 120);
-} else {
-  hideCover();
+async function loadGroups(){
+  groupsList.innerHTML='';
+  const snaps = await getDocs(collection(db,'groups'));
+  const arr = [];
+  snaps.forEach(s=> arr.push(s.data()));
+  // ensure general first
+  arr.sort((a,b)=> (a.id==='general'? -1:0));
+  arr.forEach(g=> renderGroupItem(g));
 }
 
-/* ---------------- setup dialog ---------------- */
-const SWATCH = ['#5eead4','#60a5fa','#f472b6','#fbbf24','#34d399','#a78bfa','#fb7185','#f59e0b'];
-SWATCH.forEach(c=>{ const b=document.createElement('button'); b.className='chip'; b.style.background=tint(c,.12); b.title=c; b.onclick=()=>{ colorInput.value=c; updatePreview(); }; swatches.appendChild(b); });
-function updatePreview(){ const n=(nameInput.value||'username'); const c=colorInput.value||'#5eead4'; const nm = liveBubble.querySelector('.name'); if(nm) nm.textContent=n; liveBubble.style.background = tint(c,.12); }
-nameInput.addEventListener('input', updatePreview);
-colorInput.addEventListener('input', updatePreview);
-updatePreview();
-
-setupOk.addEventListener('click', async ()=>{
-  try{
-    const raw = (nameInput.value||'').trim();
-    const sanitized = sanitizeName(raw);
-    if(!sanitized){ toast('Pick a valid username'); return; }
-    const uRef = ref(db,'users/'+sanitized);
-    const snap = await get(uRef);
-    if(snap.exists() && sanitized !== myName){ toast('Username taken'); return; }
-    myName = sanitized; myColor = colorInput.value || '#5eead4';
-    safeSet('user_v3', myName); safeSet('color_v3', myColor);
-    const adminSnap = await get(adminsRef); const adminsMap = adminSnap.val() || {};
-    if(adminsMap[myName] || CORE_ADMINS[myName]){ adminDlg.showModal(); adminInput.focus(); } else { await saveUserProfile(false); setupDlg.close(); bootChat(); syncTheme(); toast('Welcome '+myName); }
-  }catch{
-    toast('Setup failed');
-  }
-});
-
-/* admin unlock */
-adminOk.addEventListener('click', async ()=>{
-  try{
-    if(String(adminInput.value||'') === ADMIN_PASSWORD){
-      isAdmin = true; safeSet('is_admin_v3','1'); await saveUserProfile(true); adminDlg.close(); setupDlg.close(); bootChat(); syncTheme(); toast('Admin enabled');
-    } else { toast('Wrong admin password'); }
-  }catch{
-    toast('Admin error');
-  }
-});
-
-async function saveUserProfile(admin){
-  try{
-    await set(ref(db,'users/'+myName), { color: myColor, admin: !!admin, updated: Date.now() });
-    if(admin) await update(adminsRef, { [myName]: true });
-  }catch{}
+function renderGroupItem(g){
+  const el = document.createElement('div'); el.className='group'; el.innerHTML = `<div><div style='font-weight:700'>${escapeHtml(g.name)}</div><div class='small'>${g.public? 'Public' : 'Private'}</div></div>`;
+  el.addEventListener('click', ()=> openGroup(g.id));
+  groupsList.appendChild(el);
 }
 
-/* ---------------- theme/admins ---------------- */
-const themeRef = ref(db,'meta/theme');
-function syncTheme(){ try{ onValue(themeRef, s=>{ const t=s.val()||'dark'; document.body.setAttribute('data-theme', t); const meta=document.querySelector('meta[name="theme-color"]'); if(meta) meta.setAttribute('content', t==='light'?'#ffffff':'#000000'); }); }catch{} }
-$('#themeToggle')?.addEventListener('click', async ()=>{ if(!isAdmin){ toast('Admins only'); return; } try{ const t = document.body.getAttribute('data-theme')==='dark' ? 'light' : 'dark'; await set(themeRef,t);}catch{} });
+// ========== OPEN GROUP ===========
+async function openGroup(id){
+  // fetch group
+  const gSnap = await getDoc(doc(db,'groups',id));
+  if(!gSnap.exists()){ toast('Group missing'); return; }
+  const g = gSnap.data();
 
-onValue(adminsRef, s=>{
-  try{
-    const map = s.val() || {};
-    isAdmin = !!map[myName] || CORE_ADMINS[myName] || (safeGet('is_admin_v3')==='1');
-    safeSet('is_admin_v3', isAdmin ? '1' : '0');
-    const bar = $('#adminBar'); if(bar) bar.style.display = isAdmin ? 'flex' : 'none';
-  }catch{}
-});
+  // membership check for private groups
+  if(!g.public){
+    const members = g.members||{};
+    if(!me){ toast('Sign in first'); return; }
+    if(!(members[me.uid] || g.ownerUid===me.uid || (g.admins && g.admins[me.uid]))){ toast('Private group — you are not a member'); return; }
+  }
 
-/* ---------------- messaging ---------------- */
-const messagesMap = {};
-const msgsRef = query(ref(db,'messages'), limitToLast(200));
-let lastSender = null;
-const io = new IntersectionObserver(entries=>{
-  entries.forEach(async en=>{
-    try{
-      if(en.isIntersecting && en.target.dataset.id && myName){
-        await set(ref(db,`messages/${en.target.dataset.id}/readers/${myName}`), true);
-      }
-    }catch{}
-  });
-},{root: $('#chat'), threshold:0.6});
+  currentGroup = g; roomTitle.textContent = g.name; roomSubtitle.textContent = g.public? 'Public group' : 'Private group';
+  chatCard.classList.remove('hidden');
 
-function attachMessageListeners(){
-  try{
-    onChildAdded(msgsRef, snap=>{
-      const m = snap.val();
-      if(!m) return;
-      renderMsg(snap.key,m);
-      if(m.user !== myName){
-        try{ ping.currentTime = 0; ping.play(); }catch{}
-      }
-      // auto-scroll on new msg if user near bottom
-      const nearBottom = (chat.scrollHeight - chat.scrollTop - chat.clientHeight) < 120;
-      if(nearBottom) chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+  // attach messages listener
+  if(messagesUnsub) messagesUnsub();
+  const q = query(collection(db,'groups',id,'messages'), orderBy('ts'));
+  messagesUnsub = onSnapshot(q, snap=>{
+    msgList.innerHTML='';
+    snap.forEach(d=>{
+      const m = d.data(); renderMessage(d.id,m);
     });
-    onChildRemoved(ref(db,'messages'), snap=>{
-      const id = snap.key;
-      if(!id) return;
-      if(messagesMap[id]){
-        const obj = messagesMap[id];
-        if(obj.el) obj.el.remove();
-        delete messagesMap[id];
-      }
-    });
-  }catch{}
+    msgList.scrollTop = msgList.scrollHeight;
+  });
+
+  // show admin panel button if admin
+  const adm = await checkIsAdmin(me?.uid);
+  if(adm) adminPanelBtn.classList.remove('hidden'); else adminPanelBtn.classList.add('hidden');
 }
 
-async function renderExistingAndListen(){
+// render single message
+function renderMessage(id,m){
+  if(!m) return;
+  const el = document.createElement('div'); el.className='bubble'; if(me && m.uid===me.uid) el.classList.add('mine');
+  const ts = m.ts ? new Date(m.ts).toLocaleTimeString() : '';
+  el.innerHTML = `<div style='font-weight:700'>${escapeHtml(m.name||m.email||'unknown')}</div><div class='small'>${ts}</div><div style='margin-top:6px'>${escapeHtml(m.text)}</div>`;
+
+  // admin tools on each message
+  isAdminCheck().then(admin=>{
+    if(admin){
+      const tools = document.createElement('div'); tools.style.marginTop='6px'; tools.style.display='flex'; tools.style.gap='6px';
+      const edit = document.createElement('button'); edit.className='small'; edit.textContent='✏️'; edit.onclick=async (ev)=>{ ev.stopPropagation(); const nt = prompt('Edit message', m.text); if(nt!==null){ await updateDoc(doc(db,'groups',currentGroup.id,'messages',id),{ text: nt, edited: true }); toast('Edited'); }};
+      const del = document.createElement('button'); del.className='small'; del.textContent='🗑️'; del.onclick=async (ev)=>{ ev.stopPropagation(); if(confirm('Delete this message?')){ await deleteDoc(doc(db,'groups',currentGroup.id,'messages',id)); toast('Deleted'); }};
+      tools.appendChild(edit); tools.appendChild(del); el.appendChild(tools);
+    }
+  });
+
+  msgList.appendChild(el);
+}
+
+// ========== SENDING MESSAGES ===========
+sendBtn.addEventListener('click', sendMessage);
+msgInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); sendMessage(); }});
+async function sendMessage(){
+  if(!me) return toast('Sign in first');
+  if(!currentGroup) return toast('Open a group');
+  // membership check for private
+  if(!currentGroup.public){ const members = currentGroup.members||{}; if(!(members[me.uid]|| currentGroup.ownerUid===me.uid || (currentGroup.admins && currentGroup.admins[me.uid]))){ return toast('You are not a member'); }}
+  const text = (msgInput.value||'').trim(); if(!text) return; msgInput.value='';
+  await addDoc(collection(db,'groups',currentGroup.id,'messages'),{ uid: me.uid, name: me.name, email: me.email, text, ts: Date.now() });
+}
+
+// ========== ADMIN CHECKS and FLOW ===========
+// Two-step: first check admins collection; if not present, ask password via Firestore config/admin
+async function checkIsAdmin(uid){
+  if(!uid) return false;
+  // check admins collection
+  const aSnap = await getDoc(doc(db,'admins',uid));
+  if(aSnap.exists()) return true;
+  return false;
+}
+
+async function isAdminCheck(){ return isAdmin; }
+
+// Allow user to enter admin password once to become admin (password stored in config/admin.password)
+adminPanelBtn.addEventListener('click', async ()=>{
+  // ask if admin
+  const wants = confirm('Are you an admin? (enter password to become admin)');
+  if(!wants) return;
+  const pass = prompt('Admin password:'); if(pass===null) return;
   try{
-    const all = await get(ref(db,'messages'));
-    const data = all.val() || {};
-    $('#chat').innerHTML = '';
-    lastSender = null;
-    const entries = Object.entries(data).sort((a,b)=> (a[1].ts||0) - (b[1].ts||0));
-    for(const [id,m] of entries) renderMsg(id,m);
-    $('#chat').scrollTop = $('#chat').scrollHeight;
-    attachMessageListeners();
-  }catch{
-    attachMessageListeners();
+    const cfg = await getDoc(doc(db,'config','admin'));
+    if(!cfg.exists()){ toast('Admin config missing'); return; }
+    const real = cfg.data().password;
+    if(pass === real){
+      // set admins/<uid> = true
+      await setDoc(doc(db,'admins',me.uid),{ email: me.email, name: me.name, addedAt: Date.now() });
+      setAdminMode(true);
+      toast('Admin enabled');
+    } else { toast('Wrong password'); }
+  }catch(e){ console.error(e); toast('Admin check failed'); }
+});
+
+function setAdminMode(on){ isAdmin = !!on; if(isAdmin){ adminPanel.classList.remove('hidden'); adminPanelBtn.classList.add('hidden'); loadAdminsList(); } else { adminPanel.classList.add('hidden'); adminPanelBtn.classList.remove('hidden'); } }
+
+async function loadAdminsList(){ adminsList.innerHTML=''; const snaps = await getDocs(collection(db,'admins')); snaps.forEach(s=>{ const d=s.data(); const el=document.createElement('div'); el.textContent = d.name || d.email || s.id; adminsList.appendChild(el); }); }
+
+// ========== CREATE GROUP (Admin only) ===========
+doCreateGroup.addEventListener('click', async ()=>{
+  if(!isAdmin) return toast('Admins only');
+  const name = (newGroupName.value||'').trim(); if(!name) return toast('Enter group name');
+  // enforce max 3 groups total or per admin? requirement: admins can create 3 groups at most — we'll enforce per admin (count groups where ownerUid==me.uid)
+  const snaps = await getDocs(collection(db,'groups'));
+  const myGroups = [];
+  snaps.forEach(s=>{ const g=s.data(); if(g.ownerUid===me.uid) myGroups.push(g); });
+  if(myGroups.length >= 3) return toast('You already created 3 groups');
+  // create group id slug
+  const id = name.toLowerCase().replace(/[^a-z0-9_-]/g,'-').slice(0,28)+'_'+(Date.now().toString(36).slice(-5));
+  await setDoc(doc(db,'groups',id),{ id, name, public:false, ownerUid: me.uid, ownerName: me.name, created: Date.now(), members: {} });
+  toast('Group created'); newGroupName.value=''; loadGroups();
+});
+
+// ========== ADD MEMBER (Admin) ===========
+addMemberBtn.addEventListener('click', async ()=>{
+  if(!isAdmin) return toast('Admins only');
+  if(!currentGroup) return toast('Open a group');
+  const email = (memberEmail.value||'').trim().toLowerCase(); if(!email) return toast('Enter email');
+  // find uid by email from users collection
+  const usersSnap = await getDocs(collection(db,'users'));
+  let foundUid = null;
+  usersSnap.forEach(u=>{ const d=u.data(); if((d.email||'').toLowerCase()===email){ foundUid = u.id; }});
+  if(!foundUid) return toast('User not found — they must sign in once');
+  // set membership
+  await updateDoc(doc(db,'groups',currentGroup.id),{ ['members.'+foundUid]: true });
+  toast('Added'); memberEmail.value='';
+});
+
+// ========== BAN & CLEAR ===========
+banBtn.addEventListener('click', async ()=>{
+  if(!isAdmin) return toast('Admins only');
+  const em = prompt('Enter email to ban (user will be blocked from sending)'); if(!em) return;
+  // find uid
+  const usersSnap = await getDocs(collection(db,'users'));
+  let foundUid = null; usersSnap.forEach(u=>{ const d=u.data(); if((d.email||'').toLowerCase()===em.toLowerCase()) foundUid=u.id; });
+  if(!foundUid) return toast('User not found');
+  await setDoc(doc(db,'banned',foundUid),{ email: em, by: me.email, at: Date.now() });
+  toast('User banned');
+});
+
+clearGroupBtn.addEventListener('click', async ()=>{
+  if(!isAdmin) return toast('Admins only');
+  if(!currentGroup) return toast('Open a group');
+  if(!confirm('Delete all messages in this group?')) return;
+  // fetch messages then delete
+  const msgsSnap = await getDocs(collection(db,'groups',currentGroup.id,'messages'));
+  const delOps = [];
+  msgsSnap.forEach(m=>{ delOps.push(deleteDoc(doc(db,'groups',currentGroup.id,'messages',m.id))); });
+  await Promise.all(delOps);
+  toast('Cleared');
+});
+
+// ========== USER PROFILE WRITE (first sign-in) ===========
+onAuthStateChanged(auth, async user=>{
+  if(user){
+    // ensure user profile recorded
+    try{ await setDoc(doc(db,'users',user.uid),{ name: user.displayName, email: user.email, photo: user.photoURL },{ merge:true }); }catch(e){}
   }
-}
-
-function renderMsg(id,m){
-  try{
-    if(!id || !m) return;
-    if(messagesMap[id]){
-      const obj = messagesMap[id];
-      if(obj.el) obj.el.querySelector('.msg').textContent = m.text || '';
-      return;
-    }
-
-    const wrap = document.createElement('div');
-    wrap.className = 'bubble';
-    wrap.dataset.id = id;
-    if(m.user === myName) wrap.classList.add('mine');
-
-    const col = m.color || myColor;
-    try{ wrap.style.background = tint(col,.12); wrap.style.borderColor = col; }catch{}
-
-    const hdr = document.createElement('div'); hdr.className = 'hdr';
-    if(m.user !== lastSender){
-      const dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = col; hdr.appendChild(dot);
-      const nm = document.createElement('span'); nm.className = 'name'; nm.textContent = m.user || 'unknown'; hdr.appendChild(nm);
-    }
-
-    const body = document.createElement('div'); body.className = 'msg'; body.textContent = m.text || '';
-    const meta = document.createElement('div'); meta.className = 'meta';
-    const time = document.createElement('span'); time.textContent = fmt(m.ts || Date.now());
-    const readers = document.createElement('div'); readers.className = 'readers'; readers.id = `r_${id}`;
-    meta.appendChild(time); meta.appendChild(readers);
-
-    if(isAdmin){
-      const del = document.createElement('button'); del.textContent = '🗑️'; del.title = 'Delete'; del.className='menuBtn';
-      del.style.padding='4px 8px'; del.style.minHeight='auto';
-      del.addEventListener('click', async ()=>{
-        if(!confirm('Delete this message?')) return;
-        try{ await remove(ref(db,'messages/'+id)); }catch{ toast('Delete failed'); }
-      });
-      meta.appendChild(del);
-    }
-
-    wrap.appendChild(hdr);
-    wrap.appendChild(body);
-    wrap.appendChild(meta);
-    chat.appendChild(wrap);
-    io.observe(wrap);
-
-    const readersRef = ref(db,`messages/${id}/readers`);
-    const off = onValue(readersRef, async s=>{
-      try{
-        const map = s.val() || {};
-        const r = document.getElementById(`r_${id}`);
-        if(!r) return;
-        r.innerHTML = '';
-        const users = Object.keys(map).slice(0,6);
-        for(const u of users){
-          try{
-            const us = await get(ref(db,'users/'+u));
-            const c = (us.val()||{}).color || '#999';
-            const d = document.createElement('span'); d.className='dot'; d.style.background = c; r.appendChild(d);
-          }catch{}
-        }
-      }catch{}
-    });
-
-    messagesMap[id] = { el: wrap, unsub: off };
-    lastSender = m.user;
-  }catch{}
-}
-
-/* ---------------- send & typing ---------------- */
-async function sendBase(payload){
-  try{ await push(ref(db,'messages'), payload); }catch{ renderMsg('local_'+Date.now(), payload); }
-}
-
-send.addEventListener('click', async ()=>{
-  try{
-    const t = (msg.value||'').trim();
-    if(!t) return;
-    if(!myName){ toast('Pick a username'); try{ setupDlg.showModal(); }catch{} return; }
-    const banSnap = await get(ref(db,'meta/banned/'+myName));
-    if(banSnap.exists()){ toast('You are banned'); return; }
-    await sendBase({ user: myName, color: myColor, text: t, ts: Date.now(), type: 'text' });
-    msg.value = '';
-    chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
-  }catch{
-    toast('Send failed');
-  }
-});
-msg.addEventListener('keydown', e=>{ if(e.key === 'Enter'){ e.preventDefault(); send.click(); }});
-
-function sendSticker(s){ sendBase({ user: myName, color: myColor, text: s, ts: Date.now(), type: 'sticker' }); }
-function sendGif(g){ sendBase({ user: myName, color: myColor, text: `[gif:${g}]`, ts: Date.now(), type: 'gif' }); }
-
-/* typing indicator */
-let typingTimeout = null;
-msg.addEventListener('input', ()=>{
-  if(!myName) return;
-  try{ set(ref(db,'typing/'+myName), msg.value ? true : null); }catch{}
-  if(typingTimeout) clearTimeout(typingTimeout);
-  typingTimeout = setTimeout(()=> { try{ set(ref(db,'typing/'+myName), null); }catch{} }, 1500);
-});
-onValue(ref(db,'typing'), s=>{
-  try{
-    const map = s.val() || {};
-    const someone = Object.keys(map).find(u => u !== myName && map[u]);
-    typing.textContent = someone ? `${someone} is typing…` : '';
-  }catch{}
 });
 
-/* ---------------- admin flows ---------------- */
-$('#banClose')?.addEventListener('click', ()=> $('#banDlg')?.close());
-$('#clearClose')?.addEventListener('click', ()=> $('#clearDlg')?.close());
-$('#promoteClose')?.addEventListener('click', ()=> $('#promoteDlg')?.close());
+// ========== UTIL: getDoc, getDocs, deleteDoc etc imported above ===========
+// ... already used above
 
-$('#banCenter')?.addEventListener('click', async ()=>{ if(!isAdmin){ toast('Admins only'); return; } await renderBanList(); $('#banDlg')?.showModal(); });
-async function renderBanList(){ try{
-  const usersSnap = await get(ref(db,'users'));
-  const bannedSnap = await get(ref(db,'meta/banned'));
-  const users = usersSnap.val()||{}; const banned = bannedSnap.val()||{};
-  const list=$('#banList'); list.innerHTML='';
-  Object.keys(users).forEach(u=>{
-    const row=document.createElement('div'); row.className='row';
-    const left=document.createElement('div'); left.innerHTML=`<span class="chip">${u}</span>`;
-    const btn=document.createElement('button'); btn.className='menuBtn';
-    const isB=!!banned[u]; btn.textContent = isB? 'Unban' : 'Ban';
-    btn.onclick = async ()=>{ if(!confirm((isB?'Unban ':'Ban ')+u+'?')) return; const path = ref(db,'meta/banned/'+u); if(isB) await remove(path); else await set(path,true); renderBanList(); };
-    row.appendChild(left); row.appendChild(btn); list.appendChild(row);
-  });
-}catch{ toast('Could not load ban list'); } }
+// ========== INITIAL: load groups if signed-in state already present ========
+(async ()=>{ try{ await ensureGeneral(); await loadGroups(); }catch(e){} })();
 
-$('#clearChat')?.addEventListener('click', async ()=>{ if(!isAdmin){ toast('Admins only'); return; } await renderClearList(); $('#clearDlg')?.showModal(); });
-async function renderClearList(){ try{
-  const usersSnap = await get(ref(db,'users')); const users = usersSnap.val()||{};
-  const list = $('#clearList'); list.innerHTML='';
-  Object.keys(users).forEach(u=>{
-    const row=document.createElement('div'); row.className='row';
-    const label=document.createElement('label'); label.className='row'; label.style.gap='10px';
-    const cb=document.createElement('input'); cb.type='checkbox'; cb.value=u;
-    const span=document.createElement('span'); span.className='chip'; span.textContent=u;
-    label.appendChild(cb); label.appendChild(span); row.appendChild(label); list.appendChild(row);
-  });
-}catch{} }
-$('#selAll')?.addEventListener('click', ()=>{ $('#clearList').querySelectorAll('input[type=checkbox]').forEach(cb=>cb.checked=true); });
-$('#clearGo')?.addEventListener('click', async ()=>{ try{
-  const boxes=[...$('#clearList').querySelectorAll('input[type=checkbox]')].filter(x=>x.checked);
-  if(!boxes.length){ toast('Pick at least one user'); return; }
-  if(!confirm('Delete selected users messages?')) return;
-  const names = boxes.map(x=>x.value);
-  const allSnap = await get(ref(db,'messages')); const data = allSnap.val()||{};
-  const ops=[]; Object.keys(data).forEach(id=>{ if(names.includes(data[id].user)) ops.push(remove(ref(db,'messages/'+id))); });
-  await Promise.all(ops); toast('Deleted selected messages'); $('#clearDlg')?.close();
-}catch{ toast('Clear failed'); } });
-
-$('#promote')?.addEventListener('click', async ()=>{ if(!isAdmin){ toast('Admins only'); return; } await renderPromoteList(); $('#promoteDlg')?.showModal(); });
-async function renderPromoteList(){ try{
-  const usersSnap = await get(ref(db,'users')); const adminSnap = await get(adminsRef);
-  const users = usersSnap.val()||{}; const admins = adminSnap.val()||{};
-  const list=$('#promoteList'); list.innerHTML='';
-  Object.keys(users).forEach(u=>{
-    const row=document.createElement('div'); row.className='row';
-    const isCore=!!CORE_ADMINS[u]; const isNow=!!admins[u];
-    const btn=document.createElement('button'); btn.className='menuBtn'; btn.textContent = isNow? 'Demote' : 'Promote';
-    btn.onclick = async ()=>{ if(isCore && isNow){ toast('Core admins cannot be demoted'); return; } if(isNow) await update(adminsRef,{ [u]: null }); else await update(adminsRef,{ [u]: true }); renderPromoteList(); };
-    const tag=document.createElement('span'); tag.className='chip'; tag.textContent = u + (isNow? ' (admin)' : '');
-    row.appendChild(tag); row.appendChild(btn); list.appendChild(row);
-  });
-}catch{ toast('Promote list failed'); } }
-
-/* ---------------- boot / helpers ---------------- */
-async function showSetupIfNeeded(forceDialog=true){
-  if(myName){
-    try{ const u = await get(ref(db,'users/'+myName)); if(!u.exists()) await set(ref(db,'users/'+myName), { color: myColor, admin: isAdmin, updated: Date.now() }); }catch{}
-    bootChat(); syncTheme();
-  } else if(forceDialog){ try{ setupDlg.showModal(); nameInput.focus(); }catch{} }
-}
-async function bootChat(){
-  try{
-    who.textContent = `${myName || 'Anonymous'}${isAdmin? ' (admin)' : ''}`;
-    $('#adminBar').style.display = isAdmin? 'flex' : 'none';
-    await set(ref(db,'users/'+myName), { color: myColor, admin: !!isAdmin, updated: Date.now() });
-    await renderExistingAndListen();
-    setTimeout(()=>{ try{ msg.focus(); }catch{} },200);
-  }catch{}
-}
-if(authed && myName){ hideCover(); setTimeout(()=> showSetupIfNeeded(false), 80); }
-syncTheme();
-
-/* expose helpers */
-window.__chat = { showSetupIfNeeded, doUnlock };
 </script>
 </body>
 </html>
