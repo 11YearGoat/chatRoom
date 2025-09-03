@@ -5,447 +5,63 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>💀 Religious & Spiritual Talking — Friends</title>
 <meta name="theme-color" content="#000" />
+<!-- Firebase modular SDK (works for client) -->
+<script type="module">
+  // load modular SDKs via dynamic import so main HTML remains a single file but we use modules
+</script>
 <style>
 :root{
-  --bg:#050506;
-  --card:#0f1112;
-  --muted:#9aa0a6;
-  --ink:#e6eef2;
-  --line:#1f2326;
-  --accent:#7dd3fc;
-  --accent2:#a78bfa;
-  --ai-panel-width: 0px;
-  --zoom-level: 1;
+  --bg:#050506; --card:#0f1112; --muted:#9aa0a6; --ink:#e6eef2; --line:#1f2326;
+  --accent:#7dd3fc; --accent2:#a78bfa; --ai-panel-width:0px; --zoom-level:1;
 }
-
-[data-theme="light"] {
-  --bg: #f0f2f5;
-  --card: #ffffff;
-  --muted: #6c757d;
-  --ink: #212529;
-  --line: #dee2e6;
-  --accent: #0d6efd;
-  --accent2: #6f42c1;
-}
-
-html,body{
-  height:100%;
-  margin:0;
-  background:linear-gradient(180deg,var(--bg),#000);
-  color:var(--ink);
-  font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
-  zoom: var(--zoom-level);
-}
-
-.app{
-  max-width:480px;
-  margin:0 auto;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  transition: all 0.3s ease;
-}
-
-.top{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px;
-  position: relative;
-  z-index: 10;
-}
-
-.logo{
-  width:44px;
-  height:44px;
-  border-radius:10px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#041017;
-  font-weight:900;
-}
-
-.title{
-  font-weight:800;
-}
-
-.subtitle{
-  font-size:12px;
-  color:var(--muted);
-}
-
-.container{
-  flex:1;
-  padding:10px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  position: relative;
-}
-
-.card{
-  background:var(--card);
-  border-radius:14px;
-  padding:10px;
-  border:1px solid var(--line);
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  transition: all 0.3s ease;
-}
-
-.groups{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  overflow:auto;
-}
-
-.group{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px;
-  border-radius:10px;
-  background:rgba(255,255,255,0.02);
-  cursor:pointer;
-  transition: all 0.2s ease;
-}
-
-.group:hover {
-  background: rgba(255,255,255,0.05);
-}
-
-.row{
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-
-.btn{
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  border:none;
-  color:#041017;
-  padding:8px 10px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.btn:active {
-  transform: scale(0.98);
-}
-
-.small{
-  font-size:13px;
-  color:var(--muted);
-}
-
-.chatShell{
-  display:flex;
-  flex-direction:column;
-  height:62vh;
-  border-radius:12px;
-  overflow:hidden;
-  border:1px solid var(--line);
-  transition: all 0.3s ease;
-}
-
-.chatHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:8px;
-  border-bottom:1px solid var(--line);
-}
-
-.msgList{
-  flex:1;
-  padding:10px;
-  overflow:auto;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);
-}
-
-.bubble{
-  max-width:78%;
-  padding:10px;
-  border-radius:12px;
-  background:rgba(255,255,255,0.02);
-  border:1px solid var(--line);
-  position: relative;
-  transition: all 0.2s ease;
-}
-
-.bubble.mine{
-  margin-left:auto;
-  background:linear-gradient(180deg,#0b1220,#0f1b2a);
-}
-
-.msgMeta{
-  font-size:11px;
-  color:var(--muted);
-  margin-top:6px;
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-
-.chatFooter{
-  display:flex;
-  gap:8px;
-  padding:8px;
-  border-top:1px solid var(--line);
-  position: relative;
-}
-
-.input{
-  flex:1;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid var(--line);
-  background:transparent;
-  color:var(--ink);
-  outline:none;
-}
-
-.hidden{
-  display:none !important;
-}
-
-.toast{
-  position:fixed;
-  left:50%;
-  transform:translateX(-50%);
-  bottom:26px;
-  background:#0b1220;
-  color:#fff;
-  padding:8px 12px;
-  border-radius:10px;
-  z-index:999;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.2s;
-}
-
-@keyframes toastIn {
-  from { opacity: 0; transform: translate(-50%, 20px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
-}
-
-@keyframes toastOut {
-  from { opacity: 1; transform: translate(-50%, 0); }
-  to { opacity: 0; transform: translate(-50%, 20px); }
-}
-
-.adminBox{
-  padding:8px;
-  border-radius:10px;
-  background:rgba(255,255,255,0.02);
-  border:1px solid var(--line);
-}
-
-.menuBtn{
-  padding:8px 10px;
-  border-radius:8px;
-  border:1px solid var(--line);
-  background:transparent;
-  color:var(--ink);
-  cursor:pointer;
-  transition: all 0.2s ease;
-}
-
-.menuBtn:active {
-  transform: scale(0.98);
-}
-
-.danger{
-  color:#ef4444;
-}
-
-/* New UI Elements */
-.emoji-picker {
-  position: absolute;
-  bottom: 60px;
-  right: 10px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 5px;
-  max-width: 300px;
-  z-index: 100;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.emoji-btn {
-  font-size: 20px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 5px;
-  transition: background 0.2s;
-}
-
-.emoji-btn:hover {
-  background: rgba(255,255,255,0.1);
-}
-
-.ai-panel {
-  position: fixed;
-  top: 0;
-  right: calc(-1 * var(--ai-panel-width));
-  width: var(--ai-panel-width);
-  height: 100%;
-  background: var(--card);
-  border-left: 1px solid var(--line);
-  z-index: 1000;
-  transition: right 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.ai-panel.open {
-  right: 0;
-}
-
-.ai-header {
-  padding: 12px;
-  border-bottom: 1px solid var(--line);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.ai-content {
-  flex: 1;
-  padding: 12px;
-  overflow-y: auto;
-}
-
-.ai-footer {
-  padding: 12px;
-  border-top: 1px solid var(--line);
-}
-
-.typing-indicator {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 10px;
-  font-style: italic;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.typing-dots {
-  display: flex;
-  gap: 2px;
-}
-
-.typing-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--muted);
-  animation: typingAnimation 1.4s infinite ease-in-out;
-}
-
-.typing-dot:nth-child(1) { animation-delay: 0s; }
-.typing-dot:nth-child(2) { animation-delay: 0.2s; }
-.typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes typingAnimation {
-  0%, 60%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-5px); }
-}
-
-.message-actions {
-  position: absolute;
-  top: -30px;
-  right: 10px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 5px;
-  display: flex;
-  gap: 5px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-}
-
-.bubble:hover .message-actions {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.action-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 4px;
-  font-size: 12px;
-}
-
-.action-btn:hover {
-  background: rgba(255,255,255,0.1);
-}
-
-.zoom-controls {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  padding: 8px;
-  border-radius: 20px;
-  z-index: 100;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.theme-toggle {
-  position: fixed;
-  top: 70px;
-  right: 20px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 100;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-@media (max-width:420px){ 
-  .app{padding:6px} 
-  .chatShell{height:58vh} 
-  .ai-panel { width: 85vw; }
-}
+[data-theme="light"]{ --bg:#f6f7fb; --card:#ffffff; --muted:#6c757d; --ink:#111827; --line:#e6e9ee; --accent:#0d6efd; --accent2:#6f42c1; }
+html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#000);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial;zoom:var(--zoom-level)}
+.app{max-width:480px;margin:0 auto;height:100vh;display:flex;flex-direction:column}
+.header{display:flex;align-items:center;gap:12px;padding:12px;position:relative;z-index:10}
+.logo{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#041017;font-weight:900}
+.title{font-weight:800}
+.subtitle{font-size:12px;color:var(--muted)}
+.container{flex:1;padding:10px;display:flex;flex-direction:column;gap:10px;position:relative}
+.card{background:var(--card);border-radius:14px;padding:10px;border:1px solid var(--line);display:flex;flex-direction:column;gap:8px;transition:all .18s}
+.groups{display:flex;flex-direction:column;gap:8px;overflow:auto}
+.group{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);cursor:pointer;transition:all .12s}
+.row{display:flex;gap:8px;align-items:center}
+.btn{background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;color:#041017;padding:8px 10px;border-radius:10px;cursor:pointer;font-weight:600}
+.small{font-size:13px;color:var(--muted)}
+.chatShell{display:flex;flex-direction:column;height:62vh;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.chatHeader{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--line)}
+.msgList{flex:1;padding:10px;overflow:auto;display:flex;flex-direction:column;gap:8px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+.bubble{max-width:78%;padding:10px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid var(--line);position:relative}
+.bubble.mine{margin-left:auto;background:linear-gradient(180deg,#0b1220,#0f1b2a)}
+.msgMeta{font-size:11px;color:var(--muted);margin-top:6px;display:flex;gap:8px;align-items:center}
+.chatFooter{display:flex;gap:8px;padding:8px;border-top:1px solid var(--line)}
+.input{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--ink);outline:none}
+.hidden{display:none !important}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;background:#0b1220;color:#fff;padding:8px 12px;border-radius:10px;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+.menuBtn{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.danger{color:#ef4444}
+.emoji-picker{position:absolute;bottom:84px;right:18px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;display:grid;grid-template-columns:repeat(8,1fr);gap:6px;z-index:200}
+.emoji-btn{font-size:18px;background:transparent;border:none;cursor:pointer;padding:6px;border-radius:6px}
+.ai-panel{position:fixed;top:0;right:calc(-1 * var(--ai-panel-width));width:var(--ai-panel-width);height:100%;background:var(--card);border-left:1px solid var(--line);z-index:1000;transition:right .28s ease;display:flex;flex-direction:column;overflow:hidden}
+.ai-panel.open{right:0}
+.ai-header{padding:12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.ai-content{flex:1;padding:12px;overflow:auto}
+.ai-footer{padding:12px;border-top:1px solid var(--line);display:flex;gap:8px}
+.typing-indicator{display:flex;align-items:center;gap:5px;padding:6px 10px;font-style:italic;color:var(--muted);font-size:12px}
+.message-actions{position:absolute;top:-36px;right:10px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:5px;display:flex;gap:5px;opacity:0;pointer-events:none;transition:opacity .12s}
+.bubble:hover .message-actions{opacity:1;pointer-events:all}
+.zoom-controls{position:fixed;bottom:20px;right:20px;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);padding:8px;border-radius:20px;z-index:100}
+.theme-toggle{position:fixed;top:70px;right:20px;background:var(--card);border:1px solid var(--line);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:100}
+@media (max-width:420px){ .chatShell{height:58vh}.ai-panel{width:85vw} }
 </style>
 </head>
-<body>
+<body data-theme="dark">
   <div class="app" id="app">
-    <div class="top">
+    <div class="header">
       <div class="logo">💬</div>
       <div style="flex:1">
         <div class="title">Religious & Spiritual Talking</div>
-        <div class="subtitle" id="subtitle">Friends-only chat • mobile-focused</div>
+        <div class="subtitle" id="subtitle">Locked</div>
       </div>
       <div id="authArea" class="row">
         <button id="signInBtn" class="btn">Sign in with Google</button>
@@ -454,8 +70,7 @@ html,body{
     </div>
 
     <div class="container">
-      <!-- Home: groups list -->
-      <div id="home" class="card">
+      <div id="homeCard" class="card">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div>
             <div style="font-weight:800">Groups</div>
@@ -475,10 +90,9 @@ html,body{
           <button id="adminPanelBtn" class="btn hidden">Admin</button>
         </div>
 
-        <div id="createNote" class="small">Admins can create up to 3 groups (private). Use admin button to manage members.</div>
+        <div id="createNote" class="small">Admins can create up to configured groups. Use admin to manage members & bans.</div>
       </div>
 
-      <!-- Chat shell -->
       <div id="chatCard" class="chatShell hidden">
         <div class="chatHeader">
           <div>
@@ -494,7 +108,7 @@ html,body{
         <div id="msgList" class="msgList"></div>
 
         <div class="chatFooter">
-          <div class="row">
+          <div class="row" style="align-items:center">
             <button id="emojiBtn" class="menuBtn">😊</button>
             <button id="gifBtn" class="menuBtn">GIF</button>
             <button id="aiBtn" class="menuBtn hidden">AI</button>
@@ -504,7 +118,6 @@ html,body{
         </div>
       </div>
 
-      <!-- Admin panel modal area -->
       <div id="adminPanel" class="card hidden">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div style="font-weight:800">Admin Controls</div>
@@ -528,32 +141,31 @@ html,body{
           </div>
 
           <div style="margin-top:10px">
-            <div class="small">Admins list (manage in console) — changes reflect here:</div>
+            <div class="small">Admins list (managed in Firestore):</div>
             <div id="adminsList" class="small"></div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- New UI Elements -->
+  <!-- helpers UI -->
   <div id="emojiPicker" class="emoji-picker hidden"></div>
-  
-  <div id="aiPanel" class="ai-panel">
+
+  <div id="aiPanel" class="ai-panel" aria-hidden="true">
     <div class="ai-header">
-      <div style="font-weight: 700">AI Assistant</div>
+      <div style="font-weight:700">AI Assistant (admin)</div>
       <button id="closeAiPanel" class="menuBtn">✕</button>
     </div>
     <div id="aiConversation" class="ai-content"></div>
     <div class="ai-footer">
-      <input id="aiInput" class="input" placeholder="Ask AI something..." />
-      <button id="aiSend" class="btn" style="margin-top: 8px">Send</button>
+      <input id="aiInput" class="input" placeholder="Ask the AI..." />
+      <button id="aiSend" class="btn">Send</button>
     </div>
   </div>
 
   <div class="theme-toggle" id="themeToggle">🌙</div>
-  
+
   <div class="zoom-controls">
     <button id="globalZoomOut" class="menuBtn">A-</button>
     <div class="small" id="globalZoomLabel">100%</div>
@@ -563,16 +175,16 @@ html,body{
   <div id="toastWrap"></div>
 
 <script type="module">
-// --- Firebase modular imports ---
+/* ------------------ Imports ------------------ */
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {
   getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import {
-  getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, getDocs, deleteDoc, where
+  getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, getDocs, deleteDoc
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-// ---------- Your Firebase config (from your project messages-30e3a) ----------
+/* ----------------- Firebase config ----------------- */
 const firebaseConfig = {
   apiKey: "AIzaSyCRYqtAQifwmFqbnb5PZy2SVI-cSOfshVc",
   authDomain: "messages-30e3a.firebaseapp.com",
@@ -587,7 +199,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-// ---------- UI refs ----------
+/* ----------------- DOM refs ----------------- */
 const signInBtn = document.getElementById('signInBtn');
 const signOutBtn = document.getElementById('signOutBtn');
 const subtitle = document.getElementById('subtitle');
@@ -626,7 +238,10 @@ const themeToggle = document.getElementById('themeToggle');
 const globalZoomIn = document.getElementById('globalZoomIn');
 const globalZoomOut = document.getElementById('globalZoomOut');
 const globalZoomLabel = document.getElementById('globalZoomLabel');
+const toastWrap = document.getElementById('toastWrap');
+const createGroupBtnEl = document.getElementById('createGroupBtn');
 
+/* ----------------- App state ----------------- */
 let me = null;
 let currentGroup = null;
 let messagesUnsub = null;
@@ -639,711 +254,374 @@ let aiApiKey = localStorage.getItem('gemini_api_key');
 let isTyping = false;
 let typingTimeout = null;
 
-// Common emojis for the picker
-const EMOJIS = ['😀', '😂', '😍', '🥰', '😎', '🙏', '❤️', '🔥', '👍', '👎', '🎉', '🤔', '😢', '😡', '👻', '💀', '🙌', '✌️', '🤝', '🎶', '🌈', '⚡', '💯'];
-
-// ---------- PWA Setup ----------
-// Create and set manifest
-const manifest = {
-  "name": "Spiritual Chat",
-  "short_name": "Spiritual Chat",
-  "description": "Religious and spiritual discussion platform",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#050506",
-  "theme_color": "#000",
-  "icons": [
-    {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE5MiIgaGVpZ2h0PSIxOTIiIHJ4PSI0MCIgZmlsbD0iIzcwZDNmYyIvPjxwYXRoIGQ9Ik02NCA1MEM2NCA0NC40NzcyIDY4LjQ3NzIgNDAgNzQgNDBIMTExQzExNi41MjMgNDAgMTIxIDQ0LjQ3NzIgMTIxIDUwVjE0MEMxMjEgMTQ1LjUyMyAxMTYuNTIzIDE1MCAxMTEgMTUwSDc0QzY4LjQ3NzIgMTUwIDY0IDE0NS41MjMgNjQgMTQwVjUwWiIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMTM2IDc4QzEzNiA3Mi40NzcyIDE0MC40NzcgNjggMTQ2IDY4SDE1OEMxNjMuNTIzIDY4IDE2OCA3Mi40NzcyIDE2OCA3OFYxMTJDMTY4IDExNy41MjMgMTYzLjUyMyAxMjIgMTU4IDEyMkgxNDZDMTQwLjQ3NyAxMjIgMTM2IDExNy41MjMgMTM2IDExMlY3OFoiIGZpbGw9IndoaXRlIi8+PC9zdmc+",
-      "sizes": "192x192",
-      "type": "image/svg+xml"
-    },
-    {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMDAiIGZpbGw9IiM3MGQzZmMiLz48cGF0aCBkPSJNMTcwIDEzMEMxNzAgMTE2LjE5MiAxODEuMTkyIDEwNSAxOTUgMTA1SDI5NUMyOTguODA4IDEwNSAzMDUgMTE2LjE5MiAzMDUgMTMwVjM3MEMzMDUgMzgzLjgwOCAyOTguODA4IDM5NSAyOTUgMzk1SDE5NUMxODEuMTkyIDM5NSAxNzAgMzgzLjgwOCAxNzAgMzcwVjEzMFoiIGZpbGw9IndoaXRlIi8+PHBhdGggZD0iTTM2MiAyMDdDMzYyIDE5My4xOTIgMzczLjE5MiAxODIgMzg3IDE4Mkg0MjJDMzUuODA4IDE4MiA0MjIgMTkzLjE5MiA0MjIgMjA3VjI5N0M0MjIgMzEwLjgwOCAzNS44MDggMzIyIDQyMiAzMjJIMzg3QzM3My4xOTIgMzIyIDM2MiAzMTAuODA4IDM2MiAyOTdWMjA3WiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=",
-      "sizes": "512x512",
-      "type": "image/svg+xml"
-    }
-  ]
-};
-
-const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-const manifestURL = URL.createObjectURL(manifestBlob);
-document.getElementById('app-manifest').href = manifestURL;
-
-// Register service worker
-if ('serviceWorker' in navigator) {
-  const swContent = `
-    self.addEventListener('install', (event) => {
-      self.skipWaiting();
-    });
-    
-    self.addEventListener('activate', (event) => {
-      event.waitUntil(self.clients.claim());
-    });
-  `;
-  
-  const swBlob = new Blob([swContent], {type: 'application/javascript'});
-  const swURL = URL.createObjectURL(swBlob);
-  
-  navigator.serviceWorker.register(swURL)
-    .then(reg => console.log('Service worker registered'))
-    .catch(err => console.log('Service worker registration failed:', err));
+/* ----------------- Utilities ----------------- */
+function toast(msg){
+  const el = document.createElement('div'); el.className='toast'; el.textContent = msg;
+  toastWrap.appendChild(el);
+  setTimeout(()=> el.remove(), 2600);
 }
+function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+function applyZoom(){ zoom = Math.min(1.6, Math.max(0.7, zoom)); document.documentElement.style.setProperty('--zoom-level', zoom); zoomLabel.textContent = Math.round(zoom*100)+'%'; globalZoomLabel.textContent = Math.round(zoom*100)+'%'; localStorage.setItem('zoom', zoom); }
+function applyTheme(theme){ currentTheme = theme; document.documentElement.setAttribute('data-theme', theme); themeToggle.textContent = theme==='dark'? '🌙' : '☀️'; localStorage.setItem('theme', theme); }
 
-// ---------- helpers ----------
-function toast(t){ 
-  const el=document.createElement('div'); 
-  el.className='toast'; 
-  el.textContent=t; 
-  document.getElementById('toastWrap').appendChild(el); 
-  setTimeout(()=>el.remove(),2600); 
-}
-
-function escapeHtml(s){ 
-  return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); 
-}
-
-function applyZoom(){ 
-  zoom=Math.min(1.6,Math.max(0.7,zoom)); 
-  document.documentElement.style.setProperty('--zoom-level', zoom);
-  zoomLabel.textContent=Math.round(zoom*100)+'%'; 
-  globalZoomLabel.textContent=Math.round(zoom*100)+'%';
-  localStorage.setItem('zoom',zoom); 
-}
-
-function applyTheme(theme) {
-  currentTheme = theme;
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('theme', theme);
-  themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
-}
-
-// Initialize zoom and theme
+/* ----------------- Init UI values ----------------- */
 applyZoom();
 applyTheme(currentTheme);
 
-// Event listeners for zoom and theme
-zoomIn.addEventListener('click',()=>{ zoom+=0.1; applyZoom(); });
-zoomOut.addEventListener('click',()=>{ zoom-=0.1; applyZoom(); });
-globalZoomIn.addEventListener('click',()=>{ zoom+=0.1; applyZoom(); });
-globalZoomOut.addEventListener('click',()=>{ zoom-=0.1; applyZoom(); });
-
-themeToggle.addEventListener('click', () => {
-  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-});
-
-// Initialize emoji picker
-function initEmojiPicker() {
+/* ----------------- Emoji picker ----------------- */
+const EMOJIS = ['😀','😂','😍','🔥','🙏','❤️','👍','🎉','🤔','😎','🤯','🕉️','🧿','✨','😅','🙌','🤝','✌️','👀','💀'];
+function initEmojiPicker(){
   emojiPicker.innerHTML = '';
-  EMOJIS.forEach(emoji => {
-    const btn = document.createElement('button');
-    btn.className = 'emoji-btn';
-    btn.textContent = emoji;
-    btn.addEventListener('click', () => {
-      msgInput.value += emoji;
-      msgInput.focus();
-      emojiPicker.classList.add('hidden');
-    });
-    emojiPicker.appendChild(btn);
+  EMOJIS.forEach(e=>{
+    const b=document.createElement('button'); b.className='emoji-btn'; b.textContent=e;
+    b.addEventListener('click', ()=>{ msgInput.value+=e; msgInput.focus(); emojiPicker.classList.add('hidden'); });
+    emojiPicker.appendChild(b);
   });
 }
-
 initEmojiPicker();
-
-emojiBtn.addEventListener('click', () => {
-  emojiPicker.classList.toggle('hidden');
+emojiBtn.addEventListener('click', ()=> emojiPicker.classList.toggle('hidden'));
+document.addEventListener('click', e=>{
+  if(!emojiBtn.contains(e.target) && !emojiPicker.contains(e.target)) emojiPicker.classList.add('hidden');
 });
 
-// Close emoji picker when clicking outside
-document.addEventListener('click', (e) => {
-  if (!emojiBtn.contains(e.target) && !emojiPicker.contains(e.target)) {
-    emojiPicker.classList.add('hidden');
-  }
-});
-
-// AI Panel functionality
-aiBtn.addEventListener('click', () => {
-  if (!aiApiKey) {
-    aiApiKey = prompt('Please enter your Gemini API key:');
-    if (aiApiKey) {
-      localStorage.setItem('gemini_api_key', aiApiKey);
-      document.documentElement.style.setProperty('--ai-panel-width', '300px');
-      aiPanel.classList.add('open');
-    }
-  } else {
-    document.documentElement.style.setProperty('--ai-panel-width', '300px');
-    aiPanel.classList.add('open');
-  }
-});
-
-closeAiPanel.addEventListener('click', () => {
-  aiPanel.classList.remove('open');
-});
-
-aiSend.addEventListener('click', async () => {
-  const prompt = aiInput.value.trim();
-  if (!prompt) return;
-  
-  aiInput.value = '';
-  addAiMessage('user', prompt);
-  
-  try {
-    // This is a simplified version - you'd need to implement actual API call
-    const response = await mockGeminiCall(prompt);
-    addAiMessage('ai', response);
-  } catch (error) {
-    addAiMessage('ai', 'Sorry, I encountered an error. Please check your API key.');
-  }
-});
-
-function addAiMessage(role, content) {
-  const msgEl = document.createElement('div');
-  msgEl.className = `ai-msg ${role}`;
-  msgEl.textContent = content;
-  aiConversation.appendChild(msgEl);
-  aiConversation.scrollTop = aiConversation.scrollHeight;
-}
-
-// Mock function for Gemini API call
-async function mockGeminiCall(prompt) {
-  // In a real implementation, you would call the Gemini API here
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(`I received your message: "${prompt}". This is a mock response. In a real implementation, you would connect to the Gemini API.`);
-    }, 1000);
-  });
-}
-
-// Typing indicator functionality
-function setupTypingListener(groupId) {
-  if (typingUnsub) typingUnsub();
-  
-  typingUnsub = onSnapshot(collection(db, 'groups', groupId, 'typing'), (snap) => {
-    const typing = [];
-    snap.forEach(doc => {
-      if (doc.id !== me.uid && doc.data().typing) {
-        typing.push(doc.id);
-      }
-    });
-    
-    updateTypingIndicator(typing);
-  });
-}
-
-function updateTypingIndicator(userIds) {
-  let indicator = document.getElementById('typingIndicator');
-  
-  if (userIds.length === 0) {
-    if (indicator) indicator.remove();
-    return;
-  }
-  
-  if (!indicator) {
-    indicator = document.createElement('div');
-    indicator.id = 'typingIndicator';
-    indicator.className = 'typing-indicator';
-    msgList.appendChild(indicator);
-  }
-  
-  // For simplicity, we'll just show "Someone is typing..."
-  // In a real implementation, you'd fetch user names
-  indicator.innerHTML = `
-    <span>Several people are typing</span>
-    <div class="typing-dots">
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-      <div class="typing-dot"></div>
-    </div>
-  `;
-}
-
-function setUserTyping(typing) {
-  if (!currentGroup || !me) return;
-  
-  if (isTyping !== typing) {
-    isTyping = typing;
-    setDoc(doc(db, 'groups', currentGroup.id, 'typing', me.uid), {
-      typing: typing,
-      uid: me.uid,
-      lastUpdated: serverTimestamp()
-    }, { merge: true });
-  }
-  
-  if (typing) {
-    if (typingTimeout) clearTimeout(typingTimeout);
-    typingTimeout = setTimeout(() => setUserTyping(false), 3000);
-  }
-}
-
-msgInput.addEventListener('input', () => {
-  if (msgInput.value.length > 0) {
-    setUserTyping(true);
-  } else {
-    setUserTyping(false);
-  }
-});
-
-// Fetch admin config from Firestore
-async function loadAdminConfig(){ 
-  try{ 
-    const snap = await getDoc(doc(db,'config','admin')); 
-    if(snap.exists()){ 
-      const d = snap.data(); 
-      CONFIG_ADMIN.password = d.password; 
-      CONFIG_ADMIN.maxGroups = d.maxGroups||3; 
-      CONFIG_ADMIN.defaultGroup = d.defaultGroup||'general'; 
-    } 
-  }catch(e){ 
-    console.error('config load',e); 
-  } 
-}
-
-loadAdminConfig();
-
-// ---------- AUTH (redirect-based for mobile compatibility) ----------
-signInBtn.addEventListener('click', async ()=>{ 
-  try{ 
-    await signInWithRedirect(auth, provider); 
-  }catch(e){ 
-    console.error(e); 
-    toast('Sign-in error'); 
-  } 
-});
-
-// finish redirect flow (if any)
-getRedirectResult(auth).then(async (res)=>{
-  if(res && res.user){ /* no-op, onAuthStateChanged will handle UI */ }
-}).catch(e=>{ console.error('redirect result',e); });
-
-signOutBtn.addEventListener('click', async ()=>{ 
-  try{ 
-    await signOut(auth); 
-    toast('Signed out'); 
-  }catch(e){ 
-    console.error(e); 
-  } 
-});
-
-onAuthStateChanged(auth, async user=>{
-  if(user){ 
-    me = { uid:user.uid, name:user.displayName, email:user.email, photo:user.photoURL }; 
-    signInBtn.classList.add('hidden'); 
-    signOutBtn.classList.remove('hidden'); 
-    meName.textContent = me.name || me.email; 
-    subtitle.textContent = `Signed in as ${me.name||me.email}`; 
-    try{ 
-      await setDoc(doc(db,'users',me.uid),{ 
-        name: me.name, 
-        email: me.email, 
-        photo: me.photo,
-        lastSeen: serverTimestamp()
-      },{ merge:true }); 
-    }catch{} 
-    await ensureDefaultGroup(); 
-    await loadGroups(); 
-    const adm = await checkIsAdmin(me.uid); 
-    if(adm) {
-      setAdminMode(true);
-      aiBtn.classList.remove('hidden');
-    } else {
-      aiBtn.classList.add('hidden');
-    }
-  } else { 
-    me=null; 
-    signInBtn.classList.remove('hidden'); 
-    signOutBtn.classList.add('hidden'); 
-    meName.textContent='Not signed'; 
-    subtitle.textContent='Sign in with Google'; 
-    clearUI(); 
-  } 
-});
-
-function clearUI(){ 
-  groupsList.innerHTML=''; 
-  msgList.innerHTML=''; 
-  chatCard.classList.add('hidden'); 
-  adminPanel.classList.add('hidden'); 
-  adminPanelBtn.classList.add('hidden'); 
-}
-
-// ---------- Ensure default general group ----------
-async function ensureDefaultGroup(){ 
-  try{ 
-    const gRef=doc(db,'groups',CONFIG_ADMIN.defaultGroup||'general'); 
-    const gSnap = await getDoc(gRef); 
-    if(!gSnap.exists()){ 
-      await setDoc(gRef,{ 
-        id: CONFIG_ADMIN.defaultGroup||'general', 
-        name:'General', 
-        public:true, 
-        ownerUid:null, 
-        created: serverTimestamp() 
-      }); 
-    } 
-  }catch(e){ 
-    console.error('ensure default',e); 
-  } 
-}
-
-// ---------- Load groups list ----------
-async function loadGroups(){
-  groupsList.innerHTML='';
+/* ----------------- Admin config loader ----------------- */
+async function loadAdminConfig(){
   try{
+    const snap = await getDoc(doc(db,'config','admin'));
+    if(snap.exists()){
+      const d = snap.data();
+      CONFIG_ADMIN.password = d.password;
+      CONFIG_ADMIN.maxGroups = d.maxGroups || 3;
+      CONFIG_ADMIN.defaultGroup = d.defaultGroup || 'general';
+    }
+  }catch(e){ console.error('loadAdminConfig', e); }
+}
+await loadAdminConfig();
+
+/* ----------------- Auth flows (redirect friendly) ----------------- */
+signInBtn.addEventListener('click', async ()=> {
+  try{ await signInWithRedirect(auth, provider); }catch(e){ console.error('signin redirect', e); toast('Sign-in failed'); }
+});
+
+getRedirectResult(auth).then(res=>{ /* handled by onAuthStateChanged */ }).catch(e=> console.error('redirect result', e));
+
+signOutBtn.addEventListener('click', async ()=> {
+  try{ await signOut(auth); toast('Signed out'); }catch(e){ console.error('signout', e); }
+});
+
+/* ----------------- Auth listener ----------------- */
+onAuthStateChanged(auth, async user=>{
+  try{
+    if(user){
+      me = { uid: user.uid, name: user.displayName, email: user.email, photo: user.photoURL };
+      signInBtn.classList.add('hidden'); signOutBtn.classList.remove('hidden');
+      meName.textContent = me.name || me.email;
+      subtitle.textContent = `Signed in as ${me.name||me.email}`;
+      // ensure user record
+      try{ await setDoc(doc(db,'users',me.uid), { name: me.name, email: me.email, photo: me.photo, lastSeen: serverTimestamp() }, { merge: true }); }catch{}
+      await ensureDefaultGroup();
+      await loadGroups();
+      isAdmin = await checkIsAdmin(me.uid);
+      setAdminMode(isAdmin);
+      if(isAdmin) aiBtn.classList.remove('hidden'); else aiBtn.classList.add('hidden');
+    } else {
+      me = null;
+      signInBtn.classList.remove('hidden'); signOutBtn.classList.add('hidden');
+      meName.textContent = 'Not signed'; subtitle.textContent = 'Sign in with Google';
+      clearUI();
+    }
+  }catch(e){ console.error('onAuthState', e); }
+});
+
+/* ----------------- Ensure default group exists ----------------- */
+async function ensureDefaultGroup(){
+  try{
+    const def = CONFIG_ADMIN.defaultGroup || 'general';
+    const gRef = doc(db,'groups', def);
+    const gSnap = await getDoc(gRef);
+    if(!gSnap.exists()){
+      await setDoc(gRef, { id: def, name: 'General', public: true, ownerUid: null, created: serverTimestamp(), members: {} });
+    }
+  }catch(e){ console.error('ensureDefaultGroup', e); }
+}
+
+/* ----------------- Load groups (UI) ----------------- */
+async function loadGroups(){
+  try{
+    groupsList.innerHTML = '';
     const snaps = await getDocs(collection(db,'groups'));
-    const arr = [];
-    snaps.forEach(s=> arr.push(s.data()));
+    const arr = []; snaps.forEach(s=> arr.push(s.data()));
+    // put default group first
     arr.sort((a,b)=> (a.id===CONFIG_ADMIN.defaultGroup? -1 : (b.id===CONFIG_ADMIN.defaultGroup? 1:0)));
     arr.forEach(g=> renderGroupItem(g));
-  }catch(e){ console.error('loadGroups',e); }
+  }catch(e){ console.error('loadGroups', e); }
+}
+function renderGroupItem(g){
+  try{
+    const el = document.createElement('div'); el.className='group';
+    el.innerHTML = `<div><div style="font-weight:700">${escapeHtml(g.name||g.id)}</div><div class="small">${g.public? 'Public' : 'Private'}</div></div>`;
+    el.addEventListener('click', ()=> openGroup(g.id));
+    groupsList.appendChild(el);
+  }catch(e){ console.error('renderGroupItem', e); }
 }
 
-function renderGroupItem(g){ 
-  const el=document.createElement('div'); 
-  el.className='group'; 
-  el.innerHTML = `
-    <div>
-      <div style='font-weight:700'>${escapeHtml(g.name||g.id)}</div>
-      <div class='small'>${g.public? 'Public' : 'Private'}</div>
-    </div>
-  `; 
-  el.addEventListener('click', ()=> openGroup(g.id)); 
-  groupsList.appendChild(el); 
-}
-
-// ---------- Open group (membership checks) ----------
-async function openGroup(id){ 
-  try{ 
-    const gSnap = await getDoc(doc(db,'groups',id)); 
-    if(!gSnap.exists()){ 
-      toast('Group missing'); 
-      return; 
-    } 
-    const g = gSnap.data(); 
-    if(!g.public){ 
-      const members = g.members||{}; 
-      if(!me) { 
-        toast('Sign in to join'); 
-        return; 
-      } 
-      if(!(members[me.uid] || g.ownerUid===me.uid)) { 
-        toast('Private: you are not a member'); 
-        return; 
-      } 
-    } 
-    currentGroup = g; 
-    roomTitle.textContent = g.name; 
-    roomSubtitle.textContent = g.public? 'Public group' : 'Private group'; 
-    chatCard.classList.remove('hidden'); 
-    if(messagesUnsub) messagesUnsub(); 
-    const q = query(collection(db,'groups',id,'messages'), orderBy('ts')); 
-    messagesUnsub = onSnapshot(q,snap=>{ 
-      msgList.innerHTML=''; 
-      snap.forEach(d=> renderMessage(d.id,d.data())); 
-      msgList.scrollTop = msgList.scrollHeight; 
-    }); 
-    
-    // Setup typing indicator listener
+/* ----------------- Open group and listen messages ----------------- */
+async function openGroup(id){
+  try{
+    const gSnap = await getDoc(doc(db,'groups',id));
+    if(!gSnap.exists()){ toast('Group missing'); return; }
+    const g = gSnap.data();
+    if(!g.public){
+      const members = g.members || {};
+      if(!me){ toast('Sign in to join'); return; }
+      if(!(members[me.uid] || g.ownerUid === me.uid)){ toast('Private: not a member'); return; }
+    }
+    currentGroup = g;
+    roomTitle.textContent = g.name; roomSubtitle.textContent = g.public? 'Public group' : 'Private group';
+    chatCard.classList.remove('hidden');
+    // unsubscribe previous listeners
+    if(messagesUnsub) messagesUnsub();
+    // messages listener (realtime)
+    const q = query(collection(db,'groups',id,'messages'), orderBy('ts'));
+    messagesUnsub = onSnapshot(q, snap=>{
+      msgList.innerHTML = '';
+      snap.forEach(d=> renderMessage(d.id, d.data()));
+      msgList.scrollTop = msgList.scrollHeight;
+    }, e=> console.error('messages onSnapshot', e));
+    // typing listener
     setupTypingListener(id);
-    
-    const adm = await checkIsAdmin(me?.uid); 
-    if(adm) adminPanelBtn.classList.remove('hidden'); 
-    else adminPanelBtn.classList.add('hidden'); 
-  }catch(e){ 
-    console.error('openGroup',e); 
-  } 
+    // show admin controls if admin
+    if(await checkIsAdmin(me?.uid)) adminPanelBtn.classList.remove('hidden'); else adminPanelBtn.classList.add('hidden');
+  }catch(e){ console.error('openGroup', e); }
 }
 
-// ---------- Render message ----------
-function renderMessage(id,m){ 
-  try{ 
-    const el=document.createElement('div'); 
-    el.className='bubble'; 
-    if(me && m.uid===me.uid) el.classList.add('mine'); 
-    const when = m.ts && m.ts.toDate ? m.ts.toDate().toLocaleTimeString() : ''; 
+/* ----------------- Render message (with admin tools & edit/delete) ----------------- */
+function renderMessage(id, m){
+  try{
+    const el = document.createElement('div'); el.className='bubble';
+    if(me && m.uid === me.uid) el.classList.add('mine');
+    const when = m.ts && m.ts.toDate ? m.ts.toDate().toLocaleTimeString() : '';
+    const text = m.text || '';
     el.innerHTML = `
-      <div style='font-weight:700'>${escapeHtml(m.name||m.email||'unknown')}</div>
-      <div class='small'>${escapeHtml(when)}</div>
-      <div style='margin-top:6px'>${escapeHtml(m.text)}</div>
+      <div style="font-weight:700">${escapeHtml(m.name||m.email||'unknown')}</div>
+      <div class="small">${escapeHtml(when)}${m.edited? ' • edited' : ''}</div>
+      <div style="margin-top:6px">${escapeHtml(text)}</div>
       <div class="message-actions">
-        <button class="action-btn" onclick="copyMessage('${escapeHtml(m.text)}')">📋</button>
-        ${(me && m.uid===me.uid) ? `<button class="action-btn" onclick="editMessage('${id}')">✏️</button>` : ''}
-        ${isAdmin ? `<button class="action-btn" onclick="deleteMessage('${id}')">🗑️</button>` : ''}
+        <button class="action-btn" title="Copy" aria-label="Copy">📋</button>
+        ${(me && m.uid === me.uid) ? `<button class="action-btn" title="Edit" aria-label="Edit">✏️</button>` : ''}
+        ${isAdmin ? `<button class="action-btn" title="Delete" aria-label="Delete">🗑️</button>` : ''}
       </div>
-    `; 
+    `;
+    // action handlers
+    const [copyBtn, editBtn, delBtn] = el.querySelectorAll('.action-btn');
+    if(copyBtn) copyBtn.addEventListener('click', ()=> { navigator.clipboard.writeText(text).then(()=> toast('Copied')); });
+    if(editBtn) editBtn.addEventListener('click', async (ev)=>{
+      ev.stopPropagation();
+      const newText = prompt('Edit message', text);
+      if(newText !== null){
+        try{ await updateDoc(doc(db,'groups', currentGroup.id,'messages', id), { text: newText, edited: true, editedAt: serverTimestamp() }); toast('Edited'); }
+        catch(e){ console.error('editMsg', e); toast('Edit failed'); }
+      }
+    });
+    if(delBtn) delBtn.addEventListener('click', async (ev)=>{
+      ev.stopPropagation();
+      if(!confirm('Delete this message?')) return;
+      try{ await deleteDoc(doc(db,'groups', currentGroup.id, 'messages', id)); toast('Deleted'); }
+      catch(e){ console.error('delMsg', e); toast('Delete failed'); }
+    });
     msgList.appendChild(el);
-  }catch(e){
-    console.error('renderMessage',e);
-  } 
+  }catch(e){ console.error('renderMessage', e); }
 }
 
-// Message actions
-window.copyMessage = function(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    toast('Copied to clipboard');
-  });
-}
-
-window.editMessage = async function(msgId) {
-  const msgRef = doc(db, 'groups', currentGroup.id, 'messages', msgId);
-  const msgSnap = await getDoc(msgRef);
-  
-  if (msgSnap.exists()) {
-    const newText = prompt('Edit your message:', msgSnap.data().text);
-    if (newText !== null) {
-      await updateDoc(msgRef, {
-        text: newText,
-        edited: true,
-        editedAt: serverTimestamp()
-      });
-      toast('Message updated');
-    }
-  }
-}
-
-window.deleteMessage = async function(msgId) {
-  if (confirm('Are you sure you want to delete this message?')) {
-    try {
-      await deleteDoc(doc(db, 'groups', currentGroup.id, 'messages', msgId));
-      toast('Message deleted');
-    } catch (error) {
-      console.error('Error deleting message:', error);
-      toast('Failed to delete message');
-    }
-  }
-}
-
-// ---------- Send message ----------
+/* ----------------- Send message ----------------- */
 sendBtn.addEventListener('click', sendMessage);
-msgInput.addEventListener('keydown', e=>{ 
-  if(e.key==='Enter'){ 
-    e.preventDefault(); 
-    sendMessage(); 
-  }
-});
+msgInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); sendMessage(); } });
 
-async function sendMessage(){ 
-  try{ 
-    if(!me) return toast('Sign in first'); 
-    if(!currentGroup) return toast('Open a group'); 
+async function sendMessage(){
+  try{
+    if(!me) return toast('Sign in first');
+    if(!currentGroup) return toast('Open a group');
     // ban check
-    const banSnap = await getDoc(doc(db,'banned',me.uid)); 
-    if(banSnap.exists()) return toast('You are banned'); 
-    // membership check for private
-    if(!currentGroup.public){ 
-      const members = currentGroup.members||{}; 
-      if(!(members[me.uid]|| currentGroup.ownerUid===me.uid)) return toast('Not a member'); 
+    const banSnap = await getDoc(doc(db,'banned',me.uid));
+    if(banSnap.exists()) return toast('You are banned');
+    // membership for private
+    if(!currentGroup.public){
+      const members = currentGroup.members || {};
+      if(!(members[me.uid] || currentGroup.ownerUid === me.uid)) return toast('Not a member');
     }
-    const text = (msgInput.value||'').trim(); 
-    if(!text) return; 
-    msgInput.value=''; 
+    const text = (msgInput.value||'').trim();
+    if(!text) return;
+    msgInput.value = '';
     setUserTyping(false);
-    await addDoc(collection(db,'groups',currentGroup.id,'messages'),{ 
-      uid: me.uid, 
-      name: me.name, 
-      email: me.email, 
-      text, 
-      ts: serverTimestamp() 
-    }); 
-  }catch(e){ 
-    console.error('send',e); 
-    toast('Send failed'); 
-  } 
+    await addDoc(collection(db,'groups',currentGroup.id,'messages'), {
+      uid: me.uid, name: me.name, email: me.email, text, ts: serverTimestamp()
+    });
+  }catch(e){ console.error('sendMessage', e); toast('Send failed'); }
 }
 
-// ---------- Admin flows ----------
-async function checkIsAdmin(uid){ 
-  if(!uid) return false; 
-  try{ 
-    const snap = await getDoc(doc(db,'admins',uid)); 
-    return snap.exists(); 
-  }catch(e){ 
-    console.error('checkIsAdmin',e); 
-    return false; 
-  } 
+/* ----------------- Typing indicator ----------------- */
+async function setupTypingListener(groupId){
+  try{
+    if(typingUnsub) typingUnsub();
+    typingUnsub = onSnapshot(collection(db,'groups',groupId,'typing'), snap=>{
+      const typing = [];
+      snap.forEach(d=> { if(d.id !== (me && me.uid) && d.data().typing) typing.push(d.id); });
+      updateTypingIndicator(typing);
+    });
+  }catch(e){ console.error('setupTypingListener', e); }
 }
 
-adminPanelBtn.addEventListener('click', async ()=>{ 
-  // ask password flow
-  if(!me) return toast('Sign in first'); 
-  const wants = confirm('Admin login — enter password to become admin. Continue?'); 
-  if(!wants) return; 
-  const pass = prompt('Admin password'); 
-  if(pass===null) return; 
-  try{ 
-    const cfg = await getDoc(doc(db,'config','admin')); 
-    if(!cfg.exists()){ 
-      toast('Admin config missing'); 
-      return; 
-    } 
-    const real = cfg.data().password; 
-    if(String(pass) === String(real)){ 
-      await setDoc(doc(db,'admins',me.uid),{ 
-        email: me.email, 
-        name: me.name, 
-        addedAt: serverTimestamp() 
-      }); 
-      setAdminMode(true); 
-      aiBtn.classList.remove('hidden');
-      toast('Admin enabled'); 
-    } else { 
-      toast('Wrong password'); 
-    } 
-  }catch(e){ 
-    console.error('admin flow',e); 
-    toast('Admin check failed'); 
-  } 
-});
-
-function setAdminMode(on){ 
-  isAdmin = !!on; 
-  if(isAdmin){ 
-    adminPanel.classList.remove('hidden'); 
-    adminPanelBtn.classList.add('hidden'); 
-    loadAdminsList(); 
-  } else { 
-    adminPanel.classList.add('hidden'); 
-    adminPanelBtn.classList.remove('hidden'); 
-  } 
-}
-
-async function loadAdminsList(){ 
-  try{ 
-    adminsList.innerHTML=''; 
-    const snaps = await getDocs(collection(db,'admins')); 
-    snaps.forEach(s=>{ 
-      const d=s.data(); 
-      const el=document.createElement('div'); 
-      el.textContent = d.name || d.email || s.id; 
-      adminsList.appendChild(el); 
-    }); 
-  }catch(e){ 
-    console.error(e); 
-  } 
-}
-
-// create group (admin only)
-doCreateGroup.addEventListener('click', async ()=>{
-  if(!isAdmin) return toast('Admins only'); 
-  const name = (newGroupName.value||'').trim(); 
-  if(!name) return toast('Enter group name'); 
-  try{ 
-    // count how many groups this admin owns
-    const snaps = await getDocs(collection(db,'groups')); 
-    let myCount=0; 
-    snaps.forEach(s=>{ 
-      const g=s.data(); 
-      if(g.ownerUid===me.uid) myCount++; 
-    }); 
-    const cfgSnap = await getDoc(doc(db,'config','admin')); 
-    const maxG = cfgSnap.exists()? (cfgSnap.data().maxGroups||3) : 3; 
-    if(myCount>=maxG) return toast('You already created max groups'); 
-    // slug id
-    const id = name.toLowerCase().replace(/[^a-z0-9-_]/g,'-').slice(0,28) + '_' + (Date.now().toString(36).slice(-5)); 
-    await setDoc(doc(db,'groups',id),{ 
-      id, 
-      name, 
-      public:false, 
-      ownerUid: me.uid, 
-      ownerName: me.name, 
-      created: serverTimestamp(), 
-      members: {} 
-    }); 
-    toast('Group created'); 
-    newGroupName.value=''; 
-    loadGroups(); 
-  }catch(e){ 
-    console.error('create group',e); 
-    toast('Create failed'); 
-  } 
-});
-
-// add member by email
-addMemberBtn.addEventListener('click', async ()=>{
-  if(!isAdmin) return toast('Admins only'); 
-  if(!currentGroup) return toast('Open a group'); 
-  const email = (memberEmail.value||'').trim().toLowerCase(); 
-  if(!email) return toast('Enter email'); 
-  try{ 
-    const usersSnap = await getDocs(collection(db,'users')); 
-    let foundUid=null; 
-    usersSnap.forEach(u=>{ 
-      const d=u.data(); 
-      if((d.email||'').toLowerCase()===email) foundUid = u.id; 
-    }); 
-    if(!foundUid) return toast('User not found — they must sign in once'); 
-    await updateDoc(doc(db,'groups',currentGroup.id),{ 
-      ['members.'+foundUid]: true 
-    }); 
-    toast('Added'); 
-    memberEmail.value=''; 
-  }catch(e){ 
-    console.error('add member',e); 
-    toast('Add failed'); 
-  } 
-});
-
-// ban user
-banBtn.addEventListener('click', async ()=>{ 
-  if(!isAdmin) return toast('Admins only'); 
-  const em = prompt('Enter email to ban'); 
-  if(!em) return; 
-  try{ 
-    const usersSnap = await getDocs(collection(db,'users')); 
-    let foundUid=null; 
-    usersSnap.forEach(u=>{ 
-      const d=u.data(); 
-      if((d.email||'').toLowerCase()===em.toLowerCase()) foundUid = u.id; 
-    }); 
-    if(!foundUid) return toast('User not found'); 
-    await setDoc(doc(db,'banned',foundUid),{ 
-      email: em, 
-      by: me.email, 
-      at: serverTimestamp() 
-    }); 
-    toast('User banned'); 
-  }catch(e){ 
-    console.error('ban',e); 
-    toast('Ban failed'); 
-  } 
-});
-
-// clear group messages
-clearGroupBtn.addEventListener('click', async ()=>{ 
-  if(!isAdmin) return toast('Admins only'); 
-  if(!currentGroup) return toast('Open a group'); 
-  if(!confirm('Delete all messages in this group?')) return; 
-  try{ 
-    const msgsSnap = await getDocs(collection(db,'groups',currentGroup.id,'messages')); 
-    const ops=[]; 
-    msgsSnap.forEach(m=> ops.push(deleteDoc(doc(db,'groups',currentGroup.id,'messages',m.id)))); 
-    await Promise.all(ops); 
-    toast('Cleared'); 
-  }catch(e){ 
-    console.error('clear',e); 
-    toast('Clear failed'); 
-  } 
-});
-
-// leave group (for UI only)
-leaveBtn.addEventListener('click', ()=>{ 
-  currentGroup = null; 
-  chatCard.classList.add('hidden'); 
-  if (typingUnsub) {
-    typingUnsub();
-    typingUnsub = null;
+function updateTypingIndicator(userIds){
+  let indicator = document.getElementById('typingIndicator');
+  if(userIds.length === 0){
+    if(indicator) indicator.remove();
+    return;
   }
+  if(!indicator){
+    indicator = document.createElement('div'); indicator.id='typingIndicator'; indicator.className='typing-indicator';
+    msgList.appendChild(indicator);
+  }
+  indicator.innerHTML = `<span>Someone is typing…</span><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+}
+
+function setUserTyping(typing){
+  if(!currentGroup || !me) return;
+  try{
+    setDoc(doc(db,'groups',currentGroup.id,'typing',me.uid), { typing, uid: me.uid, lastUpdated: serverTimestamp() }, { merge: true });
+  }catch(e){ console.error('setUserTyping', e); }
+}
+
+msgInput.addEventListener('input', ()=>{
+  if(msgInput.value.length > 0){ setUserTyping(true); if(typingTimeout) clearTimeout(typingTimeout); typingTimeout = setTimeout(()=> setUserTyping(false), 1800); }
+  else setUserTyping(false);
 });
 
-// initial ensure and load
-(async ()=>{ 
-  try{ 
-    await loadAdminConfig(); 
-    await ensureDefaultGroup(); 
-    await loadGroups(); 
-  }catch(e){ 
-    console.error('init',e); 
-  } 
-})();
+/* ----------------- Admin flows ----------------- */
+async function checkIsAdmin(uid){
+  if(!uid) return false;
+  try{ const snap = await getDoc(doc(db,'admins',uid)); return snap.exists(); } catch(e){ console.error('checkIsAdmin', e); return false; }
+}
+
+adminPanelBtn.addEventListener('click', async ()=>{
+  if(!me) return toast('Sign in first');
+  const proceed = confirm('Admin login — continue to enter password?');
+  if(!proceed) return;
+  const pass = prompt('Admin password');
+  if(pass === null) return;
+  try{
+    const cfg = await getDoc(doc(db,'config','admin'));
+    if(!cfg.exists()){ toast('Admin config missing'); return; }
+    const real = cfg.data().password;
+    if(String(pass) === String(real)){
+      await setDoc(doc(db,'admins',me.uid), { email: me.email, name: me.name, addedAt: serverTimestamp() });
+      setAdminMode(true); aiBtn.classList.remove('hidden'); toast('Admin enabled');
+    } else toast('Wrong password');
+  }catch(e){ console.error('adminFlow', e); toast('Admin check failed'); }
+});
+
+function setAdminMode(on){
+  isAdmin = !!on;
+  if(isAdmin){ adminPanel.classList.remove('hidden'); adminPanelBtn.classList.add('hidden'); loadAdminsList(); }
+  else { adminPanel.classList.add('hidden'); adminPanelBtn.classList.remove('hidden'); }
+}
+
+async function loadAdminsList(){
+  try{ adminsList.innerHTML = ''; const snaps = await getDocs(collection(db,'admins')); snaps.forEach(s=> { const d=s.data(); const el = document.createElement('div'); el.textContent = d.name || d.email || s.id; adminsList.appendChild(el); }); }catch(e){ console.error('loadAdminsList', e); }
+}
+
+/* create group by admin */
+doCreateGroup.addEventListener('click', async ()=>{
+  if(!isAdmin) return toast('Admins only');
+  const name = (newGroupName.value||'').trim(); if(!name) return toast('Enter group name');
+  try{
+    // count owned groups
+    const snaps = await getDocs(collection(db,'groups')); let myCount=0; snaps.forEach(s=>{ const g=s.data(); if(g.ownerUid===me.uid) myCount++; });
+    const cfgSnap = await getDoc(doc(db,'config','admin')); const maxG = cfgSnap.exists()? (cfgSnap.data().maxGroups||3):3;
+    if(myCount >= maxG) return toast('Max groups reached');
+    const id = name.toLowerCase().replace(/[^a-z0-9-_]/g,'-').slice(0,28) + '_' + (Date.now().toString(36).slice(-5));
+    await setDoc(doc(db,'groups',id), { id, name, public: false, ownerUid: me.uid, ownerName: me.name, created: serverTimestamp(), members: {} });
+    toast('Group created'); newGroupName.value=''; loadGroups();
+  }catch(e){ console.error('createGroup', e); toast('Create failed'); }
+});
+
+/* add member by email to current group */
+addMemberBtn.addEventListener('click', async ()=>{
+  if(!isAdmin) return toast('Admins only'); if(!currentGroup) return toast('Open a group');
+  const email = (memberEmail.value||'').trim().toLowerCase(); if(!email) return toast('Enter email');
+  try{
+    const usersSnap = await getDocs(collection(db,'users')); let foundUid=null;
+    usersSnap.forEach(u=>{ const d=u.data(); if((d.email||'').toLowerCase()===email) foundUid = u.id; });
+    if(!foundUid) return toast('User not found (they must sign in once)');
+    await updateDoc(doc(db,'groups',currentGroup.id), { ['members.'+foundUid]: true });
+    toast('Added'); memberEmail.value='';
+  }catch(e){ console.error('addMember', e); toast('Add failed'); }
+});
+
+/* ban user by email */
+banBtn.addEventListener('click', async ()=>{
+  if(!isAdmin) return toast('Admins only'); const em = prompt('Enter email to ban'); if(!em) return;
+  try{
+    const usersSnap = await getDocs(collection(db,'users')); let foundUid=null;
+    usersSnap.forEach(u=>{ const d=u.data(); if((d.email||'').toLowerCase()===em.toLowerCase()) foundUid = u.id; });
+    if(!foundUid) return toast('User not found');
+    await setDoc(doc(db,'banned',foundUid), { email: em, by: me.email, at: serverTimestamp() });
+    toast('User banned');
+  }catch(e){ console.error('ban', e); toast('Ban failed'); }
+});
+
+/* clear messages in group */
+clearGroupBtn.addEventListener('click', async ()=>{
+  if(!isAdmin) return toast('Admins only'); if(!currentGroup) return toast('Open a group');
+  if(!confirm('Delete all messages in this group?')) return;
+  try{
+    const msgsSnap = await getDocs(collection(db,'groups',currentGroup.id,'messages'));
+    const ops = []; msgsSnap.forEach(m=> ops.push(deleteDoc(doc(db,'groups',currentGroup.id,'messages',m.id))));
+    await Promise.all(ops); toast('Cleared');
+  }catch(e){ console.error('clearGroup', e); toast('Clear failed'); }
+});
+
+/* leave group */
+leaveBtn.addEventListener('click', ()=>{ currentGroup = null; chatCard.classList.add('hidden'); if(typingUnsub) { typingUnsub(); typingUnsub = null; } });
+
+/* ----------------- AI panel (mock) ----------------- */
+aiBtn.addEventListener('click', ()=>{
+  if(!aiApiKey){
+    const key = prompt('Enter Gemini API key (stored locally) — or cancel to use mock:');
+    if(key){ aiApiKey = key; localStorage.setItem('gemini_api_key', key); }
+  }
+  // open panel
+  document.documentElement.style.setProperty('--ai-panel-width','360px'); aiPanel.classList.add('open'); aiPanel.setAttribute('aria-hidden','false');
+});
+closeAiPanel.addEventListener('click', ()=>{ aiPanel.classList.remove('open'); document.documentElement.style.setProperty('--ai-panel-width','0px'); aiPanel.setAttribute('aria-hidden','true'); });
+
+aiSend.addEventListener('click', async ()=>{
+  const promptText = (aiInput.value||'').trim(); if(!promptText) return;
+  addAiMsg('user', promptText);
+  aiInput.value = '';
+  try{
+    // MOCK: replace with real Gemini API call in the future
+    const answer = await new Promise(res => setTimeout(()=> res(`(mock) AI reply to "${promptText}"`), 900));
+    addAiMsg('ai', answer);
+  }catch(e){ console.error('ai call', e); addAiMsg('ai', 'AI error'); }
+});
+function addAiMsg(role, content){
+  const el = document.createElement('div'); el.style.marginBottom = '8px'; el.textContent = `${role === 'user' ? 'You' : 'AI'}: ${content}`;
+  aiConversation.appendChild(el); aiConversation.scrollTop = aiConversation.scrollHeight;
+}
+
+/* ----------------- zoom & theme controls ----------------- */
+zoomIn.addEventListener('click', ()=>{ zoom += 0.1; applyZoom(); });
+zoomOut.addEventListener('click', ()=>{ zoom -= 0.1; applyZoom(); });
+globalZoomIn.addEventListener('click', ()=>{ zoom += 0.1; applyZoom(); });
+globalZoomOut.addEventListener('click', ()=>{ zoom -= 0.1; applyZoom(); });
+
+themeToggle.addEventListener('click', ()=> applyTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+
+/* ----------------- small helpers ----------------- */
+function clearUI(){ groupsList.innerHTML=''; msgList.innerHTML=''; chatCard.classList.add('hidden'); adminPanel.classList.add('hidden'); adminPanelBtn.classList.add('hidden'); }
+
+/* ----------------- initial load ----------------- */
+(async ()=>{ try{ await loadAdminConfig(); await ensureDefaultGroup(); await loadGroups(); }catch(e){ console.error('init', e); } })();
 
 </script>
 </body>
