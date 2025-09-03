@@ -5,10 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>💀 Religious & Spiritual Talking — Friends</title>
 <meta name="theme-color" content="#000" />
-
-<!-- PWA Manifest -->
-<link rel="manifest" id="app-manifest" />
-
 <style>
 :root{
   --bg:#050506;
@@ -1081,13 +1077,13 @@ function renderMessage(id,m){
 }
 
 // Message actions
-function copyMessage(text) {
+window.copyMessage = function(text) {
   navigator.clipboard.writeText(text).then(() => {
     toast('Copied to clipboard');
   });
 }
 
-async function editMessage(msgId) {
+window.editMessage = async function(msgId) {
   const msgRef = doc(db, 'groups', currentGroup.id, 'messages', msgId);
   const msgSnap = await getDoc(msgRef);
   
@@ -1104,7 +1100,7 @@ async function editMessage(msgId) {
   }
 }
 
-async function deleteMessage(msgId) {
+window.deleteMessage = async function(msgId) {
   if (confirm('Are you sure you want to delete this message?')) {
     try {
       await deleteDoc(doc(db, 'groups', currentGroup.id, 'messages', msgId));
