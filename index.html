@@ -2,347 +2,134 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💀 Spiritual Chat — Friends</title>
-    <meta name="theme-color" content="#000000">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>chat-app</title>
+    <meta name="theme-color" content="#075e54">
+    <meta name="description" content="A Progressive Web App chat application">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         :root {
-            --bg: #050506;
-            --card: #0f1112;
-            --muted: #9aa0a6;
-            --ink: #e6eef2;
-            --line: #1f2326;
-            --accent: #7dd3fc;
-            --accent2: #a78bfa;
-            --ai-panel-width: 0px;
-            --zoom-level: 1;
+            --chat-green: #25d366;
+            --chat-dark-green: #075e54;
+            --chat-light-green: #dcf8c6;
+            --chat-blue: #34b7f1;
+            --chat-gray: #f0f0f0;
+            --chat-dark-gray: #e5e5e5;
+            --chat-text: #303030;
+            --chat-light-text: #667781;
+            --chat-border: #e9edef;
+            --chat-bg: #f0f2f5;
+            --chat-card: #ffffff;
+            --chat-input: #ffffff;
+            --chat-shadow: rgba(0,0,0,0.1);
         }
         
-        [data-theme="light"] {
-            --bg: #f6f7fb;
-            --card: #fff;
-            --muted: #6c757d;
-            --ink: #111827;
-            --line: #e6e9ee;
-            --accent: #0d6efd;
-            --accent2: #6f42c1;
+        [data-theme="dark"] {
+            --chat-green: #00a884;
+            --chat-dark-green: #111b21;
+            --chat-light-green: #005c4b;
+            --chat-blue: #53bdeb;
+            --chat-gray: #202c33;
+            --chat-dark-gray: #2a3942;
+            --chat-text: #e9edef;
+            --chat-light-text: #8696a0;
+            --chat-border: #313a43;
+            --chat-bg: #0b141a;
+            --chat-card: #202c33;
+            --chat-input: #2a3942;
+            --chat-shadow: rgba(0,0,0,0.3);
         }
         
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
         
         html, body {
             height: 100%;
-            font-family: Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif;
-            background: linear-gradient(180deg, var(--bg), #000);
-            color: var(--ink);
-            zoom: var(--zoom-level);
+            font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+            background: var(--chat-bg);
+            color: var(--chat-text);
+            overflow-x: hidden;
         }
         
         .app {
-            max-width: 480px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 100vw;
             height: 100vh;
             display: flex;
             flex-direction: column;
+            background: var(--chat-bg);
         }
         
-        .header {
+        .chat-header {
+            background: var(--chat-dark-green);
+            color: white;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px;
-        }
-        
-        .logo {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            display: grid;
-            place-items: center;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            color: #041017;
-            font-weight: 900;
-        }
-        
-        .title {
-            font-weight: 800;
-        }
-        
-        .subtitle {
-            font-size: 12px;
-            color: var(--muted);
-        }
-        
-        .container {
-            flex: 1;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow-y: auto;
-        }
-        
-        .card {
-            background: var(--card);
-            border-radius: 14px;
-            padding: 10px;
-            border: 1px solid var(--line);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .groups {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            overflow: auto;
-        }
-        
-        .group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.02);
-            cursor: pointer;
-        }
-        
-        .row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        
-        .btn {
-            background: linear-gradient(90deg, var(--accent), var(--accent2));
-            border: none;
-            color: #041017;
-            padding: 8px 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        
-        .small {
-            font-size: 13px;
-            color: var(--muted);
-        }
-        
-        .chatShell {
-            display: flex;
-            flex-direction: column;
-            height: 62vh;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--line);
-        }
-        
-        .chatHeader {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            border-bottom: 1px solid var(--line);
-        }
-        
-        .msgList {
-            flex: 1;
-            padding: 10px;
-            overflow: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent);
-        }
-        
-        .bubble {
-            max-width: 78%;
-            padding: 10px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--line);
-            position: relative;
-        }
-        
-        .bubble.mine {
-            margin-left: auto;
-            background: linear-gradient(180deg, #0b1220, #0f1b2a);
-        }
-        
-        .msgMeta {
-            font-size: 11px;
-            color: var(--muted);
-            margin-top: 6px;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        
-        .chatFooter {
-            display: flex;
-            gap: 8px;
-            padding: 8px;
-            border-top: 1px solid var(--line);
-        }
-        
-        .input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid var(--line);
-            background: transparent;
-            color: var(--ink);
-            outline: none;
-        }
-        
-        .hidden {
-            display: none !important;
-        }
-        
-        .toast {
-            position: fixed;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 26px;
-            background: #0b1220;
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 10px;
-            z-index: 999;
-        }
-        
-        .menuBtn {
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid var(--line);
-            background: transparent;
-            color: var(--ink);
-            cursor: pointer;
-        }
-        
-        .danger {
-            color: #ef4444;
-        }
-        
-        .emoji-picker {
-            position: absolute;
-            bottom: 84px;
-            right: 18px;
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 8px;
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 6px;
-            z-index: 200;
-        }
-        
-        .emoji-btn {
-            font-size: 18px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 6px;
-        }
-        
-        .ai-panel {
-            position: fixed;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            min-height: 64px;
+            position: sticky;
             top: 0;
-            right: calc(-1 * var(--ai-panel-width));
-            width: var(--ai-panel-width);
-            height: 100%;
-            background: var(--card);
-            border-left: 1px solid var(--line);
-            z-index: 1000;
-            transition: right .28s ease;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        
-        .ai-panel.open {
-            right: 0;
-        }
-        
-        .ai-header {
-            padding: 12px;
-            border-bottom: 1px solid var(--line);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .ai-content {
-            flex: 1;
-            padding: 12px;
-            overflow: auto;
-        }
-        
-        .ai-footer {
-            padding: 12px;
-            border-top: 1px solid var(--line);
-            display: flex;
-            gap: 8px;
-        }
-        
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 10px;
-            font-style: italic;
-            color: var(--muted);
-            font-size: 12px;
-        }
-        
-        .message-actions {
-            position: absolute;
-            top: -36px;
-            right: 10px;
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 5px;
-            display: flex;
-            gap: 5px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .12s;
-        }
-        
-        .bubble:hover .message-actions {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
-        .zoom-controls {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--card);
-            border: 1px solid var(--line);
-            padding: 8px;
-            border-radius: 20px;
             z-index: 100;
         }
         
-        .theme-toggle {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            background: var(--card);
-            border: 1px solid var(--line);
+        .header-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--chat-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-avatar:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+        }
+        
+        .header-avatar:active {
+            transform: scale(0.95);
+        }
+        
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .header-title {
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 2px;
+        }
+        
+        .header-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .header-btn {
+            background: transparent;
+            border: none;
+            color: white;
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -350,7 +137,429 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 100;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.15);
+        }
+        
+        .header-btn:active {
+            background: rgba(255,255,255,0.2);
+            transform: scale(0.9);
+        }
+        
+        .header-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.6s ease;
+        }
+        
+        .header-btn:active::before {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--chat-card);
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .chat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--chat-border);
+            min-height: 72px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .chat-item:hover::before {
+            left: 100%;
+        }
+        
+        .chat-item:hover {
+            background: var(--chat-gray);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--chat-shadow);
+        }
+        
+        .chat-item:active {
+            background: var(--chat-dark-gray);
+            transform: scale(0.98);
+        }
+        
+        .chat-item.active {
+            background: var(--chat-light-green);
+            border-left: 4px solid var(--chat-green);
+        }
+        
+        .chat-avatar {
+            width: 49px;
+            height: 49px;
+            border-radius: 50%;
+            background: var(--chat-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-avatar.ai-assistant {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,107,107,0.5); }
+        }
+        
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .chat-name {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--chat-text);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .chat-last-message {
+            font-size: 14px;
+            color: var(--chat-light-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .chat-time {
+            font-size: 12px;
+            color: var(--chat-light-text);
+        }
+        
+        .online-indicator {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 12px;
+            height: 12px;
+            background: #22c55e;
+            border: 2px solid var(--chat-card);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; transform: scale(1); }
+            51%, 100% { opacity: 0.5; transform: scale(0.8); }
+        }
+        
+        .chat-view {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            background: #e5ddd5;
+            background-image: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='a' patternUnits='userSpaceOnUse' width='40' height='40' patternTransform='scale(0.5) rotate(0)'%3e%3crect x='0' y='0' width='100%25' height='100%25' fill='%23e5ddd5'/%3e%3cpath d='M20 20m-10 0a10 10 0 1 0 20 0a10 10 0 1 0-20 0' stroke='%23ffffff' stroke-opacity='0.03' stroke-width='1' fill='none'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23a)'/%3e%3c/svg%3e");
+        }
+        
+        [data-theme="dark"] .chat-view {
+            background: #0b141a;
+            background-image: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='dark' patternUnits='userSpaceOnUse' width='40' height='40' patternTransform='scale(0.5) rotate(0)'%3e%3crect x='0' y='0' width='100%25' height='100%25' fill='%230b141a'/%3e%3cpath d='M20 20m-10 0a10 10 0 1 0 20 0a10 10 0 1 0-20 0' stroke='%23ffffff' stroke-opacity='0.01' stroke-width='1' fill='none'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23dark)'/%3e%3c/svg%3e");
+        }
+        
+        .chat-view.active {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .messages-area {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        
+        .message {
+            max-width: 65%;
+            padding: 8px 12px;
+            border-radius: 7.5px;
+            position: relative;
+            word-wrap: break-word;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .message:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .message:active {
+            transform: scale(0.98);
+        }
+        
+        .message.sent {
+            background: var(--chat-light-green);
+            margin-left: auto;
+        }
+        
+        .message.received {
+            background: var(--chat-card);
+            margin-right: auto;
+        }
+        
+        .message.ai-response {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-right: auto;
+            animation: aiGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes aiGlow {
+            from { box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3); }
+            to { box-shadow: 0 4px 20px rgba(118, 75, 162, 0.5); }
+        }
+        
+        .message-sender {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--chat-green);
+            margin-bottom: 2px;
+        }
+        
+        .message-text {
+            font-size: 14px;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            white-space: pre-wrap;
+        }
+        
+        .message-meta {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--chat-light-text);
+            flex-direction: column;
+            text-align: right;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: var(--chat-light-text);
+            font-weight: 400;
+        }
+        
+        .message-date {
+            font-size: 10px;
+            color: var(--chat-light-text);
+            opacity: 0.8;
+            font-weight: 300;
+        }
+        
+        .message-status {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-top: 2px;
+        }
+        
+        .status-icon {
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .status-icon.sent {
+            color: #9e9e9e;
+        }
+        
+        .status-icon.delivered {
+            color: #4fc3f7;
+            animation: bounce 0.5s ease;
+        }
+        
+        .status-icon.read {
+            color: #4fc3f7;
+            animation: pulse 1s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 60%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-4px); }
+            80% { transform: translateY(-2px); }
+        }
+        
+        .message-input-area {
+            padding: 8px 16px;
+            background: var(--chat-gray);
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            min-height: 62px;
+        }
+        
+        .input-btn {
+            background: transparent;
+            border: none;
+            color: var(--chat-light-text);
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .input-btn:hover {
+            background: rgba(0,0,0,0.05);
+            transform: scale(1.2) rotate(15deg);
+            color: var(--chat-green);
+        }
+        
+        .input-btn:active {
+            background: rgba(0,0,0,0.1);
+            transform: scale(0.9);
+        }
+        
+        .message-input {
+            flex: 1;
+            background: var(--chat-input);
+            border: none;
+            outline: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--chat-text);
+            resize: none;
+            min-height: 20px;
+            max-height: 100px;
+            overflow-y: auto;
+            line-height: 1.3;
+            transition: all 0.3s ease;
+        }
+        
+        .message-input:focus {
+            box-shadow: 0 0 0 2px var(--chat-green);
+            transform: scale(1.02);
+        }
+        
+        .message-input::placeholder {
+            color: var(--chat-light-text);
+        }
+        
+        .send-btn {
+            background: var(--chat-green);
+            border: none;
+            color: white;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .send-btn:hover {
+            background: #1da851;
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+        }
+        
+        .send-btn:active {
+            background: #0d7831;
+            transform: scale(0.9);
+        }
+        
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .send-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.6s ease;
+        }
+        
+        .send-btn:active::before {
+            width: 100px;
+            height: 100px;
         }
         
         .login-screen {
@@ -361,34 +570,564 @@
             height: 100vh;
             text-align: center;
             padding: 20px;
+            background: var(--chat-bg);
         }
         
         .login-content {
-            background: var(--card);
-            padding: 30px;
-            border-radius: 14px;
-            border: 1px solid var(--line);
+            background: var(--chat-card);
+            padding: 40px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--chat-shadow);
             max-width: 400px;
             width: 100%;
+            animation: slideUp 0.5s ease;
         }
         
-        .user-info {
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .chat-logo {
+            width: 64px;
+            height: 64px;
+            background: var(--chat-green);
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 15px;
-            margin-top: 20px;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 28px;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        .login-title {
+            font-size: 24px;
+            font-weight: 300;
+            color: var(--chat-text);
+            margin-bottom: 8px;
+        }
+        
+        .login-btn {
+            background: var(--chat-green);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-btn:hover {
+            background: #1da851;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .settings-screen {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            background: var(--chat-bg);
+        }
+        
+        .settings-screen.active {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .settings-content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--chat-card);
+        }
+        
+        .settings-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--chat-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .settings-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 211, 102, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .settings-item:hover::before {
+            left: 100%;
+        }
+        
+        .settings-item:hover {
+            background: var(--chat-gray);
+            transform: translateX(4px);
+        }
+        
+        .settings-item:active {
+            background: var(--chat-dark-gray);
+            transform: scale(0.98);
+        }
+        
+        .admin-panel {
+            background: var(--chat-gray);
+            border-top: 2px solid var(--chat-green);
+            padding: 16px;
+            margin: 8px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px var(--chat-shadow);
+            animation: slideDown 0.3s ease;
+        }
+        
+        .admin-panel.hidden {
+            display: none;
+        }
+        
+        .admin-panel h3 {
+            color: var(--chat-green);
+            margin-bottom: 12px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .admin-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .admin-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .admin-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .admin-btn.reset {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .admin-btn.reset:hover {
+            background: #c82333;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+        
+        .admin-btn.primary {
+            background: var(--chat-green);
+            color: white;
+        }
+        
+        .admin-btn.primary:hover {
+            background: #1da851;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+        
+        .admin-btn.secondary {
+            background: var(--chat-blue);
+            color: white;
+        }
+        
+        .admin-btn.secondary:hover {
+            background: #1e88e5;
+            box-shadow: 0 4px 12px rgba(52, 183, 241, 0.3);
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .menu-overlay.show {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 60px;
+            right: 16px;
+            background: var(--chat-card);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px var(--chat-shadow);
+            min-width: 180px;
+            z-index: 1001;
+            display: none;
+            animation: slideDown 0.2s ease;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--chat-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .menu-item:hover::before {
+            left: 100%;
+        }
+        
+        .menu-item:hover {
+            background: var(--chat-gray);
+            transform: translateX(4px);
+        }
+        
+        .menu-item:active {
+            background: var(--chat-dark-gray);
+            transform: scale(0.98);
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--chat-card);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: var(--chat-text);
+        }
+        
+        .user-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 16px 0;
+        }
+        
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: var(--chat-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 211, 102, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .user-item:hover::before {
+            left: 100%;
+        }
+        
+        .user-item:hover {
+            background: var(--chat-dark-gray);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--chat-shadow);
+        }
+        
+        .user-item:active {
+            transform: scale(0.98);
+        }
+        
+        .user-item.selected {
+            background: var(--chat-light-green);
+            transform: scale(1.02);
+            box-shadow: 0 6px 15px rgba(37, 211, 102, 0.3);
         }
         
         .user-avatar {
-            width: 80px;
-            height: 80px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
+            background: var(--chat-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
         }
         
-        .proceed-btn {
-            margin-top: 20px;
-            padding: 12px 24px;
+        .modal-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .modal-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .modal-btn.primary {
+            background: var(--chat-green);
+            color: white;
+        }
+        
+        .modal-btn.primary:hover {
+            background: #1da851;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+        
+        .modal-btn.danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .modal-btn.danger:hover {
+            background: #c82333;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+        
+        .modal-btn.secondary {
+            background: var(--chat-gray);
+            color: var(--chat-text);
+        }
+        
+        .modal-btn.secondary:hover {
+            background: var(--chat-dark-gray);
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--chat-border);
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            background: var(--chat-input);
+            color: var(--chat-text);
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            border-color: var(--chat-green);
+            box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
+            transform: scale(1.02);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
+            animation: toastSlide 0.3s ease;
+            max-width: 90%;
+        }
+        
+        @keyframes toastSlide {
+            from { transform: translate(-50%, 100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        
+        .reply-preview {
+            position: fixed;
+            bottom: 80px;
+            left: 10px;
+            right: 10px;
+            background: var(--chat-card);
+            border-left: 6px solid var(--chat-green);
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-size: 14px;
+            z-index: 10000;
+            user-select: none;
+            animation: slideUpReply 0.3s ease;
+        }
+        
+        @keyframes slideUpReply {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .install-prompt {
+            background: var(--chat-green);
+            color: white;
+            padding: 12px 16px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            animation: slideDown 0.3s ease;
+        }
+        
+        .install-prompt.show {
+            display: flex;
+        }
+        
+        .install-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .install-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        
+        .back-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.1);
+        }
+        
+        .back-btn:active {
+            background: rgba(255,255,255,0.2);
+            transform: scale(0.95);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            color: var(--chat-light-text);
+            font-size: 14px;
+            font-style: italic;
         }
         
         .typing-dots {
@@ -399,22 +1138,14 @@
         .typing-dot {
             width: 4px;
             height: 4px;
+            background: var(--chat-light-text);
             border-radius: 50%;
-            background: var(--muted);
             animation: typing 1.4s infinite ease-in-out;
         }
         
-        .typing-dot:nth-child(1) {
-            animation-delay: 0s;
-        }
-        
-        .typing-dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        
-        .typing-dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
         
         @keyframes typing {
             0%, 60%, 100% {
@@ -422,1038 +1153,1397 @@
                 opacity: 0.5;
             }
             30% {
-                transform: translateY(-5px);
+                transform: translateY(-4px);
                 opacity: 1;
             }
         }
         
-        @media (max-width: 420px) {
-            .chatShell {
-                height: 58vh;
+        .hidden {
+            display: none !important;
+        }
+        
+        @media (max-width: 767px) {
+            .message {
+                max-width: 85%;
             }
             
-            .ai-panel {
-                width: 85vw;
+            .modal-content {
+                margin: 20px;
+                width: calc(100% - 40px);
             }
+        }
+        
+        /* Ripple effect for interactive buttons */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            pointer-events: none;
+        }
+        
+        .ripple:active::after {
+            width: 300px;
+            height: 300px;
         }
     </style>
 </head>
-<body data-theme="dark">
+<body data-theme="light">
     <div class="app">
+        <!-- PWA Install Prompt -->
+        <div id="installPrompt" class="install-prompt">
+            <span>📱 Install chat-app for offline access</span>
+            <button id="installBtn" class="install-btn ripple">Install Now</button>
+        </div>
+
         <!-- Login Screen -->
         <div id="loginScreen" class="login-screen">
             <div class="login-content">
-                <div style="font-size: 34px; margin-bottom: 8px;">💀 Spiritual Chat</div>
-                <div style="color: var(--muted); margin-bottom: 18px;">Friends-only — sign in with Google</div>
+                <div class="chat-logo">💬</div>
+                <div class="login-title">chat-app</div>
+                <p style="color: var(--chat-light-text); margin-bottom: 24px;">🚀 Connect and chat in real-time with friends</p>
                 
-                <button id="loginBtn" class="btn" style="padding: 12px 18px; font-size: 16px;">
-                    Sign in with Google
-                </button>
+                <button id="loginBtn" class="login-btn ripple">🔐 Sign in with Google</button>
                 
-                <div id="userInfo" class="user-info hidden">
-                    <img id="userAvatar" class="user-avatar" />
+                <div style="margin-top: 20px; font-size: 12px; color: var(--chat-light-text);">
+                    ✨ Real-time messaging • 🤖 AI Assistant • 🔒 Secure & Private
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div id="settingsScreen" class="settings-screen">
+            <div class="chat-header">
+                <button class="back-btn ripple" id="settingsBackBtn">←</button>
+                <div class="header-info">
+                    <div class="header-title">⚙️ Settings</div>
+                </div>
+            </div>
+            
+            <div class="settings-content">
+                <div class="settings-item ripple" id="profileItem">
+                    <div class="header-avatar" id="profileAvatar" style="width: 60px; height: 60px; font-size: 20px;">👤</div>
+                    <div style="margin-left: 16px;">
+                        <div style="font-weight: 500; font-size: 16px;" id="profileName">Your Profile</div>
+                        <div style="font-size: 14px; color: var(--chat-light-text);">📱 Hey there! I am using chat-app</div>
+                    </div>
+                </div>
+                
+                <div class="settings-item ripple" id="themeItem">
+                    <div style="font-size: 20px; margin-right: 16px;">🎨</div>
                     <div>
-                        <div id="userName" style="font-weight: 700; font-size: 18px;"></div>
-                        <div id="userEmail" class="small"></div>
+                        <div style="font-weight: 500;">Theme</div>
+                        <div style="font-size: 14px; color: var(--chat-light-text);" id="currentTheme">🌞 Light Mode</div>
                     </div>
-                    
-                    <button id="proceedBtn" class="btn proceed-btn">Proceed to Chat</button>
-                    <button id="logoutBtn" class="menuBtn" style="margin-top: 10px;">Sign out</button>
+                </div>
+                
+                <div class="settings-item ripple" id="adminToggleItem">
+                    <div style="font-size: 20px; margin-right: 16px;">👑</div>
+                    <div>
+                        <div style="font-weight: 500;">Admin Panel</div>
+                        <div style="font-size: 14px; color: var(--chat-light-text);">🛠️ Click to show/hide admin controls</div>
+                    </div>
+                </div>
+                
+                <!-- ✅ WORKING ADMIN PANEL -->
+                <div id="adminPanel" class="admin-panel hidden">
+                    <h3>👑 Admin Controls Dashboard</h3>
+                    <button id="resetApiKeyBtn" class="admin-btn reset">🔄 Reset API Key</button>
+                    <button id="viewBannedUsersBtn" class="admin-btn primary">👥 View Banned Users</button>
+                    <button id="manageGroupsBtn" class="admin-btn secondary">🏢 Manage Groups</button>
+                    <button id="clearAllDataBtn" class="admin-btn reset">🗑️ Clear All Data</button>
+                    <button id="exportDataBtn" class="admin-btn secondary">📤 Export Data</button>
                 </div>
             </div>
         </div>
 
-        <!-- Main App (hidden until login) -->
+        <!-- Main App -->
         <div id="mainApp" class="hidden">
-            <div class="header">
-                <div class="logo">💬</div>
-                <div style="flex: 1">
-                    <div class="title">Religious &amp; Spiritual Talking</div>
-                    <div class="subtitle" id="subtitle">Locked</div>
+            <div class="chat-header">
+                <div class="header-avatar" id="userAvatar">💬</div>
+                <div class="header-info">
+                    <div class="header-title">chat-app</div>
+                    <div class="header-subtitle" id="headerSubtitle">🎉 Welcome back to your chats!</div>
                 </div>
-                <div id="authArea" class="row">
-                    <button id="appLogoutBtn" class="menuBtn">Sign out</button>
+                <div class="header-actions">
+                    <button class="header-btn ripple" id="menuBtn">⋮</button>
                 </div>
             </div>
 
-            <div class="container">
-                <div id="homeCard" class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center">
-                        <div>
-                            <div style="font-weight: 800">Groups</div>
-                            <div class="small">General is public — everyone can send</div>
-                        </div>
-                        <div class="row">
-                            <button id="zoomOut" class="menuBtn">−</button>
-                            <div id="zoomLabel" class="small">100%</div>
-                            <button id="zoomIn" class="menuBtn">＋</button>
-                        </div>
+            <div id="chatListView" class="container">
+                <div class="chat-list" id="chatList"></div>
+            </div>
+
+            <div id="chatView" class="chat-view">
+                <div class="chat-header">
+                    <button class="back-btn ripple" id="backBtn">←</button>
+                    <div class="header-avatar" id="chatAvatar">💬</div>
+                    <div class="header-info">
+                        <div class="header-title" id="chatTitle">General Chat</div>
+                        <div class="header-subtitle" id="chatSubtitle">📱 Tap here for group info</div>
                     </div>
-
-                    <div id="groupsList" class="groups" style="margin-top: 8px"></div>
-
-                    <div style="margin-top: 10px; display: flex; gap: 8px; align-items: center">
-                        <button id="createGroupBtn" class="btn">+ Create group</button>
-                        <button id="adminPanelBtn" class="btn hidden">Admin</button>
-                    </div>
-
-                    <div id="createNote" class="small">Admins can create up to configured groups. Use admin to manage members & bans.</div>
-                </div>
-
-                <div id="chatCard" class="chatShell hidden">
-                    <div class="chatHeader">
-                        <div>
-                            <div id="roomTitle" style="font-weight: 800">Group</div>
-                            <div class="small" id="roomSubtitle">Private / Public</div>
-                        </div>
-                        <div class="row">
-                            <div id="meName" class="small">Not signed</div>
-                            <button id="leaveBtn" class="menuBtn">Leave</button>
-                        </div>
-                    </div>
-
-                    <div id="msgList" class="msgList"></div>
-
-                    <div class="chatFooter">
-                        <div class="row" style="align-items: center">
-                            <button id="emojiBtn" class="menuBtn">😊</button>
-                            <button id="gifBtn" class="menuBtn">GIF</button>
-                            <button id="aiBtn" class="menuBtn hidden">AI</button>
-                        </div>
-                        <input id="msgInput" class="input" placeholder="Type a message…" />
-                        <button id="sendBtn" class="btn">Send</button>
+                    <div class="header-actions">
+                        <button class="header-btn ripple" id="chatMenuBtn">⋮</button>
                     </div>
                 </div>
 
-                <div id="adminPanel" class="card hidden">
-                    <div style="display: flex; justify-content: space-between; align-items: center">
-                        <div style="font-weight: 800">Admin Controls</div>
-                        <div class="small">You are admin</div>
-                    </div>
+                <div class="messages-area" id="messagesArea"></div>
 
-                    <div class="adminBox">
-                        <div style="display: flex; gap: 8px; margin-bottom: 8px">
-                            <input id="newGroupName" class="input" placeholder="New group name (private)" />
-                            <button id="doCreateGroup" class="btn">Create</button>
-                        </div>
+                <div class="message-input-area">
+                    <button class="input-btn ripple" id="emojiBtn">😊</button>
+                    <textarea class="message-input" id="messageInput" placeholder="💬 Type a message..." rows="1"></textarea>
+                    <button class="send-btn ripple" id="sendBtn" disabled>➤</button>
+                </div>
+            </div>
+        </div>
 
-                        <div style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center">
-                            <input id="memberEmail" class="input" placeholder="Add member by email (to selected group)" />
-                            <button id="addMemberBtn" class="btn">Add</button>
-                        </div>
+        <!-- Dropdown Menu -->
+        <div class="menu-overlay" id="menuOverlay"></div>
+        <div class="dropdown-menu" id="dropdownMenu">
+            <div class="menu-item ripple" id="settingsMenuItem">
+                <span style="font-size: 18px; width: 20px; text-align: center;">⚙️</span>
+                <span>Settings</span>
+            </div>
+            <div class="menu-item ripple" id="themeMenuItem">
+                <span style="font-size: 18px; width: 20px; text-align: center;" id="themeIcon">🌙</span>
+                <span id="themeText">Dark mode</span>
+            </div>
+            <div class="menu-item ripple" id="logoutMenuItem">
+                <span style="font-size: 18px; width: 20px; text-align: center;">🚪</span>
+                <span>Sign out</span>
+            </div>
+        </div>
 
-                        <div style="display: flex; gap: 8px; align-items: center">
-                            <button id="banBtn" class="menuBtn">🚫 Ban user</button>
-                            <button id="clearGroupBtn" class="menuBtn danger">🧹 Clear messages</button>
-                        </div>
+        <!-- Chat Menu -->
+        <div class="dropdown-menu" id="chatMenu">
+            <div class="menu-item ripple" id="groupInfoItem">
+                <span style="font-size: 18px; width: 20px; text-align: center;">ℹ️</span>
+                <span>Group info</span>
+            </div>
+        </div>
 
-                        <div style="margin-top: 10px">
-                            <div class="small">Admins list (managed in Firestore):</div>
-                            <div id="adminsList" class="small"></div>
-                        </div>
-                    </div>
+        <!-- User Management Modal -->
+        <div id="userModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-title" id="modalTitle">👥 Manage Users</div>
+                <div class="user-list" id="userList"></div>
+                <div class="modal-buttons">
+                    <button id="modalCancelBtn" class="modal-btn secondary ripple">❌ Cancel</button>
+                    <button id="modalConfirmBtn" class="modal-btn primary ripple">✅ Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Key Modal -->
+        <div id="apiKeyModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-title">🔑 Enter Gemini API Key</div>
+                <p style="font-size: 13px; color: var(--chat-light-text); margin-bottom: 16px;">
+                    🤖 Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank" style="color: var(--chat-green);">Google AI Studio</a>
+                </p>
+                <input type="password" id="apiKeyInput" class="input-field" placeholder="🔐 Paste your Gemini API key here">
+                <div class="modal-buttons">
+                    <button id="apiKeyCancelBtn" class="modal-btn secondary ripple">❌ Cancel</button>
+                    <button id="apiKeySaveBtn" class="modal-btn primary ripple">💾 Save Key</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="emojiPicker" class="emoji-picker hidden"></div>
-    <div id="aiPanel" class="ai-panel" aria-hidden="true">
-        <div class="ai-header"><div style="font-weight: 700">AI Assistant (admin)</div><button id="closeAiPanel" class="menuBtn">✕</button></div>
-        <div id="aiConversation" class="ai-content"></div>
-        <div class="ai-footer"><input id="aiInput" class="input" placeholder="Ask the AI..." /><button id="aiSend" class="btn">Send</button></div>
-    </div>
-
-    <div class="theme-toggle" id="themeToggle">🌙</div>
-    <div class="zoom-controls"><button id="globalZoomOut" class="menuBtn">A-</button><div class="small" id="globalZoomLabel">100%</div><button id="globalZoomIn" class="menuBtn">A+</button></div>
-    <div id="toastWrap"></div>
+    <div id="toastContainer"></div>
 
     <script type="module">
-        // Firebase imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-        import { 
-            getAuth, 
-            GoogleAuthProvider, 
-            signInWithPopup, 
-            signOut, 
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            getDoc, 
-            setDoc, 
-            updateDoc, 
-            collection, 
-            addDoc, 
-            onSnapshot, 
-            query, 
-            orderBy, 
-            serverTimestamp, 
-            getDocs, 
-            deleteDoc 
-        } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCRYqtAQifwmFqbnb5PZy2SVI-cSOfshVc",
-            authDomain: "messages-30e3a.firebaseapp.com",
-            projectId: "messages-30e3a",
-            storageBucket: "messages-30e3a.appspot.com",
-            messagingSenderId: "131390317978",
-            appId: "1:131390317978:web:8c05070328b5bcbf49c623"
+        // PWA Blob Integration
+        const manifestData = {
+            "name": "chat-app",
+            "short_name": "chat-app",
+            "description": "Real-time chat application with AI assistant",
+            "start_url": ".",
+            "scope": ".",
+            "display": "standalone",
+            "theme_color": "#075e54",
+            "background_color": "#ffffff",
+            "categories": ["social", "communication"],
+            "icons": [
+                {
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjMjVkMzY2Ii8+Cjx0ZXh0IHg9Ijk2IiB5PSIxMTAiIGZvbnQtc2l6ZT0iODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIj7wn5KsPC90ZXh0Pgo8L3N2Zz4K",
+                    "sizes": "192x192",
+                    "type": "image/svg+xml",
+                    "purpose": "any maskable"
+                },
+                {
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjMjVkMzY2Ii8+Cjx0ZXh0IHg9IjI1NiIgeT0iMzAwIiBmb250LXNpemU9IjIwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPvCfkqw8L3RleHQ+Cjwvc3ZnPgo=",
+                    "sizes": "512x512",
+                    "type": "image/svg+xml",
+                    "purpose": "any maskable"
+                }
+            ]
         };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const provider = new GoogleAuthProvider();
+        const swCode = `
+            const CACHE_NAME = 'chat-app-v1';
+            const urlsToCache = [
+                '/',
+                '/index.html',
+            ];
 
-        // DOM elements
-        const loginScreen = document.getElementById('loginScreen');
-        const mainApp = document.getElementById('mainApp');
-        const loginBtn = document.getElementById('loginBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const appLogoutBtn = document.getElementById('appLogoutBtn');
-        const proceedBtn = document.getElementById('proceedBtn');
-        const userInfo = document.getElementById('userInfo');
-        const userAvatar = document.getElementById('userAvatar');
-        const userName = document.getElementById('userName');
-        const userEmail = document.getElementById('userEmail');
-        const themeToggle = document.getElementById('themeToggle');
-        const subtitle = document.getElementById('subtitle');
-        const meName = document.getElementById('meName');
-        const groupsList = document.getElementById('groupsList');
-        const createGroupBtn = document.getElementById('createGroupBtn');
-        const adminPanelBtn = document.getElementById('adminPanelBtn');
-        const chatCard = document.getElementById('chatCard');
-        const roomTitle = document.getElementById('roomTitle');
-        const roomSubtitle = document.getElementById('roomSubtitle');
-        const msgList = document.getElementById('msgList');
-        const msgInput = document.getElementById('msgInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const leaveBtn = document.getElementById('leaveBtn');
-        const adminPanel = document.getElementById('adminPanel');
-        const doCreateGroup = document.getElementById('doCreateGroup');
-        const newGroupName = document.getElementById('newGroupName');
-        const addMemberBtn = document.getElementById('addMemberBtn');
-        const memberEmail = document.getElementById('memberEmail');
-        const adminsList = document.getElementById('adminsList');
-        const banBtn = document.getElementById('banBtn');
-        const clearGroupBtn = document.getElementById('clearGroupBtn');
-        const zoomIn = document.getElementById('zoomIn');
-        const zoomOut = document.getElementById('zoomOut');
-        const zoomLabel = document.getElementById('zoomLabel');
-        const emojiBtn = document.getElementById('emojiBtn');
-        const emojiPicker = document.getElementById('emojiPicker');
-        const gifBtn = document.getElementById('gifBtn');
-        const aiBtn = document.getElementById('aiBtn');
-        const aiPanel = document.getElementById('aiPanel');
-        const closeAiPanel = document.getElementById('closeAiPanel');
-        const aiInput = document.getElementById('aiInput');
-        const aiSend = document.getElementById('aiSend');
-        const aiConversation = document.getElementById('aiConversation');
-        const globalZoomIn = document.getElementById('globalZoomIn');
-        const globalZoomOut = document.getElementById('globalZoomOut');
-        const globalZoomLabel = document.getElementById('globalZoomLabel');
-        const toastWrap = document.getElementById('toastWrap');
+            self.addEventListener('install', event => {
+                event.waitUntil(
+                    caches.open(CACHE_NAME)
+                        .then(cache => cache.addAll(urlsToCache))
+                );
+                self.skipWaiting();
+            });
 
-        // State variables
-        let me = null;
-        let currentGroup = null;
-        let messagesUnsub = null;
-        let typingUnsub = null;
-        let isAdmin = false;
-        let CONFIG_ADMIN = { password: null, maxGroups: 3, defaultGroup: 'general' };
-        let zoom = Number(localStorage.getItem('zoom') || 1);
-        let currentTheme = localStorage.getItem('theme') || 'dark';
-        let aiApiKey = localStorage.getItem('gemini_api_key');
-        let typingTimeout = null;
-
-        // Utilities
-        function toast(msg) { 
-            const el = document.createElement('div'); 
-            el.className = 'toast'; 
-            el.textContent = msg; 
-            toastWrap.appendChild(el); 
-            setTimeout(() => el.remove(), 2600); 
-        }
-        
-        function escapeHtml(s) { 
-            return String(s || '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'); 
-        }
-        
-        function applyZoom() { 
-            zoom = Math.min(1.6, Math.max(0.7, zoom)); 
-            document.documentElement.style.setProperty('--zoom-level', zoom); 
-            zoomLabel.textContent = Math.round(zoom * 100) + '%'; 
-            globalZoomLabel.textContent = Math.round(zoom * 100) + '%'; 
-            localStorage.setItem('zoom', zoom); 
-        }
-        
-        function applyTheme(theme) { 
-            currentTheme = theme; 
-            document.documentElement.setAttribute('data-theme', theme); 
-            themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️'; 
-            localStorage.setItem('theme', theme); 
-        }
-        
-        applyZoom(); 
-        applyTheme(currentTheme);
-
-        // Emoji picker
-        const EMOJIS = ['😀','😂','😍','🔥','🙏','❤️','👍','🎉','🤔','😎','🤯','🕉️','🧿','✨','😅','🙌','🤝','✌️','👀','💀'];
-        
-        function initEmojiPicker() { 
-            emojiPicker.innerHTML = ''; 
-            EMOJIS.forEach(e => { 
-                const b = document.createElement('button'); 
-                b.className = 'emoji-btn'; 
-                b.textContent = e; 
-                b.addEventListener('click', () => { 
-                    msgInput.value += e; 
-                    msgInput.focus(); 
-                    emojiPicker.classList.add('hidden'); 
-                }); 
-                emojiPicker.appendChild(b); 
-            }); 
-        }
-        
-        initEmojiPicker();
-        
-        emojiBtn.addEventListener('click', () => emojiPicker.classList.toggle('hidden'));
-        document.addEventListener('click', e => { 
-            if (!emojiBtn.contains(e.target) && !emojiPicker.contains(e.target)) {
-                emojiPicker.classList.add('hidden'); 
-            }
-        });
-
-        // Admin config loader
-        async function loadAdminConfig() { 
-            try { 
-                const snap = await getDoc(doc(db, 'config', 'admin')); 
-                if (snap.exists()) { 
-                    const d = snap.data(); 
-                    CONFIG_ADMIN.password = d.password; 
-                    CONFIG_ADMIN.maxGroups = d.maxGroups || 3; 
-                    CONFIG_ADMIN.defaultGroup = d.defaultGroup || 'general'; 
-                } 
-            } catch(e) { 
-                console.error('loadAdminConfig', e);
-            } 
-        }
-
-        // Auth flows
-        loginBtn.addEventListener('click', async () => {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                showUserInfo(result.user);
-                toast('Login successful!');
-            } catch (error) {
-                console.error('Login error:', error);
-                toast('Login failed. Please try again.');
-            }
-        });
-
-        // Logout functionality
-        const handleLogout = async () => {
-            try {
-                await signOut(auth);
-                userInfo.classList.add('hidden');
-                loginBtn.classList.remove('hidden');
-                mainApp.classList.add('hidden');
-                loginScreen.classList.remove('hidden');
-                toast('Signed out successfully');
-            } catch (error) {
-                console.error('Logout error:', error);
-                toast('Logout failed');
-            }
-        };
-
-        logoutBtn.addEventListener('click', handleLogout);
-        appLogoutBtn.addEventListener('click', handleLogout);
-
-        // Show user info after login
-        function showUserInfo(user) {
-            userAvatar.src = user.photoURL;
-            userName.textContent = user.displayName;
-            userEmail.textContent = user.email;
-            
-            userInfo.classList.remove('hidden');
-            proceedBtn.classList.remove('hidden');
-            logoutBtn.classList.remove('hidden');
-            loginBtn.classList.add('hidden');
-            
-            // Store user data for later use
-            me = { 
-                uid: user.uid, 
-                name: user.displayName, 
-                email: user.email, 
-                photo: user.photoURL 
-            };
-        }
-
-        // Proceed to main app
-        proceedBtn.addEventListener('click', async () => {
-            try {
-                loginScreen.classList.add('hidden');
-                mainApp.classList.remove('hidden');
-                subtitle.textContent = `Signed in as ${me.name || me.email}`;
-                meName.textContent = me.name || me.email;
-                
-                // Initialize user in Firestore
-                await setDoc(doc(db, 'users', me.uid), { 
-                    name: me.name, 
-                    email: me.email, 
-                    photo: me.photo, 
-                    lastSeen: serverTimestamp() 
-                }, { merge: true });
-                
-                // Load admin config and groups
-                await loadAdminConfig();
-                await ensureDefaultGroup();
-                await loadGroups();
-                
-                // Check if user is admin
-                isAdmin = await checkIsAdmin(me.uid);
-                if (isAdmin) {
-                    setAdminMode(true);
-                } else {
-                    // Prompt for admin access if not already admin
-                    setTimeout(() => promptAdminFlow(), 1000);
-                }
-                
-                toast('Welcome to Spiritual Chat!');
-            } catch (error) {
-                console.error('Error proceeding to app:', error);
-                toast('Error initializing app');
-            }
-        });
-
-        // Monitor auth state changes
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                showUserInfo(user);
-            } else {
-                // User is signed out
-                userInfo.classList.add('hidden');
-                proceedBtn.classList.add('hidden');
-                logoutBtn.classList.add('hidden');
-                loginBtn.classList.remove('hidden');
-                me = null;
-            }
-        });
-
-        // Admin join flow
-        async function promptAdminFlow() {
-            try {
-                const want = confirm('Are you an admin (do you have the admin password)?');
-                if (!want) return;
-                
-                const pass = prompt('Enter admin password:');
-                if (pass === null) return;
-                
-                const cfg = await getDoc(doc(db, 'config', 'admin'));
-                if (!cfg.exists()) {
-                    toast('No admin config. Ask owner to set config.');
-                    return;
-                }
-                
-                const real = cfg.data().password;
-                if (String(pass) === String(real)) {
-                    await setDoc(doc(db, 'admins', me.uid), { 
-                        email: me.email, 
-                        name: me.name, 
-                        addedAt: serverTimestamp() 
-                    });
-                    setAdminMode(true);
-                    toast('Admin enabled');
-                } else {
-                    toast('Wrong password');
-                }
-            } catch(e) {
-                console.error('promptAdminFlow', e);
-                toast('Admin check failed');
-            }
-        }
-
-        // Ensure default group exists
-        async function ensureDefaultGroup() {
-            try {
-                const def = CONFIG_ADMIN.defaultGroup || 'general';
-                const gRef = doc(db, 'groups', def);
-                const gSnap = await getDoc(gRef);
-                
-                if (!gSnap.exists()) {
-                    await setDoc(gRef, { 
-                        id: def, 
-                        name: 'General', 
-                        public: true, 
-                        ownerUid: null, 
-                        created: serverTimestamp(), 
-                        members: {} 
-                    });
-                }
-            } catch(e) {
-                console.error('ensureDefaultGroup', e);
-            }
-        }
-
-        // Load groups
-        async function loadGroups() {
-            try {
-                groupsList.innerHTML = '';
-                const snaps = await getDocs(collection(db, 'groups'));
-                const arr = [];
-                
-                snaps.forEach(s => arr.push(s.data()));
-                arr.sort((a, b) => (a.id === CONFIG_ADMIN.defaultGroup ? -1 : (b.id === CONFIG_ADMIN.defaultGroup ? 1 : 0)));
-                
-                arr.forEach(g => renderGroupItem(g));
-            } catch(e) {
-                console.error('loadGroups', e);
-            }
-        }
-
-        function renderGroupItem(g) {
-            try {
-                const el = document.createElement('div');
-                el.className = 'group';
-                el.innerHTML = `
-                    <div>
-                        <div style="font-weight:700">${escapeHtml(g.name || g.id)}</div>
-                        <div class="small">${g.public ? 'Public' : 'Private'}</div>
-                    </div>
-                `;
-                
-                el.addEventListener('click', () => openGroup(g.id));
-                groupsList.appendChild(el);
-            } catch(e) {
-                console.error('renderGroupItem', e);
-            }
-        }
-
-        // Open group
-        async function openGroup(id) {
-            try {
-                const gSnap = await getDoc(doc(db, 'groups', id));
-                if (!gSnap.exists()) {
-                    toast('Group missing');
-                    return;
-                }
-                
-                const g = gSnap.data();
-                if (!g.public) {
-                    const members = g.members || {};
-                    if (!me) {
-                        toast('Sign in to join');
-                        return;
-                    }
-                    
-                    if (!(members[me.uid] || g.ownerUid === me.uid)) {
-                        toast('Private: you are not a member');
-                        return;
-                    }
-                }
-                
-                currentGroup = g;
-                roomTitle.textContent = g.name;
-                roomSubtitle.textContent = g.public ? 'Public group' : 'Private group';
-                chatCard.classList.remove('hidden');
-                
-                if (messagesUnsub) messagesUnsub();
-                
-                const q = query(collection(db, 'groups', id, 'messages'), orderBy('ts'));
-                messagesUnsub = onSnapshot(q, snap => {
-                    msgList.innerHTML = '';
-                    snap.forEach(d => renderMessage(d.id, d.data()));
-                    msgList.scrollTop = msgList.scrollHeight;
-                }, e => console.error('messages listener', e));
-                
-                setupTypingListener(id);
-                
-                if (await checkIsAdmin(me?.uid)) {
-                    adminPanelBtn.classList.remove('hidden');
-                } else {
-                    adminPanelBtn.classList.add('hidden');
-                }
-            } catch(e) {
-                console.error('openGroup', e);
-            }
-        }
-
-        // Render message
-        function renderMessage(id, m) {
-            try {
-                const el = document.createElement('div');
-                el.className = 'bubble';
-                
-                if (me && m.uid === me.uid) {
-                    el.classList.add('mine');
-                }
-                
-                const when = m.ts && m.ts.toDate ? m.ts.toDate().toLocaleTimeString() : '';
-                const text = m.text || '';
-                
-                el.innerHTML = `
-                    <div style="font-weight:700">${escapeHtml(m.name || m.email || 'unknown')}</div>
-                    <div class="small">${escapeHtml(when)}${m.edited ? ' • edited' : ''}</div>
-                    <div style="margin-top:6px">${escapeHtml(text)}</div>
-                    <div class="message-actions">
-                        <button class="action-btn" title="Copy">📋</button>
-                        ${(me && m.uid === me.uid) ? `<button class="action-btn" title="Edit">✏️</button>` : ''}
-                        ${isAdmin ? `<button class="action-btn" title="Delete">🗑️</button>` : ''}
-                    </div>
-                `;
-                
-                const [copyBtn, editBtn, delBtn] = el.querySelectorAll('.action-btn');
-                
-                if (copyBtn) {
-                    copyBtn.addEventListener('click', () => {
-                        navigator.clipboard.writeText(text).then(() => toast('Copied'));
-                    });
-                }
-                
-                if (editBtn) {
-                    editBtn.addEventListener('click', async (ev) => {
-                        ev.stopPropagation();
-                        const msgRef = doc(db, 'groups', currentGroup.id, 'messages', id);
-                        const snap = await getDoc(msgRef);
-                        
-                        if (snap.exists() && snap.data().uid === me.uid) {
-                            const newText = prompt('Edit your message:', snap.data().text);
-                            if (newText !== null) {
-                                try {
-                                    await updateDoc(msgRef, { 
-                                        text: newText, 
-                                        edited: true, 
-                                        editedAt: serverTimestamp() 
-                                    });
-                                    toast('Message updated');
-                                } catch(e) {
-                                    console.error('edit', e);
-                                    toast('Edit failed');
+            self.addEventListener('activate', event => {
+                event.waitUntil(
+                    caches.keys().then(cacheNames => {
+                        return Promise.all(
+                            cacheNames.map(cacheName => {
+                                if (cacheName !== CACHE_NAME) {
+                                    return caches.delete(cacheName);
                                 }
+                            })
+                        );
+                    })
+                );
+                clients.claim();
+            });
+
+            self.addEventListener('fetch', event => {
+                event.respondWith(
+                    caches.match(event.request)
+                        .then(response => {
+                            if (response) {
+                                return response;
                             }
-                        } else {
-                            toast('You can only edit your messages');
-                        }
-                    });
-                }
-                
-                if (delBtn) {
-                    delBtn.addEventListener('click', async (ev) => {
-                        ev.stopPropagation();
-                        if (!confirm('Delete this message?')) return;
-                        
-                        try {
-                            await deleteDoc(doc(db, 'groups', currentGroup.id, 'messages', id));
-                            toast('Message deleted');
-                        } catch(e) {
-                            console.error('delete', e);
-                            toast('Delete failed');
-                        }
-                    });
-                }
-                
-                msgList.appendChild(el);
-            } catch(e) {
-                console.error('renderMessage', e);
-            }
-        }
+                            return fetch(event.request);
+                        })
+                );
+            });
+        `;
 
-        // Send message
-        sendBtn.addEventListener('click', sendMessage);
-        msgInput.addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                sendMessage();
+        // Register PWA
+        let deferredPrompt;
+        const installPrompt = document.getElementById('installPrompt');
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installPrompt.classList.add('show');
+        });
+
+        installBtn?.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installPrompt.classList.remove('show');
+                
+                if (outcome === 'accepted') {
+                    toast('🎉 Thanks for installing chat-app!');
+                }
             }
         });
+
+        // Register service worker from blob
+        if ('serviceWorker' in navigator) {
+            const swBlob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(swBlob);
+            
+            navigator.serviceWorker.register(swUrl)
+                .then(registration => {
+                    console.log('SW registered: ', registration);
+                })
+                .catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
+        }
+
+        // Register manifest from blob
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+        const manifestUrl = URL.createObjectURL(manifestBlob);
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = manifestUrl;
+        document.head.appendChild(link);
+
+        // Firebase imports
+        let firebaseApp, auth, db, provider;
         
-        async function sendMessage() {
-            try {
-                if (!me) return toast('Sign in first');
-                if (!currentGroup) return toast('Open a group');
+        try {
+            const { initializeApp } = await import("https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js");
+            const authModule = await import("https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js");
+            const firestoreModule = await import("https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js");
+            
+            const { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } = authModule;
+            const { 
+                getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, 
+                query, orderBy, serverTimestamp, getDocs, deleteDoc, where 
+            } = firestoreModule;
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyCRYqtAQifwmFqbnb5PZy2SVI-cSOfshVc",
+                authDomain: "messages-30e3a.firebaseapp.com",
+                projectId: "messages-30e3a",
+                storageBucket: "messages-30e3a.appspot.com",
+                messagingSenderId: "131390317978",
+                appId: "1:131390317978:web:8c05070328b5bcbf49c623"
+            };
+
+            firebaseApp = initializeApp(firebaseConfig);
+            auth = getAuth(firebaseApp);
+            db = getFirestore(firebaseApp);
+            provider = new GoogleAuthProvider();
+
+            // DOM elements
+            const loginScreen = document.getElementById('loginScreen');
+            const mainApp = document.getElementById('mainApp');
+            const settingsScreen = document.getElementById('settingsScreen');
+            const loginBtn = document.getElementById('loginBtn');
+            const userAvatar = document.getElementById('userAvatar');
+            const headerSubtitle = document.getElementById('headerSubtitle');
+            const chatListView = document.getElementById('chatListView');
+            const chatView = document.getElementById('chatView');
+            const chatList = document.getElementById('chatList');
+            const backBtn = document.getElementById('backBtn');
+            const chatTitle = document.getElementById('chatTitle');
+            const messagesArea = document.getElementById('messagesArea');
+            const messageInput = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const menuBtn = document.getElementById('menuBtn');
+            const chatMenuBtn = document.getElementById('chatMenuBtn');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const chatMenu = document.getElementById('chatMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const toastContainer = document.getElementById('toastContainer');
+            const adminPanel = document.getElementById('adminPanel');
+
+            // Modals
+            const userModal = document.getElementById('userModal');
+            const apiKeyModal = document.getElementById('apiKeyModal');
+
+            // State
+            let currentUser = null;
+            let currentGroup = null;
+            let isAdmin = false;
+            let messagesUnsub = null;
+            let selectedUsers = new Set();
+            let currentTheme = localStorage.getItem('theme') || 'light';
+            let geminiApiKey = localStorage.getItem('geminiApiKey') || '';
+            let replyPreviewDiv = null;
+
+            // ✅ SWIPE TO REPLY VARIABLES
+            let touchStartX = 0;
+            let touchStartY = 0;
+            const swipeThreshold = 70;
+
+            // Utility functions
+            function toast(message, duration = 3000) {
+                const toastEl = document.createElement('div');
+                toastEl.className = 'toast';
+                toastEl.textContent = message;
+                toastContainer.appendChild(toastEl);
                 
-                const banned = await getDoc(doc(db, 'banned', me.uid));
-                if (banned.exists()) return toast('You are banned');
-                
-                if (!currentGroup.public) {
-                    const members = currentGroup.members || {};
-                    if (!(members[me.uid] || currentGroup.ownerUid === me.uid)) {
-                        return toast('Not a member');
+                setTimeout(() => {
+                    if (toastEl && toastEl.parentNode) {
+                        toastEl.parentNode.removeChild(toastEl);
                     }
+                }, duration);
+            }
+
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text || '';
+                return div.innerHTML;
+            }
+
+            function applyTheme(theme) {
+                currentTheme = theme;
+                document.body.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                
+                const themeText = theme === 'dark' ? 'Light mode' : 'Dark mode';
+                const themeIcon = theme === 'dark' ? '☀️' : '🌙';
+                
+                document.getElementById('themeText').textContent = themeText;
+                document.getElementById('themeIcon').textContent = themeIcon;
+                document.getElementById('currentTheme').textContent = 
+                    theme === 'dark' ? '🌙 Dark Mode' : '🌞 Light Mode';
+            }
+
+            function closeMenus() {
+                dropdownMenu?.classList.remove('show');
+                chatMenu?.classList.remove('show');
+                menuOverlay?.classList.remove('show');
+                userModal?.classList.remove('show');
+                apiKeyModal?.classList.remove('show');
+            }
+
+            // ✅ SWIPE TO REPLY FUNCTIONALITY
+            function initSwipeToReply() {
+                messagesArea.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 1) {
+                        touchStartX = e.touches[0].clientX;
+                        touchStartY = e.touches[0].clientY;
+                    }
+                });
+
+                messagesArea.addEventListener('touchmove', (e) => {
+                    if (e.touches.length === 1) {
+                        const touchCurrentX = e.touches[0].clientX;
+                        const touchCurrentY = e.touches[0].clientY;
+                        const deltaX = touchCurrentX - touchStartX;
+                        const deltaY = touchCurrentY - touchStartY;
+
+                        // Check for right swipe (swipe right to reply)
+                        if (deltaX > swipeThreshold && Math.abs(deltaX) > Math.abs(deltaY)) {
+                            e.preventDefault();
+                            
+                            let target = e.target;
+                            while (target && !target.classList.contains('message')) {
+                                target = target.parentElement;
+                            }
+                            if (target) {
+                                showReplyPreview(target);
+                            }
+                        }
+                    }
+                });
+            }
+
+            // ✅ SHOW WHATSAPP-STYLE REPLY PREVIEW
+            function showReplyPreview(messageElem) {
+                // Remove existing preview
+                if (replyPreviewDiv) {
+                    replyPreviewDiv.remove();
+                    replyPreviewDiv = null;
+                }
+
+                // Create new preview
+                replyPreviewDiv = document.createElement('div');
+                replyPreviewDiv.className = 'reply-preview';
+                
+                const msgTextElem = messageElem.querySelector('.message-text');
+                const senderElem = messageElem.querySelector('.message-sender');
+                
+                let textPreview = msgTextElem ? msgTextElem.textContent.slice(0, 50) : 'Message';
+                if (msgTextElem && msgTextElem.textContent.length > 50) {
+                    textPreview += '...';
                 }
                 
-                const text = (msgInput.value || '').trim();
-                if (!text) return;
+                const senderName = senderElem ? senderElem.textContent : (messageElem.classList.contains('sent') ? 'You' : 'User');
                 
-                msgInput.value = '';
-                setUserTyping(false);
-                
-                await addDoc(collection(db, 'groups', currentGroup.id, 'messages'), {
-                    uid: me.uid,
-                    name: me.name,
-                    email: me.email,
-                    text,
-                    ts: serverTimestamp()
-                });
-            } catch(e) {
-                console.error('sendMessage', e);
-                toast('Send failed');
-            }
-        }
+                replyPreviewDiv.innerHTML = `
+                    <div style="font-weight: bold; color: var(--chat-green); font-size: 12px; margin-bottom: 4px;">
+                        ↩ Replying to ${senderName}
+                    </div>
+                    <div style="color: var(--chat-text);">${escapeHtml(textPreview)}</div>
+                `;
 
-        // Typing indicator
-        async function setupTypingListener(groupId) {
-            try {
-                if (typingUnsub) typingUnsub();
+                document.body.appendChild(replyPreviewDiv);
+
+                // Auto-remove preview
+                const removePreview = () => {
+                    if (replyPreviewDiv) {
+                        replyPreviewDiv.remove();
+                        replyPreviewDiv = null;
+                    }
+                };
+
+                // Remove on next touch or after 5 seconds
+                setTimeout(() => {
+                    messagesArea.addEventListener('touchstart', removePreview, { once: true });
+                    document.addEventListener('click', removePreview, { once: true });
+                }, 100);
                 
-                typingUnsub = onSnapshot(collection(db, 'groups', groupId, 'typing'), snap => {
-                    const typing = [];
-                    snap.forEach(d => {
-                        if (d.id !== (me && me.uid) && d.data().typing) {
-                            typing.push(d.id);
+                setTimeout(removePreview, 5000); // Auto-remove after 5s
+            }
+
+            // ✅ WORKING ADMIN PANEL FUNCTIONALITY
+            function setupAdminPanel() {
+                // Toggle admin panel visibility
+                document.getElementById('adminToggleItem')?.addEventListener('click', () => {
+                    if (isAdmin) {
+                        adminPanel.classList.toggle('hidden');
+                        const isVisible = !adminPanel.classList.contains('hidden');
+                        toast(isVisible ? '👑 Admin panel shown' : '👑 Admin panel hidden');
+                    } else {
+                        toast('❌ Admin access required');
+                    }
+                });
+
+                // ✅ RESET API KEY BUTTON
+                document.getElementById('resetApiKeyBtn')?.addEventListener('click', () => {
+                    if (confirm('🔄 Are you sure you want to reset your API key? You will need to enter a new one to use AI features.')) {
+                        localStorage.removeItem('geminiApiKey');
+                        geminiApiKey = '';
+                        toast('✅ API key has been reset successfully!');
+                    }
+                });
+
+                // View banned users button
+                document.getElementById('viewBannedUsersBtn')?.addEventListener('click', async () => {
+                    await showUnbanUsersModal();
+                });
+
+                // Manage groups button
+                document.getElementById('manageGroupsBtn')?.addEventListener('click', () => {
+                    toast('🏢 Group management feature - coming soon!');
+                });
+
+                // Clear all data button
+                document.getElementById('clearAllDataBtn')?.addEventListener('click', () => {
+                    if (confirm('🚨 Are you sure you want to clear ALL local data? This action cannot be undone!')) {
+                        if (confirm('⚠️ This will delete all local settings and cached data. Continue?')) {
+                            const confirmation = prompt('Type "DELETE" to confirm:');
+                            if (confirmation === 'DELETE') {
+                                try {
+                                    localStorage.clear();
+                                    sessionStorage.clear();
+                                    toast('✅ All local data cleared! Refreshing page...');
+                                    setTimeout(() => window.location.reload(), 2000);
+                                } catch (error) {
+                                    toast('❌ Failed to clear data');
+                                }
+                            } else {
+                                toast('❌ Action cancelled - wrong confirmation');
+                            }
                         }
-                    });
-                    
-                    updateTypingIndicator(typing);
+                    }
                 });
-            } catch(e) {
-                console.error('setupTypingListener', e);
-            }
-        }
-        
-        function updateTypingIndicator(uids) {
-            let indicator = document.getElementById('typingIndicator');
-            
-            if (uids.length === 0) {
-                if (indicator) indicator.remove();
-                return;
-            }
-            
-            if (!indicator) {
-                indicator = document.createElement('div');
-                indicator.id = 'typingIndicator';
-                indicator.className = 'typing-indicator';
-                msgList.appendChild(indicator);
-            }
-            
-            indicator.innerHTML = `
-                <span>Someone is typing…</span>
-                <div class="typing-dots">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            `;
-        }
-        
-        function setUserTyping(typing) {
-            if (!currentGroup || !me) return;
-            
-            try {
-                setDoc(doc(db, 'groups', currentGroup.id, 'typing', me.uid), {
-                    typing,
-                    uid: me.uid,
-                    lastUpdated: serverTimestamp()
-                }, { merge: true });
-            } catch(e) {
-                console.error('setUserTyping', e);
-            }
-        }
-        
-        msgInput.addEventListener('input', () => {
-            if (msgInput.value.length > 0) {
-                setUserTyping(true);
-                if (typingTimeout) clearTimeout(typingTimeout);
-                typingTimeout = setTimeout(() => setUserTyping(false), 1800);
-            } else {
-                setUserTyping(false);
-            }
-        });
 
-        // Admin flows
-        async function checkIsAdmin(uid) {
-            if (!uid) return false;
-            
-            try {
-                const snap = await getDoc(doc(db, 'admins', uid));
-                return snap.exists();
-            } catch(e) {
-                console.error('checkIsAdmin', e);
-                return false;
+                // Export data button
+                document.getElementById('exportDataBtn')?.addEventListener('click', () => {
+                    try {
+                        const data = {
+                            theme: currentTheme,
+                            apiKey: geminiApiKey ? '***HIDDEN***' : 'Not set',
+                            timestamp: new Date().toISOString(),
+                            user: currentUser ? {
+                                name: currentUser.displayName,
+                                email: currentUser.email
+                            } : null
+                        };
+                        
+                        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `chat-app-data-${new Date().toISOString().split('T')[0]}.json`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        
+                        toast('📤 Data exported successfully!');
+                    } catch (error) {
+                        toast('❌ Failed to export data');
+                    }
+                });
             }
-        }
 
-        adminPanelBtn.addEventListener('click', async () => {
-            if (!me) return toast('Sign in first');
-            
-            const wants = confirm('Admin login — continue to enter password?');
-            if (!wants) return;
-            
-            const pass = prompt('Admin password');
-            if (pass === null) return;
-            
-            try {
-                const cfg = await getDoc(doc(db, 'config', 'admin'));
-                if (!cfg.exists()) {
-                    toast('Admin config missing');
+            // Authentication
+            loginBtn?.addEventListener('click', async () => {
+                try {
+                    loginBtn.disabled = true;
+                    loginBtn.textContent = '🔄 Signing in...';
+                    
+                    const result = await signInWithPopup(auth, provider);
+                    currentUser = result.user;
+                    loginScreen.classList.add('hidden');
+                    mainApp.classList.remove('hidden');
+                    
+                    userAvatar.textContent = currentUser.displayName?.charAt(0) || '👤';
+                    headerSubtitle.textContent = `👋 Welcome back, ${currentUser.displayName?.split(' ')[0] || 'User'}!`;
+                    
+                    // Initialize user in Firestore
+                    await setDoc(doc(db, 'users', currentUser.uid), {
+                        name: currentUser.displayName,
+                        email: currentUser.email,
+                        photo: currentUser.photoURL,
+                        online: true,
+                        lastSeen: serverTimestamp()
+                    }, { merge: true });
+                    
+                    await loadGroups();
+                    await checkAdminStatus();
+                    setupMessageHandling();
+                    initSwipeToReply(); // ✅ Initialize swipe functionality
+                    setupAdminPanel(); // ✅ Initialize admin panel
+                    
+                    toast('🎉 Welcome to chat-app! Ready to chat?');
+                } catch (error) {
+                    console.error('Login error:', error);
+                    toast('❌ Login failed. Please try again.');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = '🔐 Sign in with Google';
+                }
+            });
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                } else {
+                    currentUser = null;
+                    mainApp.classList.add('hidden');
+                    settingsScreen.classList.remove('active');
+                    loginScreen.classList.remove('hidden');
+                }
+            });
+
+            // Admin status check
+            async function checkAdminStatus() {
+                if (!currentUser) return;
+                try {
+                    const adminSnap = await getDoc(doc(db, 'admins', currentUser.uid));
+                    isAdmin = adminSnap.exists();
+                    
+                    if (!isAdmin) {
+                        setTimeout(promptForAdmin, 3000);
+                    } else {
+                        setupAdminMenu();
+                        adminPanel.classList.remove('hidden'); // ✅ Show admin panel for admins
+                        toast('👑 Admin privileges activated!');
+                    }
+                } catch(e) {
+                    console.error('checkAdminStatus', e);
+                }
+            }
+
+            async function promptForAdmin() {
+                const wantAdmin = confirm('🔐 Are you an admin? Enter admin password to access admin features and AI assistant.');
+                if (!wantAdmin) return;
+                
+                const password = prompt('🔑 Enter admin password:');
+                if (!password) return;
+                
+                try {
+                    const configSnap = await getDoc(doc(db, 'config', 'admin'));
+                    if (configSnap.exists() && configSnap.data().password === password) {
+                        await setDoc(doc(db, 'admins', currentUser.uid), {
+                            email: currentUser.email,
+                            name: currentUser.displayName,
+                            addedAt: serverTimestamp()
+                        });
+                        isAdmin = true;
+                        toast('✅ Admin access granted! 🎉');
+                        setupAdminMenu();
+                        adminPanel.classList.remove('hidden'); // ✅ Show admin panel
+                        loadGroups(); // Refresh to show AI assistant
+                    } else {
+                        toast('❌ Wrong password. Try again later.');
+                    }
+                } catch(e) {
+                    console.error('Admin verification failed', e);
+                    toast('❌ Admin verification failed. Please try again.');
+                }
+            }
+
+            function setupAdminMenu() {
+                if (!isAdmin) return;
+                
+                // Add admin items to chat menu
+                const adminItems = [
+                    { icon: '👥', text: 'Add Users', action: 'add' },
+                    { icon: '🚫', text: 'Ban Users', action: 'ban' },
+                    { icon: '🔓', text: 'Unban Users', action: 'unban' },
+                    { icon: '🗑️', text: 'Clear Messages', action: 'clear' }
+                ];
+                
+                adminItems.forEach(item => {
+                    const menuItem = document.createElement('div');
+                    menuItem.className = 'menu-item ripple';
+                    menuItem.innerHTML = `
+                        <span style="font-size: 18px; width: 20px; text-align: center;">${item.icon}</span>
+                        <span>${item.text}</span>
+                    `;
+                    menuItem.addEventListener('click', () => {
+                        closeMenus();
+                        handleAdminAction(item.action);
+                    });
+                    chatMenu.appendChild(menuItem);
+                });
+            }
+
+            async function handleAdminAction(action) {
+                if (!currentGroup) {
+                    toast('⚠️ Please select a group first');
                     return;
                 }
-                
-                const real = cfg.data().password;
-                if (String(pass) === String(real)) {
-                    await setDoc(doc(db, 'admins', me.uid), {
-                        email: me.email,
-                        name: me.name,
-                        addedAt: serverTimestamp()
-                    });
-                    setAdminMode(true);
-                    aiBtn.classList.remove('hidden');
-                    toast('Admin enabled');
-                } else {
-                    toast('Wrong password');
+
+                // Prevent admin actions in General group for add/ban
+                if (currentGroup.id === 'general' && (action === 'add' || action === 'ban')) {
+                    toast('🚫 Cannot modify users in General group - it\'s open to everyone');
+                    return;
                 }
-            } catch(e) {
-                console.error('admin flow', e);
-                toast('Admin check failed');
-            }
-        });
 
-        function setAdminMode(on) {
-            isAdmin = !!on;
-            
-            if (isAdmin) {
-                adminPanel.classList.remove('hidden');
-                adminPanelBtn.classList.add('hidden');
-                loadAdminsList();
-            } else {
-                adminPanel.classList.add('hidden');
-                adminPanelBtn.classList.remove('hidden');
+                switch (action) {
+                    case 'add':
+                        await showAddUsersModal();
+                        break;
+                    case 'ban':
+                        await showBanUsersModal();
+                        break;
+                    case 'unban':
+                        await showUnbanUsersModal();
+                        break;
+                    case 'clear':
+                        if (confirm('🗑️ Clear all messages in this group? This action cannot be undone.')) {
+                            await clearAllMessages();
+                        }
+                        break;
+                }
             }
-        }
-        
-        async function loadAdminsList() {
-            try {
-                adminsList.innerHTML = '';
-                const snaps = await getDocs(collection(db, 'admins'));
-                
-                snaps.forEach(s => {
-                    const d = s.data();
-                    const el = document.createElement('div');
-                    el.textContent = d.name || d.email || s.id;
-                    adminsList.appendChild(el);
-                });
-            } catch(e) {
-                console.error('loadAdminsList', e);
-            }
-        }
 
-        // Create group (admin only)
-        doCreateGroup.addEventListener('click', async () => {
-            if (!isAdmin) return toast('Admins only');
-            
-            const name = (newGroupName.value || '').trim();
-            if (!name) return toast('Enter group name');
-            
-            try {
-                const snaps = await getDocs(collection(db, 'groups'));
-                let myCount = 0;
-                
-                snaps.forEach(s => {
-                    const g = s.data();
-                    if (g.ownerUid === me.uid) myCount++;
+            async function showAddUsersModal() {
+                const modalTitle = document.getElementById('modalTitle');
+                const userList = document.getElementById('userList');
+                const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+                modalTitle.textContent = '👥 Add Users to Group';
+                modalConfirmBtn.textContent = '✅ Add Selected';
+                modalConfirmBtn.className = 'modal-btn primary ripple';
+
+                // Get users not in current group
+                const usersSnap = await getDocs(collection(db, 'users'));
+                const groupMembersSnap = await getDoc(doc(db, 'groups', currentGroup.id));
+                const groupMembers = groupMembersSnap.data()?.members || {};
+
+                userList.innerHTML = '';
+                selectedUsers.clear();
+
+                usersSnap.forEach(doc => {
+                    const user = doc.data();
+                    if (doc.id !== currentUser.uid && !groupMembers[doc.id]) {
+                        const userItem = createUserItem(doc.id, user);
+                        userList.appendChild(userItem);
+                    }
                 });
+
+                if (userList.children.length === 0) {
+                    userList.innerHTML = '<p style="text-align: center; color: var(--chat-light-text); padding: 20px;">✅ All users are already in this group</p>';
+                }
+
+                userModal.classList.add('show');
+
+                modalConfirmBtn.onclick = async () => {
+                    if (selectedUsers.size === 0) {
+                        toast('⚠️ Please select users to add');
+                        return;
+                    }
+                    
+                    try {
+                        modalConfirmBtn.disabled = true;
+                        modalConfirmBtn.textContent = '⏳ Adding...';
+                        
+                        const updatedMembers = { ...groupMembers };
+                        selectedUsers.forEach(userId => {
+                            updatedMembers[userId] = true;
+                        });
+
+                        await updateDoc(doc(db, 'groups', currentGroup.id), {
+                            members: updatedMembers
+                        });
+
+                        toast(`✅ Added ${selectedUsers.size} user(s) to group successfully!`);
+                        closeMenus();
+                    } catch (error) {
+                        console.error('Error adding users:', error);
+                        toast('❌ Failed to add users. Please try again.');
+                        modalConfirmBtn.disabled = false;
+                        modalConfirmBtn.textContent = '✅ Add Selected';
+                    }
+                };
+            }
+
+            async function showBanUsersModal() {
+                const modalTitle = document.getElementById('modalTitle');
+                const userList = document.getElementById('userList');
+                const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+                modalTitle.textContent = '🚫 Ban Users';
+                modalConfirmBtn.textContent = '🚫 Ban Selected';
+                modalConfirmBtn.className = 'modal-btn danger ripple';
+
+                // Get all users except banned ones
+                const usersSnap = await getDocs(collection(db, 'users'));
+                const bannedSnap = await getDocs(collection(db, 'bannedUsers'));
+                const bannedUserIds = new Set(bannedSnap.docs.map(doc => doc.id));
+
+                userList.innerHTML = '';
+                selectedUsers.clear();
+
+                usersSnap.forEach(doc => {
+                    const user = doc.data();
+                    if (doc.id !== currentUser.uid && !bannedUserIds.has(doc.id)) {
+                        const userItem = createUserItem(doc.id, user);
+                        userList.appendChild(userItem);
+                    }
+                });
+
+                if (userList.children.length === 0) {
+                    userList.innerHTML = '<p style="text-align: center; color: var(--chat-light-text); padding: 20px;">✅ No users available to ban</p>';
+                }
+
+                userModal.classList.add('show');
+
+                modalConfirmBtn.onclick = async () => {
+                    if (selectedUsers.size === 0) {
+                        toast('⚠️ Please select users to ban');
+                        return;
+                    }
+
+                    if (!confirm(`🚫 Ban ${selectedUsers.size} user(s)? This will prevent them from sending messages.`)) return;
+                    
+                    try {
+                        modalConfirmBtn.disabled = true;
+                        modalConfirmBtn.textContent = '⏳ Banning...';
+                        
+                        const banPromises = Array.from(selectedUsers).map(userId => 
+                            setDoc(doc(db, 'bannedUsers', userId), {
+                                bannedBy: currentUser.uid,
+                                bannedByName: currentUser.displayName,
+                                bannedAt: serverTimestamp(),
+                                reason: 'Admin action'
+                            })
+                        );
+
+                        await Promise.all(banPromises);
+                        toast(`✅ Successfully banned ${selectedUsers.size} user(s)`);
+                        closeMenus();
+                    } catch (error) {
+                        console.error('Error banning users:', error);
+                        toast('❌ Failed to ban users. Please try again.');
+                        modalConfirmBtn.disabled = false;
+                        modalConfirmBtn.textContent = '🚫 Ban Selected';
+                    }
+                };
+            }
+
+            async function showUnbanUsersModal() {
+                const modalTitle = document.getElementById('modalTitle');
+                const userList = document.getElementById('userList');
+                const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+                modalTitle.textContent = '🔓 Unban Users';
+                modalConfirmBtn.textContent = '🔓 Unban Selected';
+                modalConfirmBtn.className = 'modal-btn primary ripple';
+
+                // Get banned users
+                const bannedSnap = await getDocs(collection(db, 'bannedUsers'));
+
+                userList.innerHTML = '';
+                selectedUsers.clear();
+
+                for (const banDoc of bannedSnap.docs) {
+                    const userDoc = await getDoc(doc(db, 'users', banDoc.id));
+                    if (userDoc.exists()) {
+                        const user = userDoc.data();
+                        const banData = banDoc.data();
+                        const userItem = createUserItem(banDoc.id, user, '🚫 ', banData);
+                        userList.appendChild(userItem);
+                    }
+                }
+
+                if (bannedSnap.empty) {
+                    userList.innerHTML = '<p style="text-align: center; color: var(--chat-light-text); padding: 20px;">✅ No banned users</p>';
+                }
+
+                userModal.classList.add('show');
+
+                modalConfirmBtn.onclick = async () => {
+                    if (selectedUsers.size === 0) {
+                        toast('⚠️ Please select users to unban');
+                        return;
+                    }
+                    
+                    try {
+                        modalConfirmBtn.disabled = true;
+                        modalConfirmBtn.textContent = '⏳ Unbanning...';
+                        
+                        const unbanPromises = Array.from(selectedUsers).map(userId => 
+                            deleteDoc(doc(db, 'bannedUsers', userId))
+                        );
+
+                        await Promise.all(unbanPromises);
+                        toast(`✅ Successfully unbanned ${selectedUsers.size} user(s)`);
+                        closeMenus();
+                    } catch (error) {
+                        console.error('Error unbanning users:', error);
+                        toast('❌ Failed to unban users. Please try again.');
+                        modalConfirmBtn.disabled = false;
+                        modalConfirmBtn.textContent = '🔓 Unban Selected';
+                    }
+                };
+            }
+
+            function createUserItem(userId, user, prefix = '', banData = null) {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item ripple';
+                userItem.dataset.userId = userId;
+
+                const displayName = prefix + (user.name || user.email || 'Unknown User');
+                const statusColor = user.online ? '🟢' : '🔴';
+                const statusText = user.online ? 'Online' : 'Offline';
                 
-                const cfgSnap = await getDoc(doc(db, 'config', 'admin'));
-                const maxG = cfgSnap.exists() ? (cfgSnap.data().maxGroups || 3) : 3;
+                let additionalInfo = '';
+                if (banData) {
+                    const banDate = banData.bannedAt ? 
+                        new Date(banData.bannedAt.seconds * 1000).toLocaleDateString() : 
+                        'Unknown date';
+                    additionalInfo = `<div style="font-size: 11px; color: #dc3545;">Banned on ${banDate}</div>`;
+                }
                 
-                if (myCount >= maxG) return toast('You already created max groups');
+                userItem.innerHTML = `
+                    <div class="user-avatar">${displayName.replace(prefix, '').charAt(0).toUpperCase()}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 500;">${escapeHtml(displayName)}</div>
+                        <div style="font-size: 12px; color: var(--chat-light-text);">
+                            ${statusColor} ${statusText}
+                        </div>
+                        ${additionalInfo}
+                    </div>
+                `;
+
+                userItem.addEventListener('click', () => {
+                    userItem.classList.toggle('selected');
+                    if (userItem.classList.contains('selected')) {
+                        selectedUsers.add(userId);
+                    } else {
+                        selectedUsers.delete(userId);
+                    }
+                });
+
+                return userItem;
+            }
+
+            async function clearAllMessages() {
+                if (!currentGroup) return;
                 
-                const id = name.toLowerCase().replace(/[^a-z0-9-_]/g, '-').slice(0, 28) + '_' + (Date.now().toString(36).slice(-5));
-                
-                await setDoc(doc(db, 'groups', id), {
-                    id,
-                    name,
-                    public: false,
-                    ownerUid: me.uid,
-                    ownerName: me.name,
+                try {
+                    const messagesSnap = await getDocs(collection(db, 'groups', currentGroup.id, 'messages'));
+                    const deletePromises = messagesSnap.docs.map(doc => deleteDoc(doc.ref));
+                    
+                    await Promise.all(deletePromises);
+                    toast('✅ All messages cleared successfully');
+                } catch (error) {
+                    console.error('Error clearing messages:', error);
+                    toast('❌ Failed to clear messages');
+                }
+            }
+
+            // Load groups
+            async function loadGroups() {
+                try {
+                    const groupsSnap = await getDocs(collection(db, 'groups'));
+                    const groups = [];
+                    
+                    groupsSnap.forEach(doc => {
+                        groups.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    if (groups.length === 0) {
+                        await createDefaultGroup();
+                        return loadGroups();
+                    }
+                    
+                    // Add AI Assistant for admins only
+                    if (isAdmin) {
+                        groups.unshift({
+                            id: 'ai-assistant',
+                            name: '🤖 AI Assistant',
+                            public: false,
+                            isAI: true
+                        });
+                    }
+                    
+                    renderChatList(groups);
+                } catch(e) {
+                    console.error('loadGroups', e);
+                }
+            }
+
+            async function createDefaultGroup() {
+                await setDoc(doc(db, 'groups', 'general'), {
+                    name: '💬 General Chat',
+                    public: true,
                     created: serverTimestamp(),
                     members: {}
                 });
-                
-                toast('Group created');
-                newGroupName.value = '';
-                loadGroups();
-            } catch(e) {
-                console.error('create group', e);
-                toast('Create failed');
             }
-        });
 
-        // Add member by email
-        addMemberBtn.addEventListener('click', async () => {
-            if (!isAdmin) return toast('Admins only');
-            if (!currentGroup) return toast('Open a group');
-            
-            const email = (memberEmail.value || '').trim().toLowerCase();
-            if (!email) return toast('Enter email');
-            
-            try {
-                const usersSnap = await getDocs(collection(db, 'users'));
-                let foundUid = null;
+            function renderChatList(groups) {
+                chatList.innerHTML = '';
                 
-                usersSnap.forEach(u => {
-                    const d = u.data();
-                    if ((d.email || '').toLowerCase() === email) foundUid = u.id;
+                groups.forEach(group => {
+                    const chatItem = document.createElement('div');
+                    chatItem.className = 'chat-item ripple';
+                    
+                    const avatarClass = group.isAI ? 'chat-avatar ai-assistant' : 'chat-avatar';
+                    const avatarText = group.isAI ? '🤖' : (group.name.includes('💬') ? '💬' : group.name.charAt(0).toUpperCase());
+                    
+                    chatItem.innerHTML = `
+                        <div class="${avatarClass}">${avatarText}${group.isAI ? '<div class="online-indicator"></div>' : ''}</div>
+                        <div class="chat-info">
+                            <div class="chat-name">${escapeHtml(group.name)}</div>
+                            <div class="chat-last-message">${group.isAI ? '🧠 AI Assistant - Ask me anything! ✨' : (group.public ? '🌍 Public group - Everyone can join' : '🔒 Private group')}</div>
+                        </div>
+                        <div class="chat-time">now</div>
+                    `;
+                    
+                    chatItem.addEventListener('click', () => openGroup(group.id, group));
+                    chatList.appendChild(chatItem);
+                });
+            }
+
+            // Open group
+            async function openGroup(groupId, groupData) {
+                currentGroup = groupData;
+                
+                chatListView.style.display = 'none';
+                chatView.classList.add('active');
+                chatTitle.textContent = groupData.name;
+                
+                const subtitleText = groupData.isAI ? '🤖 AI Assistant powered by Gemini ✨' : 
+                                   `${groupData.public ? '🌍 Public' : '🔒 Private'} group`;
+                document.getElementById('chatSubtitle').textContent = subtitleText;
+                
+                // Set chat avatar
+                const chatAvatar = document.getElementById('chatAvatar');
+                if (groupData.isAI) {
+                    chatAvatar.classList.add('ai-assistant');
+                    chatAvatar.textContent = '🤖';
+                } else {
+                    chatAvatar.classList.remove('ai-assistant');
+                    chatAvatar.textContent = groupData.name.includes('💬') ? '💬' : groupData.name.charAt(0).toUpperCase();
+                }
+                
+                // Load messages
+                if (messagesUnsub) messagesUnsub();
+                
+                const q = query(collection(db, 'groups', groupId, 'messages'), orderBy('ts'));
+                messagesUnsub = onSnapshot(q, snapshot => {
+                    renderMessages(snapshot);
+                });
+            }
+
+            // ✅ RENDER MESSAGES WITH DATE AND TIME
+            function renderMessages(snapshot) {
+                messagesArea.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const message = doc.data();
+                    const messageEl = document.createElement('div');
+                    
+                    let messageClass = 'message ';
+                    if (message.isAI) {
+                        messageClass += 'ai-response';
+                    } else {
+                        messageClass += message.uid === currentUser?.uid ? 'sent' : 'received';
+                    }
+                    
+                    messageEl.className = messageClass;
+                    
+                    // ✅ FORMAT DATE AND TIME DISPLAY
+                    const messageDate = message.ts ? new Date(message.ts.seconds * 1000) : new Date();
+                    const timeStr = messageDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const dateStr = messageDate.toLocaleDateString([], {
+                        weekday: 'short', 
+                        month: 'short', 
+                        day: 'numeric',
+                        year: messageDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+                    });
+                    
+                    let statusHtml = '';
+                    if (message.uid === currentUser?.uid && !message.isAI) {
+                        statusHtml = `
+                            <div class="message-status">
+                                <span class="status-icon sent">✓</span>
+                                <span class="status-icon delivered">✓</span>
+                            </div>
+                        `;
+                    }
+                    
+                    messageEl.innerHTML = `
+                        ${!message.isAI && message.uid !== currentUser?.uid ? `<div class="message-sender">${escapeHtml(message.name || 'Unknown')}</div>` : ''}
+                        <div class="message-text">${escapeHtml(message.text || '')}</div>
+                        <div class="message-meta">
+                            <div class="message-time">${timeStr}</div>
+                            <div class="message-date">${dateStr}</div>
+                            ${statusHtml}
+                        </div>
+                    `;
+                    
+                    messagesArea.appendChild(messageEl);
                 });
                 
-                if (!foundUid) return toast('User not found — they must sign in once');
-                
-                await updateDoc(doc(db, 'groups', currentGroup.id), {
-                    ['members.' + foundUid]: true
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            }
+
+            // Message handling
+            function setupMessageHandling() {
+                messageInput.addEventListener('input', () => {
+                    sendBtn.disabled = !messageInput.value.trim();
+                    // Auto-resize
+                    messageInput.style.height = 'auto';
+                    messageInput.style.height = Math.min(messageInput.scrollHeight, 100) + 'px';
                 });
-                
-                toast('Added');
-                memberEmail.value = '';
-            } catch(e) {
-                console.error('addMember', e);
-                toast('Add failed');
-            }
-        });
 
-        // Ban user
-        banBtn.addEventListener('click', async () => {
-            if (!isAdmin) return toast('Admins only');
-            
-            const em = prompt('Enter email to ban');
-            if (!em) return;
-            
-            try {
-                const usersSnap = await getDocs(collection(db, 'users'));
-                let foundUid = null;
-                
-                usersSnap.forEach(u => {
-                    const d = u.data();
-                    if ((d.email || '').toLowerCase() === em.toLowerCase()) foundUid = u.id;
+                messageInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        const isMobile = window.innerWidth <= 768;
+                        if (isMobile) {
+                            if (e.shiftKey) {
+                                e.preventDefault();
+                                sendMessage();
+                            }
+                        } else {
+                            if (!e.shiftKey) {
+                                e.preventDefault();
+                                sendMessage();
+                            }
+                        }
+                    }
                 });
-                
-                if (!foundUid) return toast('User not found');
-                
-                await setDoc(doc(db, 'banned', foundUid), {
-                    email: em,
-                    by: me.email,
-                    at: serverTimestamp()
-                });
-                
-                toast('User banned');
-            } catch(e) {
-                console.error('ban', e);
-                toast('Ban failed');
-            }
-        });
 
-        // Clear group messages
-        clearGroupBtn.addEventListener('click', async () => {
-            if (!isAdmin) return toast('Admins only');
-            if (!currentGroup) return toast('Open a group');
-            
-            if (!confirm('Delete all messages in this group?')) return;
-            
-            try {
-                const msgsSnap = await getDocs(collection(db, 'groups', currentGroup.id, 'messages'));
-                const ops = [];
-                
-                msgsSnap.forEach(m => ops.push(deleteDoc(doc(db, 'groups', currentGroup.id, 'messages', m.id))));
-                await Promise.all(ops);
-                
-                toast('Cleared');
-            } catch(e) {
-                console.error('clear', e);
-                toast('Clear failed');
+                sendBtn.addEventListener('click', sendMessage);
             }
-        });
 
-        // Leave group
-        leaveBtn.addEventListener('click', () => {
-            currentGroup = null;
-            chatCard.classList.add('hidden');
-            
-            if (typingUnsub) {
-                typingUnsub();
-                typingUnsub = null;
-            }
-            
-            if (messagesUnsub) {
-                messagesUnsub();
-                messagesUnsub = null;
-            }
-        });
+            async function sendMessage() {
+                if (!currentUser || !currentGroup) return;
+                
+                const text = messageInput.value.trim();
+                if (!text) return;
+                
+                // Check if user is banned
+                try {
+                    const banDoc = await getDoc(doc(db, 'bannedUsers', currentUser.uid));
+                    if (banDoc.exists()) {
+                        toast('🚫 You are banned and cannot send messages');
+                        messageInput.value = '';
+                        return;
+                    }
+                } catch(e) {
+                    console.error('Error checking ban status:', e);
+                }
+                
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+                sendBtn.disabled = true;
+                
+                try {
+                    // Handle AI Assistant chat
+                    if (currentGroup.id === 'ai-assistant') {
+                        // Add user message
+                        await addDoc(collection(db, 'groups', currentGroup.id, 'messages'), {
+                            uid: currentUser.uid,
+                            name: currentUser.displayName,
+                            text: text,
+                            ts: serverTimestamp()
+                        });
 
-        // AI Panel
-        aiBtn.addEventListener('click', () => {
-            if (!aiApiKey) {
-                const k = prompt('Enter Gemini API key (stored locally) — or Cancel for mock');
-                if (k) {
-                    aiApiKey = k;
-                    localStorage.setItem('gemini_api_key', k);
+                        // Show typing indicator
+                        const typingEl = document.createElement('div');
+                        typingEl.className = 'typing-indicator';
+                        typingEl.innerHTML = `
+                            <span>🤖 AI is thinking...</span>
+                            <div class="typing-dots">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        `;
+                        messagesArea.appendChild(typingEl);
+                        messagesArea.scrollTop = messagesArea.scrollHeight;
+
+                        // Get AI response
+                        if (!geminiApiKey) {
+                            typingEl.remove();
+                            apiKeyModal.classList.add('show');
+                            return;
+                        }
+
+                        try {
+                            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    contents: [{ parts: [{ text }] }]
+                                })
+                            });
+
+                            typingEl.remove();
+
+                            if (response.ok) {
+                                const data = await response.json();
+                                const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I could not generate a response. Please try again.';
+                                
+                                await addDoc(collection(db, 'groups', currentGroup.id, 'messages'), {
+                                    uid: 'ai-assistant',
+                                    name: '🤖 AI Assistant',
+                                    text: aiResponse,
+                                    ts: serverTimestamp(),
+                                    isAI: true
+                                });
+                            } else {
+                                throw new Error(`API Error: ${response.status}`);
+                            }
+                        } catch (error) {
+                            typingEl.remove();
+                            console.error('AI Error:', error);
+                            await addDoc(collection(db, 'groups', currentGroup.id, 'messages'), {
+                                uid: 'ai-assistant',
+                                name: '🤖 AI Assistant',
+                                text: '⚠️ Sorry, I encountered an error. Please check your API key and try again. If the problem persists, contact an admin.',
+                                ts: serverTimestamp(),
+                                isAI: true
+                            });
+                        }
+                        return;
+                    }
+                    
+                    // Regular message
+                    await addDoc(collection(db, 'groups', currentGroup.id, 'messages'), {
+                        uid: currentUser.uid,
+                        name: currentUser.displayName,
+                        email: currentUser.email,
+                        text: text,
+                        ts: serverTimestamp()
+                    });
+                    
+                } catch(e) {
+                    console.error('sendMessage', e);
+                    toast('❌ Failed to send message. Please try again.');
                 }
             }
-            
-            document.documentElement.style.setProperty('--ai-panel-width', '360px');
-            aiPanel.classList.add('open');
-            aiPanel.setAttribute('aria-hidden', 'false');
-        });
-        
-        closeAiPanel.addEventListener('click', () => {
-            aiPanel.classList.remove('open');
-            document.documentElement.style.setProperty('--ai-panel-width', '0px');
-            aiPanel.setAttribute('aria-hidden', 'true');
-        });
-        
-        aiSend.addEventListener('click', async () => {
-            const p = (aiInput.value || '').trim();
-            if (!p) return;
-            
-            addAiMsg('user', p);
-            aiInput.value = '';
-            
-            try {
-                const answer = await new Promise(res => setTimeout(() => res(`(mock) AI reply to "${p}"`), 900));
-                addAiMsg('ai', answer);
-            } catch(e) {
-                console.error('ai', e);
-                addAiMsg('ai', 'AI error');
-            }
-        });
-        
-        function addAiMsg(role, content) {
-            const el = document.createElement('div');
-            el.style.marginBottom = '8px';
-            el.textContent = `${role === 'user' ? 'You' : 'AI'}: ${content}`;
-            aiConversation.appendChild(el);
-            aiConversation.scrollTop = aiConversation.scrollHeight;
+
+            // Navigation handlers
+            backBtn?.addEventListener('click', () => {
+                chatView.classList.remove('active');
+                chatListView.style.display = 'flex';
+                
+                if (messagesUnsub) {
+                    messagesUnsub();
+                    messagesUnsub = null;
+                }
+                
+                currentGroup = null;
+                closeMenus();
+            });
+
+            // Menu handlers
+            menuBtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeMenus();
+                dropdownMenu.classList.add('show');
+                menuOverlay.classList.add('show');
+            });
+
+            chatMenuBtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeMenus();
+                chatMenu.classList.add('show');
+                menuOverlay.classList.add('show');
+            });
+
+            menuOverlay?.addEventListener('click', closeMenus);
+
+            document.getElementById('settingsMenuItem')?.addEventListener('click', () => {
+                closeMenus();
+                mainApp.classList.add('hidden');
+                settingsScreen.classList.add('active');
+                
+                document.getElementById('profileAvatar').textContent = currentUser?.displayName?.charAt(0) || '👤';
+                document.getElementById('profileName').textContent = currentUser?.displayName || 'Unknown User';
+            });
+
+            document.getElementById('themeMenuItem')?.addEventListener('click', () => {
+                closeMenus();
+                applyTheme(currentTheme === 'light' ? 'dark' : 'light');
+                toast(`🎨 Switched to ${currentTheme} mode!`);
+            });
+
+            document.getElementById('logoutMenuItem')?.addEventListener('click', () => {
+                closeMenus();
+                if (confirm('🚪 Are you sure you want to sign out?')) {
+                    signOut(auth);
+                    toast('👋 Signed out successfully. See you soon!');
+                }
+            });
+
+            document.getElementById('settingsBackBtn')?.addEventListener('click', () => {
+                settingsScreen.classList.remove('active');
+                mainApp.classList.remove('hidden');
+            });
+
+            document.getElementById('themeItem')?.addEventListener('click', () => {
+                applyTheme(currentTheme === 'light' ? 'dark' : 'light');
+                toast(`🎨 Switched to ${currentTheme} mode!`);
+            });
+
+            // Modal handlers
+            document.getElementById('modalCancelBtn')?.addEventListener('click', closeMenus);
+
+            document.getElementById('apiKeySaveBtn')?.addEventListener('click', () => {
+                const key = document.getElementById('apiKeyInput').value.trim();
+                if (!key) {
+                    toast('⚠️ Please enter a valid API key');
+                    return;
+                }
+                
+                if (!key.startsWith('AIza')) {
+                    toast('⚠️ Invalid API key format. Please check and try again.');
+                    return;
+                }
+                
+                geminiApiKey = key;
+                localStorage.setItem('geminiApiKey', key);
+                closeMenus();
+                document.getElementById('apiKeyInput').value = '';
+                toast('✅ API key saved successfully! You can now chat with AI 🤖');
+            });
+
+            document.getElementById('apiKeyCancelBtn')?.addEventListener('click', closeMenus);
+
+            // Initialize theme
+            applyTheme(currentTheme);
+
+            // Success message
+            toast('🚀 chat-app loaded successfully! All features ready to use!');
+
+        } catch (error) {
+            console.error('App initialization error:', error);
+            document.body.innerHTML = `
+                <div style="padding: 40px 20px; text-align: center; color: #ef4444; font-family: system-ui;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">❌</div>
+                    <h2>Failed to load chat-app</h2>
+                    <p style="margin: 20px 0; color: #666;">Something went wrong while loading the application.</p>
+                    <button onclick="location.reload()" style="
+                        background: #25d366; 
+                        color: white; 
+                        border: none; 
+                        padding: 12px 24px; 
+                        border-radius: 6px; 
+                        cursor: pointer;
+                        font-size: 14px;
+                    ">🔄 Reload Page</button>
+                    <div style="margin-top: 20px; font-size: 12px; color: #999;">
+                        Error: ${error.message}
+                    </div>
+                </div>
+            `;
         }
-
-        // Zoom & theme controls
-        zoomIn.addEventListener('click', () => { zoom += 0.1; applyZoom(); });
-        zoomOut.addEventListener('click', () => { zoom -= 0.1; applyZoom(); });
-        globalZoomIn.addEventListener('click', () => { zoom += 0.1; applyZoom(); });
-        globalZoomOut.addEventListener('click', () => { zoom -= 0.1; applyZoom(); });
-        themeToggle.addEventListener('click', () => applyTheme(currentTheme === 'dark' ? 'light' : 'dark'));
-
-        // Initialize
-        (async () => {
-            try {
-                await loadAdminConfig();
-                await ensureDefaultGroup();
-            } catch(e) {
-                console.error('init', e);
-            }
-        })();
     </script>
 </body>
 </html>
