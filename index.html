@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Chat-APP Pro">
-<title>Chat-APP Pro v4.0</title>
+<title>Chat-APP Pro v4.1</title>
 
 <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ2hhdC1BUFAgUHJvIiwic2hvcnRfbmFtZSI6IkNoYXQiLCJkZXNjcmlwdGlvbiI6IlByb2Zlc3Npb25hbCBjaGF0IGFwcCIsInN0YXJ0X3VybCI6Ii4vIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2ZlZjNmOCIsInRoZW1lX2NvbG9yIjoiI2ZmNmI5ZCIsIm9yaWVudGF0aW9uIjoicG9ydHJhaXQiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxOTInIGhlaWdodD0nMTkyJyUzRSUzQ3JlY3Qgd2lkdGg9JzE5MicgaGVpZ2h0PScxOTInIGZpbGw9JyUyM2ZmNmI5ZCcvJTNFJTNDdGV4dCB4PSc1MCUyNScgeT0nNTAlMjUnIGZvbnQtc2l6ZT0nOTAnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGR5PScuMzVlbScgZmlsbD0nd2hpdGUnJTNFJUYwJTlGJTkyJUFDJTNDL3RleHQlM0UlM0Mvc3ZnJTNFIiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwiLCJwdXJwb3NlIjoiYW55IG1hc2thYmxlIn0seyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInJTNFJTNDcmVjdCB3aWR0aD0nNTEyJyBoZWlnaHQ9JzUxMicgZmlsbD0nJTIzZmY2YjlkJy8lM0UlM0N0ZXh0IHg9JzUwJTI1JyB5PSc1MCUyNScgZm9udC1zaXplPScyNDAnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGR5PScuMzVlbScgZmlsbD0nd2hpdGUnJTNFJUYwJTlGJTkyJUFDJTNDL3RleHQlM0UlM0Mvc3ZnJTNFIiwic2l6ZXMiOiI1MTJ4NTEyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
 
@@ -65,7 +65,6 @@ body{font-family:Poppins,sans-serif;background:var(--bg1);color:var(--tx1);heigh
 .me .bubble{background:linear-gradient(135deg,var(--ac1),var(--ac2));color:#fff;border-bottom-right-radius:5px;box-shadow:0 4px 14px rgba(255,107,157,.38)}
 .you .bubble{background:var(--bg2);border:2px solid var(--bdr);color:var(--tx1);border-bottom-left-radius:5px;box-shadow:0 2px 8px rgba(255,107,157,.12)}
 .bubble.deleted{background:transparent!important;border:2px dashed var(--ac1)!important;color:var(--tx3)!important;font-style:italic;opacity:.7}
-.edit-badge{font-size:11px;opacity:.7;font-style:italic;margin-left:6px}
 .link-preview{background:rgba(0,0,0,.05);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;margin-top:8px;display:flex;align-items:center;gap:8px;font-size:13px}
 .link-icon{width:16px;height:16px;opacity:.7}
 .link-domain{color:var(--ac1);font-weight:600}
@@ -153,7 +152,7 @@ textarea:focus{outline:0;border-color:var(--ac1);background:var(--bg2);box-shado
 <div id="login">
   <div class="login-card">
     <div class="app-icon">💬</div>
-    <h1 class="login-title">Chat-APP Pro v4.0</h1>
+    <h1 class="login-title">Chat-APP Pro v4.1</h1>
     <p class="login-subtitle">Choose your account to continue</p>
     <button class="user-btn" data-user="aditya"><div class="user-avatar">A</div>Aditya</button>
     <button class="user-btn" data-user="vishwatej"><div class="user-avatar">V</div>Vishwatej</button>
@@ -178,11 +177,6 @@ textarea:focus{outline:0;border-color:var(--ac1);background:var(--bg2);box-shado
       <div class="reply-bar-text" id="replyText">Message</div>
       <button class="reply-close" id="replyClose">×</button>
     </div>
-    <div id="editBar" class="reply-bar">
-      <div class="reply-bar-name" id="editName">Editing message</div>
-      <div class="reply-bar-text" id="editText">Message</div>
-      <button class="reply-close" id="editClose">×</button>
-    </div>
     <div class="input-area">
       <textarea id="input" placeholder="Type a message... (Shift+Enter to send)"></textarea>
       <button id="send" class="send" disabled>➤</button>
@@ -194,7 +188,6 @@ textarea:focus{outline:0;border-color:var(--ac1);background:var(--bg2);box-shado
 
 <div id="menu" class="menu">
   <button id="mReply">💬 Reply</button>
-  <button id="mEdit">✏️ Edit</button>
   <button id="mCopy">📋 Copy</button>
   <button id="mReact">😊 React</button>
   <button id="mDelete" class="danger">🗑️ Delete</button>
@@ -333,17 +326,17 @@ textarea:focus{outline:0;border-color:var(--ac1);background:var(--bg2);box-shado
 <div id="notification" class="notification"></div>
 
 <script>
-console.log("🚀 Chat-APP Pro v4.0 - Loading...");
+console.log("🚀 Chat-APP Pro v4.1 - Loading...");
 
 // SERVICE WORKER WITH BETTER PUSH NOTIFICATIONS
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     const swCode = `
-      const CACHE = 'chat-v4';
+      const CACHE = 'chat-v4-1';
       const urlsToCache = ['/'];
 
       self.addEventListener('install', e => {
-        console.log('SW: Installing v4...');
+        console.log('SW: Installing v4.1...');
         e.waitUntil(
           caches.open(CACHE)
             .then(cache => cache.addAll(urlsToCache))
@@ -352,7 +345,7 @@ if ('serviceWorker' in navigator) {
       });
 
       self.addEventListener('activate', e => {
-        console.log('SW: Activating v4...');
+        console.log('SW: Activating v4.1...');
         e.waitUntil(clients.claim());
       });
 
@@ -415,13 +408,11 @@ if ('serviceWorker' in navigator) {
         e.waitUntil(
           clients.matchAll({ type: 'window' })
             .then(clientList => {
-              // If chat is already open, focus it
               for (let client of clientList) {
                 if (client.url.includes('chat') && 'focus' in client) {
                   return client.focus();
                 }
               }
-              // Otherwise open new window
               if (clients.openWindow) {
                 return clients.openWindow('/');
               }
@@ -440,7 +431,6 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register(swUrl)
       .then(reg => {
         console.log('✅ Service Worker registered', reg);
-        // Subscribe to push notifications if permission granted
         if (Notification.permission === 'granted') {
           subscribeToPush(reg);
         }
@@ -459,7 +449,6 @@ async function subscribeToPush(registration) {
       applicationServerKey: urlB64ToUint8Array('your-vapid-public-key-here')
     });
     console.log('✅ Push subscription:', subscription);
-    // In real app, send subscription to server
   } catch (err) {
     console.log('❌ Push subscription failed:', err);
   }
@@ -532,7 +521,6 @@ async function requestNotificationPermission() {
       console.log('✅ Notification permission granted');
       notify('🔔 Notifications enabled!');
 
-      // Subscribe to push notifications
       const registration = await navigator.serviceWorker.ready;
       subscribeToPush(registration);
 
@@ -565,7 +553,6 @@ function showDesktopNotification(title, body, icon) {
         notification.close();
       };
 
-      // Auto-close after 5 seconds
       setTimeout(() => notification.close(), 5000);
 
     } catch (err) {
@@ -596,9 +583,8 @@ const $ = id => document.getElementById(id);
 const el = {
   login: $("login"), chat: $("chat"), messages: $("messages"), input: $("input"),
   send: $("send"), typing: $("typing"), replyBar: $("replyBar"), replyName: $("replyName"),
-  replyText: $("replyText"), replyClose: $("replyClose"), editBar: $("editBar"),
-  editName: $("editName"), editText: $("editText"), editClose: $("editClose"),
-  menu: $("menu"), mReply: $("mReply"), mEdit: $("mEdit"), mCopy: $("mCopy"),
+  replyText: $("replyText"), replyClose: $("replyClose"),
+  menu: $("menu"), mReply: $("mReply"), mCopy: $("mCopy"),
   mReact: $("mReact"), mDelete: $("mDelete"), emojiPicker: $("emojiPicker"),
   deleteDialog: $("deleteDialog"), dialogDeleteCancel: $("dialogDeleteCancel"),
   dialogDeleteConfirm: $("dialogDeleteConfirm"), notification: $("notification"),
@@ -621,7 +607,6 @@ const state = {
   messageReactions: new Map(),
   readReceipts: new Map(),
   replyTo: null,
-  editingMessage: null,
   connected: false,
   typingUsers: new Set(),
   typingTimer: null,
@@ -725,10 +710,8 @@ function initPubNub() {
             return;
           }
 
-          // Regular message
           renderMessage(msg, true);
 
-          // Send delivered receipt
           if (msg.name !== state.user.name) {
             sendReceipt(msg.id, "delivered");
 
@@ -765,7 +748,7 @@ function initPubNub() {
   }
 }
 
-// ROBUST DELETE SYSTEM - ONLY OWN MESSAGES
+// ROBUST DELETE SYSTEM
 function handleDelete(messageId) {
   state.deletedIds.add(messageId);
 
@@ -779,7 +762,6 @@ function handleDelete(messageId) {
     node.className = "bubble deleted";
     node.innerHTML = "🚫 This message was deleted";
 
-    // Remove reactions
     const reactionsDiv = node.parentElement.querySelector('.reactions');
     if (reactionsDiv) {
       reactionsDiv.remove();
@@ -997,7 +979,6 @@ el.input.addEventListener("input", () => {
   el.input.style.height = "auto";
   el.input.style.height = Math.min(el.input.scrollHeight, 130) + "px";
 
-  // TYPING SIGNAL
   clearTimeout(state.typingTimer);
 
   const now = Date.now();
@@ -1199,13 +1180,6 @@ function renderMessage(msg, animate) {
     const textDiv = document.createElement("div");
     textDiv.textContent = msg.deleted ? "🚫 This message was deleted" : msg.txt;
 
-    if (msg.edited && !msg.deleted) {
-      const editBadge = document.createElement("span");
-      editBadge.className = "edit-badge";
-      editBadge.textContent = "(edited)";
-      textDiv.appendChild(editBadge);
-    }
-
     bubble.appendChild(textDiv);
 
     // LINK PREVIEW
@@ -1238,12 +1212,10 @@ function renderMessage(msg, animate) {
 
     wrapper.appendChild(bubble);
 
-    // CHECK SCROLL POSITION
     const wasAtBottom = el.messages.scrollTop + el.messages.clientHeight >= el.messages.scrollHeight - 10;
 
     el.messages.appendChild(wrapper);
 
-    // OBSERVE FOR READ RECEIPTS
     if (!isMe) {
       messageObserver.observe(wrapper);
     }
@@ -1272,10 +1244,8 @@ function renderMessage(msg, animate) {
       bubble.addEventListener("touchend", () => clearTimeout(touchTimer));
     }
 
-    // UPDATE REACTIONS DISPLAY
     updateReactionsDisplay(msg.id);
 
-    // UPDATE RECEIPTS DISPLAY  
     if (isMe) {
       updateReceiptDisplay(msg.id);
     }
@@ -1314,11 +1284,10 @@ function showMenu(x, y, msg, isMe) {
   state.currentMenuMessage = msg;
 
   el.menu.style.left = Math.min(x, window.innerWidth - 180) + "px";
-  el.menu.style.top = Math.min(y, window.innerHeight - 250) + "px";
+  el.menu.style.top = Math.min(y, window.innerHeight - 200) + "px";
   el.menu.classList.add("show");
 
-  // Show/hide menu options
-  el.mEdit.style.display = isMe ? "flex" : "none";
+  // Only show delete for own messages
   el.mDelete.style.display = isMe ? "flex" : "none";
 }
 
@@ -1336,26 +1305,7 @@ el.mReply.onclick = () => {
   el.replyName.textContent = msg.displayName;
   el.replyText.textContent = msg.txt;
   el.replyBar.classList.add("show");
-  el.editBar.classList.remove("show");
   el.input.focus();
-};
-
-// ZERO-ERROR EDIT IMPLEMENTATION
-el.mEdit.onclick = () => {
-  const msg = state.currentMenuMessage;
-  if (!msg || msg.name !== state.user.name) {
-    notify("❌ Can only edit your own messages");
-    return;
-  }
-
-  state.editingMessage = msg;
-  el.input.value = msg.txt;
-  el.editName.textContent = "Editing message";
-  el.editText.textContent = msg.txt;
-  el.editBar.classList.add("show");
-  el.replyBar.classList.remove("show");
-  el.input.focus();
-  el.input.select();
 };
 
 el.mCopy.onclick = async () => {
@@ -1366,7 +1316,6 @@ el.mCopy.onclick = async () => {
     await navigator.clipboard.writeText(msg.txt);
     notify("✅ Message copied!");
   } catch (error) {
-    // Fallback for older browsers
     const textArea = document.createElement('textarea');
     textArea.value = msg.txt;
     document.body.appendChild(textArea);
@@ -1447,13 +1396,7 @@ el.replyClose.onclick = () => {
   el.replyBar.classList.remove("show");
 };
 
-el.editClose.onclick = () => {
-  state.editingMessage = null;
-  el.editBar.classList.remove("show");
-  el.input.value = "";
-};
-
-// SEND WITH SPAM CONTROL AND EDIT SUPPORT
+// SEND WITH SPAM CONTROL
 function send() {
   const txt = el.input.value.trim();
 
@@ -1462,7 +1405,6 @@ function send() {
     return;
   }
 
-  // SPAM CONTROL
   const now = Date.now();
   if (now - state.lastSendTime < 500) {
     notify("⚠️ Slow down! Too fast.");
@@ -1470,7 +1412,6 @@ function send() {
   }
   state.lastSendTime = now;
 
-  // STOP TYPING SIGNAL
   if (state.connected) {
     state.pubnub.publish({
       channel: CHANNEL_SIGNALS,
@@ -1482,63 +1423,6 @@ function send() {
   }
   clearTimeout(state.typingTimer);
 
-  // EDIT MODE
-  if (state.editingMessage) {
-    const originalMsg = state.editingMessage;
-
-    // First delete the original message
-    state.pubnub.publish({
-      channel: CHANNEL_DELETE,
-      message: { 
-        id: originalMsg.id,
-        deletedBy: state.user.name,
-        deletedAt: Date.now()
-      },
-      storeInHistory: true
-    }).then(() => {
-      // Then send the edited message with same ID
-      const editedMsg = {
-        id: originalMsg.id, // Keep same ID
-        txt: txt,
-        ts: Date.now(),
-        name: state.user.name,
-        displayName: state.user.displayName,
-        edited: true,
-        originalTs: originalMsg.ts
-      };
-
-      if (state.replyTo) {
-        editedMsg.reply = {
-          id: state.replyTo.id,
-          txt: state.replyTo.txt,
-          displayName: state.replyTo.displayName
-        };
-      }
-
-      return state.pubnub.publish({
-        channel: CHANNEL,
-        message: editedMsg
-      });
-    }).then(() => {
-      console.log("✅ Message edited");
-      notify("✅ Message edited");
-
-      state.editingMessage = null;
-      state.replyTo = null;
-      el.editBar.classList.remove("show");
-      el.replyBar.classList.remove("show");
-      el.input.value = "";
-      el.input.style.height = "auto";
-      el.send.disabled = true;
-    }).catch(error => {
-      console.error("❌ Edit failed:", error);
-      notify("❌ Failed to edit message");
-    });
-
-    return;
-  }
-
-  // NORMAL MESSAGE
   const msg = {
     id: Date.now() + "-" + Math.random().toString(36).slice(2, 9),
     txt: txt,
@@ -1700,7 +1584,7 @@ window.addEventListener("load", () => {
   }
 });
 
-console.log("✅ Chat-APP Pro v4.0 - Ready!");
+console.log("✅ Chat-APP Pro v4.1 - Ready!");
 </script>
 
 </body>
